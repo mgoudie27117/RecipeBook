@@ -5,22 +5,46 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(&quot;/api/user&quot;)
-<span class="fc" id="L12">public class UserController {</span>
+<span class="fc" id="L13">public class UserController {</span>
 
 	@RequestMapping(value = &quot;/login&quot;, method = RequestMethod.POST)
 	public User login(@RequestBody Map&lt;String, String&gt; payload) {
-<span class="fc" id="L16">		User result = null;</span>
-<span class="fc bfc" id="L17" title="All 2 branches covered.">		if (!payload.isEmpty()) {</span>
-<span class="fc" id="L18">			String userName = payload.get(&quot;userName&quot;);</span>
-<span class="fc" id="L19">			String password = payload.get(&quot;password&quot;);</span>
-<span class="fc" id="L20">			result = new User(password, userName);</span>
-<span class="fc" id="L21">			result.login();</span>
+<span class="fc" id="L17">		User result = null;</span>
+<span class="pc bpc" id="L18" title="2 of 6 branches missed.">		if (!payload.isEmpty() &amp;&amp; payload.containsKey(&quot;userName&quot;) &amp;&amp; payload.containsKey(&quot;password&quot;)) {</span>
+<span class="fc" id="L19">			String userName = payload.get(&quot;userName&quot;);</span>
+<span class="fc" id="L20">			String password = payload.get(&quot;password&quot;);</span>
+<span class="fc" id="L21">			result = new User(password, userName);</span>
+<span class="fc" id="L22">			result.login();</span>
 		}
-<span class="fc" id="L23">		return result;</span>
+<span class="fc" id="L24">		return result;</span>
+	}
+
+	// NEW
+	@RequestMapping(value = &quot;/usernameexists&quot;, method = RequestMethod.GET)
+	public Boolean usernameexists(@RequestParam String userName) {
+<span class="fc" id="L30">		Boolean result = false;</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">		if (userName.length() &gt; 0) {</span>
+<span class="fc" id="L32">			result = new User(&quot;&quot;, userName).verifyDuplicateUsername();</span>
+		}
+<span class="fc" id="L34">		return result;</span>
+	}
+
+	// NEW
+	@RequestMapping(value = &quot;/createuser&quot;, method = RequestMethod.POST)
+	public User createuser(@RequestBody Map&lt;String, String&gt; payload) {
+<span class="fc" id="L40">		User result = null;</span>
+<span class="pc bpc" id="L41" title="3 of 6 branches missed.">		if (!payload.isEmpty() &amp;&amp; payload.containsKey(&quot;userName&quot;) &amp;&amp; payload.containsKey(&quot;password&quot;)</span>
+<span class="pc bpc" id="L42" title="2 of 4 branches missed.">				&amp;&amp; payload.containsKey(&quot;firstName&quot;) &amp;&amp; payload.containsKey(&quot;lastName&quot;)) {</span>
+<span class="fc" id="L43">			result = new User(payload.get(&quot;firstName&quot;), payload.get(&quot;lastName&quot;), payload.get(&quot;password&quot;), 0,</span>
+<span class="fc" id="L44">					payload.get(&quot;userName&quot;));</span>
+<span class="fc" id="L45">			result.createUser();</span>
+		}
+<span class="fc" id="L47">		return result;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

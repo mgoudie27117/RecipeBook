@@ -8,22 +8,58 @@ import java.sql.SQLException;
 import org.springframework.stereotype.Component;
 
 @Component(&quot;UserDataAccess&quot;)
-<span class="fc" id="L11">public class UserDataAccess {</span>
+<span class="nc" id="L11">public class UserDataAccess {</span>
 <span class="fc" id="L12">    private static Connection connection = DatabaseConnection.getConnection();</span>
 
-    public static User validateUser(String password, String userName) throws SQLException {
-<span class="fc" id="L15">        User result = new User(password, userName);</span>
-<span class="fc" id="L16">        System.out.println();</span>
-<span class="fc" id="L17">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
-<span class="fc" id="L18">        PreparedStatement statement = connection.prepareStatement(query);</span>
+    // NEW
+    public static User createUser(String firstName, String lastName, String password, String userName)
+            throws SQLException {
+<span class="fc" id="L17">        String dml = &quot;INSERT INTO recipebook_user (user_name, password, first_name, last_name) VALUES (?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L18">        PreparedStatement statement = connection.prepareStatement(dml);</span>
 <span class="fc" id="L19">        statement.setString(1, userName);</span>
 <span class="fc" id="L20">        statement.setString(2, password);</span>
-<span class="fc" id="L21">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L22" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L23">            return new User(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
-<span class="fc" id="L24">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
+<span class="fc" id="L21">        statement.setString(3, firstName);</span>
+<span class="fc" id="L22">        statement.setString(4, lastName);</span>
+<span class="fc" id="L23">        int inserted = statement.executeUpdate();</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if (inserted &gt; 0) {</span>
+<span class="fc" id="L25">            return validateUser(password, userName);</span>
         }
-<span class="fc" id="L26">        return result;</span>
+<span class="nc" id="L27">        return null;</span>
+    }
+
+    // NEW
+    public static void removeUser(int userId) throws SQLException {
+<span class="fc" id="L32">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L33">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L34">        statement.setInt(1, userId);</span>
+<span class="fc" id="L35">        statement.executeUpdate();</span>
+<span class="fc" id="L36">    }</span>
+
+    public static User validateUser(String password, String userName) throws SQLException {
+<span class="fc" id="L39">        User result = new User(password, userName);</span>
+<span class="fc" id="L40">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
+<span class="fc" id="L41">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L42">        statement.setString(1, userName);</span>
+<span class="fc" id="L43">        statement.setString(2, password);</span>
+<span class="fc" id="L44">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L46">            return new User(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
+<span class="fc" id="L47">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
+        }
+<span class="fc" id="L49">        return result;</span>
+    }
+
+    // NEW
+    public static Boolean verifyDuplicateUsername(String userName) throws SQLException {
+<span class="fc" id="L54">        int result = 0;</span>
+<span class="fc" id="L55">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
+<span class="fc" id="L56">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L57">        statement.setString(1, userName);</span>
+<span class="fc" id="L58">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L60">            result++;</span>
+        }
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        return result &gt; 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

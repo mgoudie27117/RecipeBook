@@ -1,7 +1,7 @@
 <template>
     <div class="vue-tempalte">
         <form>
-            <h3>Sign In</h3>
+            <h3>RecipeBook Sign In</h3>
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" 
@@ -18,36 +18,41 @@
                     class="form-control form-control-lg" 
                     autocomplete="off" />
             </div>
-            <button v-on:click="onSubmit" type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+            <button type="submit" @click.stop.prevent="onSubmit()" class="btn btn-dark btn-lg btn-block">Sign In</button>
         </form>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+    import axios from 'axios';
     export default {
         name: 'login',
-        data() {
-            return {
+        data: () => ({
                 firstName: '',
                 lastName: '',
                 password: '',
                 userId: '',
-                userName: ''
-            }
-        },
+                userName: '',
+                authenticated: false
+        }),
         methods: {
             onSubmit() {
-                axios.post('/api/user/login', {
-                        userName: this.userName,
-                        password: this.password
-                    }, { timeout: 10000 }).then((message) => {
+                const formData = {
+                    userName: this.userName,
+                    password: this.password
+                }
+                axios.post('/api/user/login', formData)
+                    .then((message) => {
                         console.log(message.data);
-                    }).catch(error => {
-                        console.log('Error', error);
-                    });
-                this.$router.push('/landing');
+                        if (message && message.data && message.data.authenticated) {
+                            this.authenticated = message.data.authenticated;
+                            this.firstName = message.data.firstName;
+                            this.lastName = message.data.lastName;
+                            this.userId = message.data.userId;
+                            this.$router.push('/landing');
+                        }
+                    }).catch(error => { console.log(error); });
             }
-        },
+        }
     }    
 </script>

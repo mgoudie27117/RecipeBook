@@ -5,5 +5,5 @@ mvn test
 mvn jacoco:prepare-agent test install jacoco:report
 java -jar C:\RecipeBook\recipebook\target\recipebook-1.0.0.jar
 
-cd C:\RecipeBook\recipebook\src\frontend
+cd C:\RecipeBook\recipebook\src\recipebook
 npm run serve

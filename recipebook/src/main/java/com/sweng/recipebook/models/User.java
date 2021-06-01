@@ -4,6 +4,7 @@ import com.sweng.recipebook.data.UserDataAccess;
 import java.sql.SQLException;
 
 public class User implements IUser {
+    private Boolean authenticated;
     private String firstName;
     private String lastName;
     private String password;
@@ -16,6 +17,7 @@ public class User implements IUser {
         this.password = password;
         this.userId = userId;
         this.userName = userName;
+        this.authenticated = false;
     }
 
     public User(String password, String userName) {
@@ -24,6 +26,22 @@ public class User implements IUser {
         this.password = password;
         this.userId = 0;
         this.userName = userName;
+        this.authenticated = false;
+    }
+
+    public void createUser() {
+        try {
+            User result = UserDataAccess.createUser(this.firstName, this.lastName, this.password, this.userName);
+            if (result != null && result.getUserId() > 0) {
+                this.userId = result.getUserId();
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public Boolean getAuthenticated() {
+        return authenticated;
     }
 
     public String getFirstName() {
@@ -45,12 +63,25 @@ public class User implements IUser {
     public void login() {
         try {
             User result = UserDataAccess.validateUser(this.password, this.userName);
-            this.firstName = result.getFirstName();
-            this.lastName = result.getLastName();
-            this.userId = result.getUserId();
-            System.out.println("User " + this.userName + " logged in.");
+            if (result != null && result.getFirstName().length() > 0 && result.getLastName().length() > 0
+                    && result.getUserId() > 0) {
+                this.authenticated = true;
+                this.firstName = result.getFirstName();
+                this.lastName = result.getLastName();
+                this.userId = result.getUserId();
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    public Boolean verifyDuplicateUsername() {
+        Boolean result = false;
+        try {
+            result = UserDataAccess.verifyDuplicateUsername(this.userName);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return result;
     }
 }

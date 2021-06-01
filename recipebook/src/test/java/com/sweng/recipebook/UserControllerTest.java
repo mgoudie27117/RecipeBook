@@ -1,11 +1,15 @@
 package com.sweng.recipebook;
 
 import com.sweng.recipebook.controller.UserController;
+import com.sweng.recipebook.data.UserDataAccess;
 import com.sweng.recipebook.models.User;
+
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class UserControllerTest {
 
@@ -34,5 +38,26 @@ public class UserControllerTest {
         Map<String, String> payload3 = new HashMap<String, String>();
         User TestUser3 = controllerTest.login(payload3);
         assertEquals(TestUser3, null);
+    }
+
+    @Test // NEW
+    public void verifyDuplicateUsernameTest() {
+        String TestUsername1 = "_";
+        assertEquals(false, controllerTest.usernameexists(TestUsername1));
+
+        String TestUsername2 = "mgoudie";
+        assertEquals(true, controllerTest.usernameexists(TestUsername2));
+    }
+
+    @Test // NEW
+    public void createUserTest() throws SQLException {
+        Map<String, String> payload = new HashMap<String, String>();
+        payload.put("userName", "mg");
+        payload.put("password", "j");
+        payload.put("firstName", "m");
+        payload.put("lastName", "g");
+        User TestUser = controllerTest.createuser(payload);
+        assertNotEquals(0, TestUser.getUserId());
+        UserDataAccess.removeUser(TestUser.getUserId());
     }
 }
