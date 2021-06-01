@@ -4,51 +4,51 @@ import com.sweng.recipebook.data.UserDataAccess;
 import java.sql.SQLException;
 
 public class User implements IUser {
-    private String FirstName;
-    private String LastName;
-    private String Password;
-    private int UserId;
-    private String UserName;
+    private String firstName;
+    private String lastName;
+    private String password;
+    private int userId;
+    private String userName;
 
     public User(String firstName, String lastName, String password, int userId, String userName) {
-        FirstName = firstName;
-        LastName = lastName;
-        Password = password;
-        UserId = userId;
-        UserName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.userId = userId;
+        this.userName = userName;
     }
 
     public User(String password, String userName) {
-        FirstName = "";
-        LastName = "";
-        Password = password;
-        UserId = 0;
-        UserName = userName;
+        this.firstName = "";
+        this.lastName = "";
+        this.password = password;
+        this.userId = 0;
+        this.userName = userName;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public int getUserId() {
-        return UserId;
+        return userId;
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void login() {
         try {
-            User result = UserDataAccess.validateUser(this.Password, this.UserName);
-            this.FirstName = result.getFirstName();
-            this.LastName = result.getLastName();
-            this.UserId = result.getUserId();
-            System.out.println("User " + this.UserName + " logged in.");
+            User result = UserDataAccess.validateUser(this.password, this.userName);
+            this.firstName = result.getFirstName();
+            this.lastName = result.getLastName();
+            this.userId = result.getUserId();
+            System.out.println("User " + this.userName + " logged in.");
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }

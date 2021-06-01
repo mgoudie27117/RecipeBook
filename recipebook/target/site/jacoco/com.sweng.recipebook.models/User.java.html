@@ -4,51 +4,51 @@ import com.sweng.recipebook.data.UserDataAccess;
 import java.sql.SQLException;
 
 public class User implements IUser {
-    private String FirstName;
-    private String LastName;
-    private String Password;
-    private int UserId;
-    private String UserName;
+    private String firstName;
+    private String lastName;
+    private String password;
+    private int userId;
+    private String userName;
 
 <span class="fc" id="L13">    public User(String firstName, String lastName, String password, int userId, String userName) {</span>
-<span class="fc" id="L14">        FirstName = firstName;</span>
-<span class="fc" id="L15">        LastName = lastName;</span>
-<span class="fc" id="L16">        Password = password;</span>
-<span class="fc" id="L17">        UserId = userId;</span>
-<span class="fc" id="L18">        UserName = userName;</span>
+<span class="fc" id="L14">        this.firstName = firstName;</span>
+<span class="fc" id="L15">        this.lastName = lastName;</span>
+<span class="fc" id="L16">        this.password = password;</span>
+<span class="fc" id="L17">        this.userId = userId;</span>
+<span class="fc" id="L18">        this.userName = userName;</span>
 <span class="fc" id="L19">    }</span>
 
 <span class="fc" id="L21">    public User(String password, String userName) {</span>
-<span class="fc" id="L22">        FirstName = &quot;&quot;;</span>
-<span class="fc" id="L23">        LastName = &quot;&quot;;</span>
-<span class="fc" id="L24">        Password = password;</span>
-<span class="fc" id="L25">        UserId = 0;</span>
-<span class="fc" id="L26">        UserName = userName;</span>
+<span class="fc" id="L22">        this.firstName = &quot;&quot;;</span>
+<span class="fc" id="L23">        this.lastName = &quot;&quot;;</span>
+<span class="fc" id="L24">        this.password = password;</span>
+<span class="fc" id="L25">        this.userId = 0;</span>
+<span class="fc" id="L26">        this.userName = userName;</span>
 <span class="fc" id="L27">    }</span>
 
     public String getFirstName() {
-<span class="fc" id="L30">        return FirstName;</span>
+<span class="fc" id="L30">        return firstName;</span>
     }
 
     public String getLastName() {
-<span class="fc" id="L34">        return LastName;</span>
+<span class="fc" id="L34">        return lastName;</span>
     }
 
     public int getUserId() {
-<span class="fc" id="L38">        return UserId;</span>
+<span class="fc" id="L38">        return userId;</span>
     }
 
     public String getUserName() {
-<span class="fc" id="L42">        return UserName;</span>
+<span class="fc" id="L42">        return userName;</span>
     }
 
     public void login() {
         try {
-<span class="fc" id="L47">            User result = UserDataAccess.validateUser(this.Password, this.UserName);</span>
-<span class="fc" id="L48">            this.FirstName = result.getFirstName();</span>
-<span class="fc" id="L49">            this.LastName = result.getLastName();</span>
-<span class="fc" id="L50">            this.UserId = result.getUserId();</span>
-<span class="fc" id="L51">            System.out.println(&quot;User &quot; + this.UserName + &quot; logged in.&quot;);</span>
+<span class="fc" id="L47">            User result = UserDataAccess.validateUser(this.password, this.userName);</span>
+<span class="fc" id="L48">            this.firstName = result.getFirstName();</span>
+<span class="fc" id="L49">            this.lastName = result.getLastName();</span>
+<span class="fc" id="L50">            this.userId = result.getUserId();</span>
+<span class="fc" id="L51">            System.out.println(&quot;User &quot; + this.userName + &quot; logged in.&quot;);</span>
 <span class="pc" id="L52">        } catch (SQLException ex) {</span>
 <span class="nc" id="L53">            System.out.println(ex.getMessage());</span>
         }
