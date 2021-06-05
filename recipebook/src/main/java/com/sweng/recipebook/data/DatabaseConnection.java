@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseConnection {
+/**
+ * DatabaseConnection - Database connection constant class.
+ */
+public final class DatabaseConnection {
     private static Connection connection = null;
 
     static {
@@ -19,6 +22,11 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * getConnection - Static method to return the application database connection.
+     * 
+     * @return - Connection object with application database.
+     */
     public static Connection getConnection() {
         return connection;
     }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JWTHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.security</a> &gt; <span class="el_source">JWTHandler.java</span></div><h1>JWTHandler.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.security;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.sweng.recipebook.models.RecipeBookUser;
+import java.util.Date;
+
+<span class="nc" id="L12">public class JWTHandler {</span>
+
+    public static final String SECRET = &quot;AmazingRecipes&quot;;
+    public static final int EXPIRATION = 15;
+
+    // TEST ME NEW
+    public static String generateToken(RecipeBookUser user) {
+<span class="fc" id="L19">        return JWT.create().withIssuer(&quot;auth0&quot;).withClaim(&quot;userId&quot;, user.getUserId())</span>
+<span class="fc" id="L20">                .withClaim(&quot;userName&quot;, user.getUserId()).withClaim(&quot;firstName&quot;, user.getFirstName())</span>
+<span class="fc" id="L21">                .withClaim(&quot;lastName&quot;, user.getLastName())</span>
+<span class="fc" id="L22">                .withExpiresAt(new Date(System.currentTimeMillis() + (EXPIRATION * 60 * 1000)))</span>
+<span class="fc" id="L23">                .sign(Algorithm.HMAC256(SECRET));</span>
+    }
+
+    // TEST ME NEW
+    public static String refreshToken(String token) {
+<span class="nc" id="L28">        DecodedJWT jwt = JWT.decode(token);</span>
+<span class="nc" id="L29">        RecipeBookUser user = new RecipeBookUser(jwt.getClaim(&quot;firstName&quot;).toString(),</span>
+<span class="nc" id="L30">                jwt.getClaim(&quot;lastName&quot;).toString(), &quot;&quot;, 0, jwt.getClaim(&quot;userName&quot;).toString());</span>
+<span class="nc" id="L31">        return generateToken(user);</span>
+    }
+
+    // TEST ME NEW
+    public static JWTStatus verifyToken(String token) {
+        try {
+<span class="nc" id="L37">            Algorithm algorithm = Algorithm.HMAC256(SECRET);</span>
+<span class="nc" id="L38">            JWTVerifier verifier = JWT.require(algorithm).withIssuer(&quot;auth0&quot;).build();</span>
+<span class="nc" id="L39">            verifier.verify(token);</span>
+<span class="nc" id="L40">        } catch (TokenExpiredException e) {</span>
+<span class="nc" id="L41">            return JWTStatus.EXPIRED;</span>
+<span class="nc" id="L42">        } catch (JWTVerificationException e) {</span>
+<span class="nc" id="L43">            return JWTStatus.INVALID;</span>
+        }
+<span class="nc" id="L45">        return JWTStatus.VALID;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

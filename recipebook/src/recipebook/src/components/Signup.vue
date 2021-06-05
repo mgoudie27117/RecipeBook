@@ -1,40 +1,49 @@
 <template>
     <div class="vue-tempalte">
-    <form>
-      <h3>RecipeBook Sign Up</h3>
-      <div class="form-group">
+    <form novalidate @submit.prevent="onSubmit()">
+      <div class="form-group-signup">
+        <h3>RecipeBook Sign Up</h3>
+        <div class="alert alert-info" v-if="isBusy">Loading...</div>
+        <div class="alert alert-danger" v-if="error">{{ error }}</div>
+      </div>
+      <div class="form-group form-group-signup">
           <label>First Name</label>
           <input type="text" 
-            v-model="firstName"
+            v-model="model.firstName"
+            placeholder="Enter your first name"
             class="form-control form-control-lg" 
             required />
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-signup">
           <label>Last Name</label>
           <input type="text" 
-            v-model="lastName"
+            v-model="model.lastName"
+            placeholder="Enter your last name"
             class="form-control form-control-lg" 
             required />
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-signup">
           <label>Username</label>
           <input type="text" 
-            v-model="userName"
+            v-model="model.userName"
+            placeholder="Enter your chosen username"
             class="form-control form-control-lg" 
             required />
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-signup">
           <label>Password</label>
           <input type="password" 
-            v-model="password"
+            v-model="model.password"
+            placeholder="Enter your chosen password"
             class="form-control form-control-lg" 
             autocomplete="off" 
             required />
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-signup">
           <label>Verify Password</label>
           <input type="password" 
-            v-model="verificationPassword"
+            v-model="model.verificationPassword"
+            placeholder="Re-enter your chosen password"
             class="form-control form-control-lg"  
             autocomplete="off" 
             required />
@@ -45,48 +54,35 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import { computed, reactive } from "vue";
+    import store from "../store/store";
     export default {
-        name: 'signup',
-        data: () => ({
-            firstName: '',
-            lastName: '',
-            password: '',
-            userId: 0,
-            userName: '',
-            verificationPassword: '',
-            authenticated: false
-        }),
-         methods: {
-            onSubmit() {
-                // password does not match
-                if (this.password !== this.verificationPassword) {
-                    alert('Passwords do not match! Please re-enter your password and vefiry entry to try again.');
-                    this.password = '';
-                    this.verificationPassword = '';
-                } else {
-                    const formData = {
-                        userName: this.userName,
-                        password: this.password,
-                        firstName: this.firstName,
-                        lastName: this.lastName
+        setup() {
+            const model = reactive({ userName: "", password: "", verificationPassword: "", firstName: "", lastName: "" });
+            function onSubmit() {
+                store.dispatch("requiredIndication");
+                if (model.verificationPassword === model.password) {
+                  if ((model.userName.length > 0) &&
+                    (model.password.length > 0) &&
+                    (model.firstName.length > 0) &&
+                    (model.lastName.length > 0)) {
+                      store.dispatch("create", model);
                     }
-                    axios.get('/api/user/usernameexists', { params: { userName: this.userName } })
-                    .then((message) => {
-                        if (message && !message.data) {
-                          axios.post('/api/user/createuser', formData)
-                            .then((response) => {
-                              console.log()
-                              if (response && response.data) {
-                                this.userId = response.data.userId;
-                                this.$router.push('/');
-                              }
-                            }).catch(err => { console.log(err); })
-                        }
-                        console.log(message);
-                    }).catch(error => { console.log(error); });
+                } else {
+                    store.dispatch("setComponentError", "Passwords do not Match!");
+                    model.verificationPassword = "";
+                    model.password = "";
                 }
-              }
-         }
-    }
+            }
+            return {
+                closeModal: () => store.commit("setModal", false),
+                modal: computed(() => store.state.modal),
+                error: computed(() => store.state.error),
+                isBusy: computed(() => store.state.isBusy),
+                model,
+                onSubmit,
+                showModal: () => store.commit("setModal", true)
+            }
+        }
+    };
 </script>

@@ -4,26 +4,22 @@ import axios from 'axios';
 
 import router from './router/router';
 import store from './store/store';
+import './assets/bootstrap/css/bootstrap.min.css';
+import './assets/css/main.css';
 
-import './assets/bootstrap/css/bootstrap.min.css'
-import './assets/css/main.css'
-
-axios.defaults.baseURL = 'http://localhost:3000/'
-axios.defaults.headers.get['Accepts'] = 'application/json'
+axios.defaults.baseURL = 'http://localhost:3000/';
+axios.defaults.headers.get['Accepts'] = 'application/json';
 
 const reqInterceptor = axios.interceptors.request.use(config => {
   console.log('Request Interceptor', config)
   return config
-})
+});
 const resInterceptor = axios.interceptors.response.use(res => {
   console.log('Response Interceptor', res)
   return res
-})
+});
 
-axios.interceptors.request.eject(reqInterceptor)
-axios.interceptors.response.eject(resInterceptor)
+axios.interceptors.request.eject(reqInterceptor);
+axios.interceptors.response.eject(resInterceptor);
 
-const app = createApp(App);
-app.use(store);
-app.use(router);
-app.mount("#app");
+createApp(App).use(store).use(router).mount("#app");

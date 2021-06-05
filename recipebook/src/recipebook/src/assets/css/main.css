@@ -11,14 +11,21 @@ body {
 body,
 html,
 #app,
-.App,
-.vue-tempalte {
+.app-tempalte {
   width: 100%;
   height: 100%;
 }
 
-.form-group {
+.form-group-login {
   padding-bottom: 10%;
+}
+
+.form-group-signup {
+  padding-bottom: 5%;
+}
+
+.formError {
+  border: 3px solid #ff0000;
 }
 
 .navbar-light {
@@ -27,7 +34,7 @@ html,
 }
 
 div.App div.vertical-center {
-  padding-top: 5%;
+  padding-top: 12%;
 }
 
 .inner-block {
@@ -54,4 +61,29 @@ div.App div.vertical-center {
 
 label {
   font-weight: 500;
+}
+
+.modal-vue .overlay {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-vue .modal {
+  position: relative;
+  width: 300px;
+  z-index: 9999;
+  margin: 0 auto;
+  padding: 20px 30px;
+  background-color: #fff;
+}
+
+.modal-vue .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }

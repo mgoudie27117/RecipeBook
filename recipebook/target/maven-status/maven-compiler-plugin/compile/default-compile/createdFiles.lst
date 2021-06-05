@@ -1,0 +1,5 @@
+com\sweng\recipebook\controller\UserController.class
+com\sweng\recipebook\data\DatabaseConnection.class
+com\sweng\recipebook\data\UserDataAccess.class
+com\sweng\recipebook\RecipebookApplication.class
+com\sweng\recipebook\security\JWTHandler.class

@@ -1,58 +1,50 @@
 <template>
     <div class="vue-tempalte">
-        <form>
-            <h3>RecipeBook Sign In</h3>
-            <div class="form-group">
+        <form novalidate @submit.prevent="onSubmit()">
+            <div class="form-group-login">
+                <h3>RecipeBook Sign In</h3>
+                <div class="alert alert-info" v-if="isBusy">Loading...</div>
+                <div class="alert alert-danger" v-if="error">{{ error }}</div>
+            </div>
+            <div class="form-group form-group-login">
                 <label>Username</label>
                 <input type="text" 
-                    id="userName"
-                    v-model="userName"
+                    v-model="model.userName"
                     class="form-control form-control-lg" 
-                    autocomplete="off" />
+                    autocomplete="off" 
+                    required />
             </div>
-            <div class="form-group">
+            <div class="form-group form-group-login">
                 <label>Password</label>
                 <input type="password" 
-                    id="password"
-                    v-model="password"
+                    v-model="model.password"
                     class="form-control form-control-lg" 
-                    autocomplete="off" />
+                    autocomplete="off" 
+                    required />
             </div>
-            <button type="submit" @click.stop.prevent="onSubmit()" class="btn btn-dark btn-lg btn-block">Sign In</button>
+            <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
         </form>
     </div>
 </template>
 
 <script>
-    import axios from 'axios';
+    import { computed, reactive } from "vue";
+    import store from "../store/store";
     export default {
-        name: 'login',
-        data: () => ({
-                firstName: '',
-                lastName: '',
-                password: '',
-                userId: '',
-                userName: '',
-                authenticated: false
-        }),
-        methods: {
-            onSubmit() {
-                const formData = {
-                    userName: this.userName,
-                    password: this.password
+        setup() {
+            const model = reactive({ userName: "", password: "" });
+            function onSubmit() {
+                store.dispatch("requiredIndication");
+                if (model.userName.length > 0 && model.password.length > 0) {
+                    store.dispatch("login", model);
                 }
-                axios.post('/api/user/login', formData)
-                    .then((message) => {
-                        console.log(message.data);
-                        if (message && message.data && message.data.authenticated) {
-                            this.authenticated = message.data.authenticated;
-                            this.firstName = message.data.firstName;
-                            this.lastName = message.data.lastName;
-                            this.userId = message.data.userId;
-                            this.$router.push('/landing');
-                        }
-                    }).catch(error => { console.log(error); });
+            }
+            return {
+                error: computed(() => store.state.error),
+                isBusy: computed(() => store.state.isBusy),
+                model,
+                onSubmit
             }
         }
-    }    
+    };
 </script>

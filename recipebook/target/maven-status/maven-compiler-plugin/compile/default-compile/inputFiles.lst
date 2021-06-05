@@ -1,6 +1,8 @@
-C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\User.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\security\JWTHandler.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\UserController.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\security\JWTStatus.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DatabaseConnection.java
-C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\IUser.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeBookUser.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\UserDataAccess.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\IRecipeBookUser.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\RecipebookApplication.java
