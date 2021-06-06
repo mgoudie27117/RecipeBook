@@ -21,6 +21,7 @@
     "vee-validate": "^4.4.3",
     "vue": "^3.0.0",
     "vue-router": "^4.0.8",
+    "vue-universal-modal": "^1.1.2",
     "vuex": "^4.0.1",
     "yup": "^0.32.9"
   },

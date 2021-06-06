@@ -1,10 +1,5 @@
 <template>
-  <div class="vue-tempalte modal-vue">
-    <!-- Modal -->
-    <div class="overlay" v-if="modal"></div>
-    <div class="modal" v-if="modal">
-      <h3>{{ modalMessage }}</h3>
-    </div>
+  <div class="vue-tempalte">
     
     <!-- Navigation -->
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row fixed-top">
@@ -50,8 +45,6 @@
         error: computed(() => store.state.error),
         isAuthenticated: computed(() => store.getters.isAuthenticated),
         isBusy: computed(() => store.state.isBusy),
-        modal: computed(() => store.state.modal),
-        modalMessage: computed(() => store.state.modalMessage),
         onLogout: () => store.dispatch("logout")
       }
     }

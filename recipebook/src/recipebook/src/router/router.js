@@ -39,8 +39,7 @@ const router = createRouter({
 
 router.afterEach(() => {
     store.commit("clearError");
-    store.commit("setModal", false);
-    store.commit("setModalMessage", "");
+    store.commit("clearSuccess");
 });
 
 export default router;

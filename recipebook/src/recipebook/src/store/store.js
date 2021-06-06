@@ -6,21 +6,18 @@ const store = createStore({
     state: {
         error: "",
         isBusy: false,
-        modal: true,
-        modalMessage: "",
         model: {},
+        success: "",
         token: ""
     },
     mutations: {
         clearBusy: (state) => state.isBusy = false,
         clearError: (state) => state.error = "",
-        clearToken: (state) => {
-            state.token = "";
-        },
+        clearSuccess: (state) => state.success = "",
+        clearToken: (state) => state.token = "",
         setBusy: (state) => state.isBusy = true,
         setError: (state, error) => state.error = error,
-        setModal: (state, setter) => state.modal = setter,
-        setModalMessage: (state, message) => state.modalMessage = message,
+        setSuccess: (state, success) => state.success = success,
         setToken: (state, responseData) => {
             state.token = responseData.accessToken;
             state.model = responseData;
@@ -34,18 +31,18 @@ const store = createStore({
                 axios.get('/api/user/usernameexists', { params: { userName: formData.userName } })
                     .then((message) => {
                         if (!message.data) {
-                            axios.post('/api/user/createuser', formData)
+                            commit("setSuccess", "The username is available. Please wait while the account is created.");
+                            setTimeout(() => {
+                                axios.post('/api/user/createuser', formData)
                                 .then((response) => {
                                     if (response.data) {
-                                        console.log('Set modal to true.')
-                                        commit("setModal", true);
-                                        commit("setModalMessage", "Account created. Please login to enjoy RecipeBook!")
+                                        commit("setSuccess", "The account has been created. Please click on the Sign in button, or wait to be redirected to the sign in page.");
                                         setTimeout(() => {
-                                            console.log('Redirecting!')
                                             router.push("/");
-                                        }, 5000);
+                                        }, 10000);
                                     }
                                 });
+                            }, 3000);
                         } else {
                             commit("setError", "Username already exists!");
                         }
@@ -97,9 +94,6 @@ const store = createStore({
         }
     },
     getters: {
-        activeModal: (state) => {
-            return state.modal;
-        },
         isAuthenticated: (state) => {
             return state.token.length > 0;
         }

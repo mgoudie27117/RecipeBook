@@ -5,6 +5,7 @@
         <h3>RecipeBook Sign Up</h3>
         <div class="alert alert-info" v-if="isBusy">Loading...</div>
         <div class="alert alert-danger" v-if="error">{{ error }}</div>
+        <div class="alert alert-success" v-if="success">{{ success }}</div>
       </div>
       <div class="form-group form-group-signup">
           <label>First Name</label>
@@ -58,7 +59,12 @@
     import store from "../store/store";
     export default {
         setup() {
-            const model = reactive({ userName: "", password: "", verificationPassword: "", firstName: "", lastName: "" });
+            const model = reactive({ userName: "", 
+                                      password: "", 
+                                      verificationPassword: "", 
+                                      firstName: "", 
+                                      lastName: ""
+                                    });
             function onSubmit() {
                 store.dispatch("requiredIndication");
                 if (model.verificationPassword === model.password) {
@@ -70,18 +76,15 @@
                     }
                 } else {
                     store.dispatch("setComponentError", "Passwords do not Match!");
-                    model.verificationPassword = "";
-                    model.password = "";
+                    model.verificationPassword,model.password = "";
                 }
             }
             return {
-                closeModal: () => store.commit("setModal", false),
-                modal: computed(() => store.state.modal),
+                success: computed(() => store.state.success),
                 error: computed(() => store.state.error),
                 isBusy: computed(() => store.state.isBusy),
                 model,
-                onSubmit,
-                showModal: () => store.commit("setModal", true)
+                onSubmit
             }
         }
     };
