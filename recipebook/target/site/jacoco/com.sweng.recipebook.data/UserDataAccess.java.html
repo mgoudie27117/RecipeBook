@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * UserDataAccess - Data access class for application users.
  */
 @Component(&quot;UserDataAccess&quot;)
-<span class="nc" id="L14">public class UserDataAccess {</span>
+<span class="fc" id="L14">public class UserDataAccess {</span>
 
 <span class="fc" id="L16">    private static Connection connection = DatabaseConnection.getConnection();</span>
 
@@ -33,11 +33,8 @@ import org.springframework.stereotype.Component;
 <span class="fc" id="L33">        statement.setString(2, password);</span>
 <span class="fc" id="L34">        statement.setString(3, firstName);</span>
 <span class="fc" id="L35">        statement.setString(4, lastName);</span>
-<span class="fc" id="L36">        int inserted = statement.executeUpdate();</span>
-<span class="pc bpc" id="L37" title="1 of 2 branches missed.">        if (inserted &gt; 0) {</span>
-<span class="fc" id="L38">            return validateUser(password, userName);</span>
-        }
-<span class="nc" id="L40">        return null;</span>
+<span class="fc" id="L36">        statement.executeUpdate();</span>
+<span class="fc" id="L37">        return validateUser(password, userName);</span>
     }
 
     // NEW
@@ -48,11 +45,11 @@ import org.springframework.stereotype.Component;
      * @throws SQLException
      */
     public static void removeUser(int userId) throws SQLException {
-<span class="fc" id="L51">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
-<span class="fc" id="L52">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L53">        statement.setInt(1, userId);</span>
-<span class="fc" id="L54">        statement.executeUpdate();</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L48">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L49">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L50">        statement.setInt(1, userId);</span>
+<span class="fc" id="L51">        statement.executeUpdate();</span>
+<span class="fc" id="L52">    }</span>
 
     /**
      * validateUser - Method to validate the user's username and password in the
@@ -64,17 +61,17 @@ import org.springframework.stereotype.Component;
      * @throws SQLException
      */
     public static RecipeBookUser validateUser(String password, String userName) throws SQLException {
-<span class="fc" id="L67">        RecipeBookUser result = new RecipeBookUser(password, userName);</span>
-<span class="fc" id="L68">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
-<span class="fc" id="L69">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L70">        statement.setString(1, userName);</span>
-<span class="fc" id="L71">        statement.setString(2, password);</span>
-<span class="fc" id="L72">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L74">            return new RecipeBookUser(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
-<span class="fc" id="L75">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
+<span class="fc" id="L64">        RecipeBookUser result = new RecipeBookUser(password, userName);</span>
+<span class="fc" id="L65">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
+<span class="fc" id="L66">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L67">        statement.setString(1, userName);</span>
+<span class="fc" id="L68">        statement.setString(2, password);</span>
+<span class="fc" id="L69">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L71">            return new RecipeBookUser(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
+<span class="fc" id="L72">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
         }
-<span class="fc" id="L77">        return result;</span>
+<span class="fc" id="L74">        return result;</span>
     }
 
     // NEW
@@ -87,15 +84,15 @@ import org.springframework.stereotype.Component;
      * @throws SQLException
      */
     public static Boolean verifyDuplicateUsername(String userName) throws SQLException {
-<span class="fc" id="L90">        int result = 0;</span>
-<span class="fc" id="L91">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
-<span class="fc" id="L92">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L93">        statement.setString(1, userName);</span>
-<span class="fc" id="L94">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L96">            result++;</span>
+<span class="fc" id="L87">        int result = 0;</span>
+<span class="fc" id="L88">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
+<span class="fc" id="L89">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L90">        statement.setString(1, userName);</span>
+<span class="fc" id="L91">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L93">            result++;</span>
         }
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        return result &gt; 0;</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        return result &gt; 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

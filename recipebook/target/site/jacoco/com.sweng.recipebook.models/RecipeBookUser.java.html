@@ -54,7 +54,7 @@ public class RecipeBookUser implements IRecipeBookUser {
         try {
 <span class="fc" id="L55">            RecipeBookUser result = UserDataAccess.createUser(this.firstName, this.lastName, this.password,</span>
 <span class="fc" id="L56">                    this.userName);</span>
-<span class="pc bpc" id="L57" title="2 of 4 branches missed.">            if (result != null &amp;&amp; result.getUserId() &gt; 0) {</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            if (result != null) {</span>
 <span class="fc" id="L58">                this.userId = result.getUserId();</span>
             }
 <span class="pc" id="L60">        } catch (SQLException ex) {</span>
@@ -66,7 +66,7 @@ public class RecipeBookUser implements IRecipeBookUser {
      * getAccessToken - Getter for user's access token.
      */
     public String getAccessToken() {
-<span class="nc" id="L69">        return accessToken;</span>
+<span class="fc" id="L69">        return accessToken;</span>
     }
 
     /**
@@ -110,37 +110,36 @@ public class RecipeBookUser implements IRecipeBookUser {
     public void login() {
         try {
 <span class="fc" id="L112">            RecipeBookUser result = UserDataAccess.validateUser(this.password, this.userName);</span>
-<span class="pc bpc" id="L113" title="2 of 6 branches missed.">            if (result != null &amp;&amp; result.getFirstName().length() &gt; 0 &amp;&amp; result.getLastName().length() &gt; 0</span>
-<span class="pc bpc" id="L114" title="1 of 2 branches missed.">                    &amp;&amp; result.getUserId() &gt; 0) {</span>
-<span class="fc" id="L115">                this.authenticated = true;</span>
-<span class="fc" id="L116">                this.firstName = result.getFirstName();</span>
-<span class="fc" id="L117">                this.lastName = result.getLastName();</span>
-<span class="fc" id="L118">                this.userId = result.getUserId();</span>
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">            if (result != null &amp;&amp; result.getUserId() &gt; 0) {</span>
+<span class="fc" id="L114">                this.authenticated = true;</span>
+<span class="fc" id="L115">                this.firstName = result.getFirstName();</span>
+<span class="fc" id="L116">                this.lastName = result.getLastName();</span>
+<span class="fc" id="L117">                this.userId = result.getUserId();</span>
             }
-<span class="pc" id="L120">        } catch (SQLException ex) {</span>
-<span class="nc" id="L121">            System.out.println(ex.getMessage());</span>
+<span class="pc" id="L119">        } catch (SQLException ex) {</span>
+<span class="nc" id="L120">            System.out.println(ex.getMessage());</span>
         }
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L122">    }</span>
 
     /**
      * setAccessToken - Mutator for user's access token.
      */
     public void setAccessToken(String accessToken) {
-<span class="fc" id="L129">        this.accessToken = accessToken;</span>
-<span class="fc" id="L130">    }</span>
+<span class="fc" id="L128">        this.accessToken = accessToken;</span>
+<span class="fc" id="L129">    }</span>
 
     /**
      * verifyDuplicateUsername - Method to verify if the username already exists in
      * the application database.
      */
     public Boolean verifyDuplicateUsername() {
-<span class="fc" id="L137">        Boolean result = false;</span>
+<span class="fc" id="L136">        Boolean result = false;</span>
         try {
-<span class="fc" id="L139">            result = UserDataAccess.verifyDuplicateUsername(this.userName);</span>
-<span class="pc" id="L140">        } catch (SQLException ex) {</span>
-<span class="nc" id="L141">            System.out.println(ex.getMessage());</span>
+<span class="fc" id="L138">            result = UserDataAccess.verifyDuplicateUsername(this.userName);</span>
+<span class="pc" id="L139">        } catch (SQLException ex) {</span>
+<span class="nc" id="L140">            System.out.println(ex.getMessage());</span>
         }
-<span class="fc" id="L143">        return result;</span>
+<span class="fc" id="L142">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user")
 public class UserController {
 
+	private static final JWTHandler JWT = new JWTHandler();
+
 	/**
 	 * createuser - API call to create a user for the application and add to the
 	 * database.
@@ -29,8 +31,7 @@ public class UserController {
 	@RequestMapping(value = "/createuser", method = RequestMethod.POST)
 	public RecipeBookUser createuser(@RequestBody Map<String, String> payload) {
 		RecipeBookUser result = new RecipeBookUser();
-		if (!payload.isEmpty() && payload.containsKey("userName") && payload.containsKey("password")
-				&& payload.containsKey("firstName") && payload.containsKey("lastName")) {
+		if (!payload.isEmpty()) {
 			result = new RecipeBookUser(payload.get("firstName"), payload.get("lastName"), payload.get("password"), 0,
 					payload.get("userName"));
 			result.createUser();
@@ -48,11 +49,11 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public RecipeBookUser login(@RequestBody Map<String, String> payload) {
 		RecipeBookUser result = null;
-		if (!payload.isEmpty() && payload.containsKey("userName") && payload.containsKey("password")) {
+		if (!payload.isEmpty()) {
 			result = new RecipeBookUser(payload.get("password"), payload.get("userName"));
 			result.login();
 			if (result.getAuthenticated()) {
-				result.setAccessToken(JWTHandler.generateToken(result));
+				result.setAccessToken(JWT.generateToken(result));
 			}
 		}
 		return result;

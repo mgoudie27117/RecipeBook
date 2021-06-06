@@ -12,10 +12,14 @@ import java.util.Date;
 public class JWTHandler {
 
     public static final String SECRET = "AmazingRecipes";
-    public static final int EXPIRATION = 15;
+    public static final int EXPIRATION = 1;
+
+    public JWTHandler() {
+
+    }
 
     // TEST ME NEW
-    public static String generateToken(RecipeBookUser user) {
+    public String generateToken(RecipeBookUser user) {
         return JWT.create().withIssuer("auth0").withClaim("userId", user.getUserId())
                 .withClaim("userName", user.getUserId()).withClaim("firstName", user.getFirstName())
                 .withClaim("lastName", user.getLastName())
@@ -24,7 +28,7 @@ public class JWTHandler {
     }
 
     // TEST ME NEW
-    public static String refreshToken(String token) {
+    public String refreshToken(String token) {
         DecodedJWT jwt = JWT.decode(token);
         RecipeBookUser user = new RecipeBookUser(jwt.getClaim("firstName").toString(),
                 jwt.getClaim("lastName").toString(), "", 0, jwt.getClaim("userName").toString());
@@ -32,7 +36,7 @@ public class JWTHandler {
     }
 
     // TEST ME NEW
-    public static JWTStatus verifyToken(String token) {
+    public JWTStatus verifyToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             JWTVerifier verifier = JWT.require(algorithm).withIssuer("auth0").build();

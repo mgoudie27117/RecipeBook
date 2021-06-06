@@ -33,11 +33,8 @@ public class UserDataAccess {
         statement.setString(2, password);
         statement.setString(3, firstName);
         statement.setString(4, lastName);
-        int inserted = statement.executeUpdate();
-        if (inserted > 0) {
-            return validateUser(password, userName);
-        }
-        return null;
+        statement.executeUpdate();
+        return validateUser(password, userName);
     }
 
     // NEW

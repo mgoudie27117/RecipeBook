@@ -54,7 +54,7 @@ public class RecipeBookUser implements IRecipeBookUser {
         try {
             RecipeBookUser result = UserDataAccess.createUser(this.firstName, this.lastName, this.password,
                     this.userName);
-            if (result != null && result.getUserId() > 0) {
+            if (result != null) {
                 this.userId = result.getUserId();
             }
         } catch (SQLException ex) {
@@ -110,8 +110,7 @@ public class RecipeBookUser implements IRecipeBookUser {
     public void login() {
         try {
             RecipeBookUser result = UserDataAccess.validateUser(this.password, this.userName);
-            if (result != null && result.getFirstName().length() > 0 && result.getLastName().length() > 0
-                    && result.getUserId() > 0) {
+            if (result != null && result.getUserId() > 0) {
                 this.authenticated = true;
                 this.firstName = result.getFirstName();
                 this.lastName = result.getLastName();

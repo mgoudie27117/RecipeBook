@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(&quot;/api/user&quot;)
 <span class="fc" id="L19">public class UserController {</span>
 
+<span class="fc" id="L21">	private static final JWTHandler JWT = new JWTHandler();</span>
+
 	/**
 	 * createuser - API call to create a user for the application and add to the
 	 * database.
@@ -28,14 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 	 */
 	@RequestMapping(value = &quot;/createuser&quot;, method = RequestMethod.POST)
 	public RecipeBookUser createuser(@RequestBody Map&lt;String, String&gt; payload) {
-<span class="fc" id="L31">		RecipeBookUser result = new RecipeBookUser();</span>
-<span class="pc bpc" id="L32" title="3 of 6 branches missed.">		if (!payload.isEmpty() &amp;&amp; payload.containsKey(&quot;userName&quot;) &amp;&amp; payload.containsKey(&quot;password&quot;)</span>
-<span class="pc bpc" id="L33" title="2 of 4 branches missed.">				&amp;&amp; payload.containsKey(&quot;firstName&quot;) &amp;&amp; payload.containsKey(&quot;lastName&quot;)) {</span>
-<span class="fc" id="L34">			result = new RecipeBookUser(payload.get(&quot;firstName&quot;), payload.get(&quot;lastName&quot;), payload.get(&quot;password&quot;), 0,</span>
-<span class="fc" id="L35">					payload.get(&quot;userName&quot;));</span>
-<span class="fc" id="L36">			result.createUser();</span>
+<span class="fc" id="L33">		RecipeBookUser result = new RecipeBookUser();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">		if (!payload.isEmpty()) {</span>
+<span class="fc" id="L35">			result = new RecipeBookUser(payload.get(&quot;firstName&quot;), payload.get(&quot;lastName&quot;), payload.get(&quot;password&quot;), 0,</span>
+<span class="fc" id="L36">					payload.get(&quot;userName&quot;));</span>
+<span class="fc" id="L37">			result.createUser();</span>
 		}
-<span class="fc" id="L38">		return result;</span>
+<span class="fc" id="L39">		return result;</span>
 	}
 
 	/**
@@ -47,15 +48,15 @@ import org.springframework.web.bind.annotation.RestController;
 	 */
 	@RequestMapping(value = &quot;/login&quot;, method = RequestMethod.POST)
 	public RecipeBookUser login(@RequestBody Map&lt;String, String&gt; payload) {
-<span class="fc" id="L50">		RecipeBookUser result = null;</span>
-<span class="pc bpc" id="L51" title="2 of 6 branches missed.">		if (!payload.isEmpty() &amp;&amp; payload.containsKey(&quot;userName&quot;) &amp;&amp; payload.containsKey(&quot;password&quot;)) {</span>
-<span class="fc" id="L52">			result = new RecipeBookUser(payload.get(&quot;password&quot;), payload.get(&quot;userName&quot;));</span>
-<span class="fc" id="L53">			result.login();</span>
-<span class="fc bfc" id="L54" title="All 2 branches covered.">			if (result.getAuthenticated()) {</span>
-<span class="fc" id="L55">				result.setAccessToken(JWTHandler.generateToken(result));</span>
+<span class="fc" id="L51">		RecipeBookUser result = null;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">		if (!payload.isEmpty()) {</span>
+<span class="fc" id="L53">			result = new RecipeBookUser(payload.get(&quot;password&quot;), payload.get(&quot;userName&quot;));</span>
+<span class="fc" id="L54">			result.login();</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">			if (result.getAuthenticated()) {</span>
+<span class="fc" id="L56">				result.setAccessToken(JWT.generateToken(result));</span>
 			}
 		}
-<span class="fc" id="L58">		return result;</span>
+<span class="fc" id="L59">		return result;</span>
 	}
 
 	/**
@@ -67,7 +68,7 @@ import org.springframework.web.bind.annotation.RestController;
 	 */
 	@RequestMapping(value = &quot;/usernameexists&quot;, method = RequestMethod.GET)
 	public Boolean usernameexists(@RequestParam String userName) {
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">		return (userName.length() &gt; 0) ? new RecipeBookUser(&quot;&quot;, userName).verifyDuplicateUsername() : false;</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">		return (userName.length() &gt; 0) ? new RecipeBookUser(&quot;&quot;, userName).verifyDuplicateUsername() : false;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
