@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IngredientComposite.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.models</a> &gt; <span class="el_source">IngredientComposite.java</span></div><h1>IngredientComposite.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.models;
+
+import java.util.ArrayList;
+
+/**
+ * IngredientComposite - Ingredient class that extends Ingredient to implement
+ * composite pattern.
+ */
+public class IngredientComposite extends Ingredient {
+
+    private ArrayList&lt;Ingredient&gt; ingredients;
+
+<span class="fc" id="L13">    public IngredientComposite() {</span>
+<span class="fc" id="L14">        ingredients = new ArrayList&lt;Ingredient&gt;();</span>
+<span class="fc" id="L15">    }</span>
+
+    /**
+     * addIngredient - Method to add an ingredient to the composite.
+     * 
+     * @param ingredient - Ingredient to add.
+     */
+    public void addIngredient(Ingredient ingredient) {
+<span class="fc" id="L23">        ingredients.add(ingredient);</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     * getIngredients - Getter for composite ingredients.
+     * 
+     * @return - ArrayList of ingredients.
+     */
+    public ArrayList&lt;Ingredient&gt; getIngredients() {
+<span class="fc" id="L32">        return ingredients;</span>
+    }
+
+    /**
+     * removeIngredient - Method to remove an ingredient from the composite.
+     * 
+     * @param ingredient - Ingredient to remove.
+     */
+    public void removeIngredient(Ingredient ingredient) {
+<span class="fc" id="L41">        ingredients.remove(ingredient);</span>
+<span class="fc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

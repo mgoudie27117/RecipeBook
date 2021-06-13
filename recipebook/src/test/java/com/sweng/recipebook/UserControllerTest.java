@@ -2,7 +2,7 @@ package com.sweng.recipebook;
 
 import com.sweng.recipebook.controller.UserController;
 import com.sweng.recipebook.data.UserDataAccess;
-import com.sweng.recipebook.models.RecipeBookUser;
+import com.sweng.recipebook.models.User;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,22 +31,26 @@ public class UserControllerTest {
         payload.put("password", "test123");
         payload.put("firstName", "Mike");
         payload.put("lastName", "Goudie");
-        RecipeBookUser TestUser = controllerTest.createuser(payload);
+        User TestUser = controllerTest.createuser(payload);
         assertNotEquals(0, TestUser.getUserId());
-        UserDataAccess.removeUser(TestUser.getUserId());
+        new UserDataAccess().removeUser(TestUser.getUserId());
+        User TestUserEmpty = controllerTest.createuser(new HashMap<String, String>());
+        assertEquals(0, TestUserEmpty.getUserId());
     }
 
     /**
      * loginTest - Test method for UserController login functionality.
      * 
      * Related Test Case Number(s): T3
+     * 
+     * @throws SQLException
      */
     @Test
-    public void loginTest() {
+    public void loginTest() throws SQLException {
         Map<String, String> payload1 = new HashMap<String, String>();
         payload1.put("userName", "mg");
         payload1.put("password", "test123");
-        RecipeBookUser TestUser1 = controllerTest.login(payload1);
+        User TestUser1 = controllerTest.login(payload1);
         assertEquals("", TestUser1.getFirstName());
         assertEquals("", TestUser1.getLastName());
         assertEquals(0, TestUser1.getUserId());
@@ -55,15 +59,18 @@ public class UserControllerTest {
         Map<String, String> payload2 = new HashMap<String, String>();
         payload2.put("userName", "mgoudie");
         payload2.put("password", "TEST");
-        RecipeBookUser TestUser2 = controllerTest.login(payload2);
+        User TestUser2 = controllerTest.login(payload2);
         assertEquals("Michael", TestUser2.getFirstName());
         assertEquals("Goudie", TestUser2.getLastName());
         assertEquals(1, TestUser2.getUserId());
         assertEquals("mgoudie", TestUser2.getUserName());
         assertEquals(true, TestUser2.getAccessToken().length() > 1);
-        Map<String, String> payload3 = new HashMap<String, String>();
-        RecipeBookUser TestUser3 = controllerTest.login(payload3);
-        assertEquals(TestUser3, null);
+        User TestUser3 = controllerTest.login(new HashMap<String, String>());
+        assertEquals("", TestUser3.getFirstName());
+        assertEquals("", TestUser3.getLastName());
+        assertEquals(0, TestUser3.getUserId());
+        assertEquals("", TestUser3.getUserName());
+        assertEquals("", TestUser3.getAccessToken());
     }
 
     /**
@@ -71,9 +78,11 @@ public class UserControllerTest {
      * username already exists functionality.
      * 
      * Related Test Case Number(s): T8
+     * 
+     * @throws SQLException
      */
     @Test
-    public void verifyDuplicateUsernameTest() {
+    public void verifyDuplicateUsernameTest() throws SQLException {
         String TestUsername1 = "_";
         assertEquals(false, controllerTest.usernameexists(TestUsername1));
         String TestUsername2 = "mgoudie";

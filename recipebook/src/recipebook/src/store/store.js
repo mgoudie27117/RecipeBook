@@ -1,11 +1,16 @@
 import { createStore } from "vuex";
 import axios from "../axios-connection";
 import router from "../router/router";
+import createPersistedState from 'vuex-persistedstate'
 
 const store = createStore({
+    plugins: [createPersistedState({
+        storage: window.sessionStorage
+    })],
     state: {
         error: "",
         isBusy: false,
+        measureUnits: [],
         model: {},
         success: "",
         token: ""
@@ -17,6 +22,7 @@ const store = createStore({
         clearToken: (state) => state.token = "",
         setBusy: (state) => state.isBusy = true,
         setError: (state, error) => state.error = error,
+        setMeasureUnits: (state, units) => state.measureUnits = units,
         setSuccess: (state, success) => state.success = success,
         setToken: (state, responseData) => {
             state.token = responseData.accessToken;
@@ -53,7 +59,17 @@ const store = createStore({
                 commit("clearBusy");
             }
         },
-        login: async ({ commit }, formData) => {
+        getRecipeMeasures: async({ commit }) => {
+            axios.get('api/measure/recipemeasures')
+                .then((message) => {
+                    let units = [];
+                    message.data.forEach(unit => {
+                        units.push(unit.measureUnit);
+                    });
+                    commit("setMeasureUnits", units);
+                });
+        },
+        login: async ({ commit, dispatch }, formData) => {
             try {
                 commit("setBusy");
                 commit("clearError");
@@ -63,6 +79,7 @@ const store = createStore({
                             commit("setError", "Invalid login! Please try again.");
                         } else {
                             commit("setToken", message.data);
+                            dispatch("getRecipeMeasures");
                             router.push("/home");
                         }
                     });
@@ -74,23 +91,84 @@ const store = createStore({
         },
         logout: ({ commit }) => {
             commit("clearToken");
+            sessionStorage.clear();
             router.push("/");
         },
         setComponentError: ({ commit }, message) => {
             commit("setError", message);
         },
+        shareRecipe: ({ commit }, recipe) => {
+            commit("setBusy");
+            axios.post('/api/recipe/checkuserrecipeexists', { recipeName: recipe.SharedRecipe.recipeName, token: recipe.Token })
+                .then(message => {
+                    if (message.data) {
+                        commit("setError", "Recipe name already created by this user!");
+                    } else {
+                        axios.post('/api/recipe/sharerecipe', recipe)
+                            .then((message) => {
+                                commit("clearBusy");
+                                if (message.data === "SUCCESS") {
+                                    commit("setSuccess", "Successfully shared recipe!"); // <-- if none single or many
+                                    // console.log(recipe.Files[0].media.file);
+                                    // var formData = new FormData();
+                                    // formData.append('file', recipe.Files[0].media.file);
+                                    // const config = { headers: { 'content-type': 'multipart/form-data' } };
+                                    // axios.post('/api/recipemedia/uploadrecipemedia', formData, config).then((message) => { console.log(message); });
+                                } else if (message.data === "FAILED_TO_INSERT_RECIPE") {
+                                    commit("setError", "Failed to share recipe.");
+                                } else if (message.data === "MISSING_REQUEST_INFORMATION") {
+                                    commit("setError", "Request missing required information.");
+                                }
+                            });
+                    }
+            });
+        },
         requiredIndication: ({ commit }) => {
+            let check = false;
             let good = "1px solid #ced4da";
             let error = "3px solid #FF0000";
-            let inputs = document.getElementsByTagName('input');
+            let inputs = document.querySelectorAll('input[type=text]');
             for (let i = 0; i < inputs.length; i++) {
                 if (inputs[i].value.length > 0) {
                     inputs[i].style.border = good;
                 } else {
                     inputs[i].style.border = error;
+                    check = true;
                 }
             }
-            commit("setError", "Please enter all required fields!");
+            if (check) {
+                commit("setError", "Please enter all required fields!");
+            } else {
+                commit("clearError");
+            }
+            return check;
+        },
+        requiredIndicationSelect: ({ commit }, verifier) => {
+            let check = false;
+            let good = "1px solid #ced4da";
+            let error = "3px solid #FF0000";
+            let inputs = document.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i].getAttribute('placeholder')) {
+                    check = true;
+                    verifier.forEach(item => {
+                        if (item === inputs[i].getAttribute('placeholder')) {
+                            check = false;
+                        }
+                    });
+                    if (check) {
+                        inputs[i].style.border = error;
+                    } else {
+                        inputs[i].style.border = good;
+                    }
+                } 
+            }
+            if (check) {
+                commit("setError", "Please enter all required fields!");
+            } else {
+                commit("clearError");
+            }
+            return check;
         }
     },
     getters: {

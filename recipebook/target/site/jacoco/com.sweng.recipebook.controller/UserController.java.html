@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.controller;
 
+import com.sweng.recipebook.data.DataAccessConcreteCreator;
+import com.sweng.recipebook.data.UserDataAccess;
 import com.sweng.recipebook.models.RecipeBookUser;
-import com.sweng.recipebook.security.JWTHandler;
-
+import com.sweng.recipebook.models.User;
+import java.sql.SQLException;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(&quot;/api/user&quot;)
-<span class="fc" id="L19">public class UserController {</span>
+<span class="fc" id="L21">public class UserController extends Controller {</span>
 
-<span class="fc" id="L21">	private static final JWTHandler JWT = new JWTHandler();</span>
+<span class="fc" id="L23">	private UserDataAccess userDataAccess = (UserDataAccess) new DataAccessConcreteCreator().createDataAccess(&quot;user&quot;);</span>
 
 	/**
 	 * createuser - API call to create a user for the application and add to the
@@ -29,14 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 	 * @return - RecipeBookUser object of the created user.
 	 */
 	@RequestMapping(value = &quot;/createuser&quot;, method = RequestMethod.POST)
-	public RecipeBookUser createuser(@RequestBody Map&lt;String, String&gt; payload) {
-<span class="fc" id="L33">		RecipeBookUser result = new RecipeBookUser();</span>
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">		if (!payload.isEmpty()) {</span>
-<span class="fc" id="L35">			result = new RecipeBookUser(payload.get(&quot;firstName&quot;), payload.get(&quot;lastName&quot;), payload.get(&quot;password&quot;), 0,</span>
-<span class="fc" id="L36">					payload.get(&quot;userName&quot;));</span>
-<span class="fc" id="L37">			result.createUser();</span>
+	public User createuser(@RequestBody Map&lt;String, String&gt; payload) throws SQLException {
+<span class="fc bfc" id="L35" title="All 2 branches covered.">		if (!payload.isEmpty()) {</span>
+<span class="fc" id="L36">			User result = userDataAccess.createUser(payload.get(&quot;firstName&quot;), payload.get(&quot;lastName&quot;),</span>
+<span class="fc" id="L37">					payload.get(&quot;password&quot;), payload.get(&quot;userName&quot;));</span>
+<span class="fc" id="L38">			return result;</span>
 		}
-<span class="fc" id="L39">		return result;</span>
+<span class="fc" id="L40">		return new RecipeBookUser();</span>
 	}
 
 	/**
@@ -44,19 +45,19 @@ import org.springframework.web.bind.annotation.RestController;
 	 * 
 	 * @param payload - JSON object passed in request body containing user
 	 *                information.
+	 * @throws SQLException
 	 * @return- RecipeBookUser object of the login result user.
 	 */
 	@RequestMapping(value = &quot;/login&quot;, method = RequestMethod.POST)
-	public RecipeBookUser login(@RequestBody Map&lt;String, String&gt; payload) {
-<span class="fc" id="L51">		RecipeBookUser result = null;</span>
-<span class="fc bfc" id="L52" title="All 2 branches covered.">		if (!payload.isEmpty()) {</span>
-<span class="fc" id="L53">			result = new RecipeBookUser(payload.get(&quot;password&quot;), payload.get(&quot;userName&quot;));</span>
-<span class="fc" id="L54">			result.login();</span>
+	public User login(@RequestBody Map&lt;String, String&gt; payload) throws SQLException {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">		if (!payload.isEmpty()) {</span>
+<span class="fc" id="L54">			User result = userDataAccess.validateUser(payload.get(&quot;password&quot;), payload.get(&quot;userName&quot;));</span>
 <span class="fc bfc" id="L55" title="All 2 branches covered.">			if (result.getAuthenticated()) {</span>
 <span class="fc" id="L56">				result.setAccessToken(JWT.generateToken(result));</span>
 			}
+<span class="fc" id="L58">			return result;</span>
 		}
-<span class="fc" id="L59">		return result;</span>
+<span class="fc" id="L60">		return new RecipeBookUser();</span>
 	}
 
 	/**
@@ -65,10 +66,11 @@ import org.springframework.web.bind.annotation.RestController;
 	 * 
 	 * @param userName - The username passed as a URL parameter.
 	 * @return True if the username already exists, otherwise false.
+	 * @throws SQLException
 	 */
 	@RequestMapping(value = &quot;/usernameexists&quot;, method = RequestMethod.GET)
-	public Boolean usernameexists(@RequestParam String userName) {
-<span class="fc bfc" id="L71" title="All 2 branches covered.">		return (userName.length() &gt; 0) ? new RecipeBookUser(&quot;&quot;, userName).verifyDuplicateUsername() : false;</span>
+	public Boolean usernameexists(@RequestParam String userName) throws SQLException {
+<span class="fc bfc" id="L73" title="All 2 branches covered.">		return (userName.length() &gt; 0) ? userDataAccess.verifyDuplicateUsername(userName) : false;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

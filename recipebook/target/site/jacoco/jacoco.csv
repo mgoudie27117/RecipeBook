@@ -1,8 +1,30 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-recipebook,com.sweng.recipebook.security,JWTHandler,0,87,0,0,0,19,0,4,0,4
+recipebook,com.sweng.recipebook.security,JWTHandler,0,96,0,0,0,22,0,5,0,5
 recipebook,com.sweng.recipebook.security,JWTStatus,0,44,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook,RecipebookApplication,0,8,0,0,0,3,0,2,0,2
-recipebook,com.sweng.recipebook.data,UserDataAccess,0,124,0,6,0,33,0,9,0,6
-recipebook,com.sweng.recipebook.data,DatabaseConnection,6,20,0,0,2,9,1,2,1,2
-recipebook,com.sweng.recipebook.controller,UserController,0,84,1,7,0,16,1,8,0,5
-recipebook,com.sweng.recipebook.models,RecipeBookUser,15,154,2,4,3,53,2,14,0,13
+recipebook,com.sweng.recipebook.data,UserDataAccess,0,126,0,6,0,34,0,8,0,5
+recipebook,com.sweng.recipebook.data,RecipeDataAccess,0,94,0,2,0,27,0,5,0,4
+recipebook,com.sweng.recipebook.data,DataAccessConcreteCreator,0,3,0,0,0,2,0,1,0,1
+recipebook,com.sweng.recipebook.data,MeasureDataAccess,0,40,0,2,0,11,0,3,0,2
+recipebook,com.sweng.recipebook.data,DatabaseConnection,6,20,0,0,3,9,1,2,1,2
+recipebook,com.sweng.recipebook.data,DataAccessCreator,2,24,1,4,1,7,1,5,0,2
+recipebook,com.sweng.recipebook.data,IngredientDataAccess,0,43,0,2,0,12,0,3,0,2
+recipebook,com.sweng.recipebook.data,DataAccess,0,5,0,0,0,3,0,1,0,1
+recipebook,com.sweng.recipebook.controller,MeasureController,0,16,0,0,0,4,0,2,0,2
+recipebook,com.sweng.recipebook.controller,RecipeMediaController,0,3,0,0,0,1,0,1,0,1
+recipebook,com.sweng.recipebook.controller,UserController,0,82,0,8,0,14,0,8,0,4
+recipebook,com.sweng.recipebook.controller,Controller,0,8,0,0,0,2,0,2,0,2
+recipebook,com.sweng.recipebook.controller,RecipeController,0,109,2,6,0,18,2,5,0,3
+recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
+recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
+recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
+recipebook,com.sweng.recipebook.models,RecipeBookUser,0,16,0,0,0,6,0,3,0,3
+recipebook,com.sweng.recipebook.models,Ingredient,0,65,0,0,0,26,0,9,0,9
+recipebook,com.sweng.recipebook.models,RecipeIngredient,0,16,0,0,0,6,0,3,0,3
+recipebook,com.sweng.recipebook.models,IngredientComposite,0,23,0,0,0,8,0,4,0,4
+recipebook,com.sweng.recipebook.models,User,0,101,0,0,0,37,0,11,0,11
+recipebook,com.sweng.recipebook.models,RecipeMeasure,0,17,0,0,0,8,0,4,0,4
+recipebook,com.sweng.recipebook.models,MeasureType,0,34,0,0,0,4,0,1,0,1
+recipebook,com.sweng.recipebook.models,Measure,0,57,0,0,0,23,0,7,0,7
+recipebook,com.sweng.recipebook.models,Recipe,0,150,0,2,0,48,0,12,0,11
+recipebook,com.sweng.recipebook.models,SharedRecipe,0,35,0,0,0,10,0,5,0,5

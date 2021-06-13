@@ -1,14 +1,14 @@
 <template>
-  <div class="vue-tempalte">
+  <div class="vue-template">
     <form>
-      <h3>Landing</h3>
+      <h3>Home</h3>
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  name: "landing",
+  name: "home",
   data() {
     return {};
   },

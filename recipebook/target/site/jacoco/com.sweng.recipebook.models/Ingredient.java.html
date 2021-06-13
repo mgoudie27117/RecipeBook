@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ingredient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.models</a> &gt; <span class="el_source">Ingredient.java</span></div><h1>Ingredient.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.models;
+
+/**
+ * Ingredient - Abstract class for ingredient classes to extend.
+ */
+public abstract class Ingredient {
+    protected int ingredientId;
+    protected String ingredientName;
+    protected double portionAmount;
+    protected String portionMeasure;
+
+    // region Constructors
+<span class="fc" id="L13">    public Ingredient() {</span>
+<span class="fc" id="L14">        this.ingredientId = 0;</span>
+<span class="fc" id="L15">        this.ingredientName = &quot;&quot;;</span>
+<span class="fc" id="L16">        this.portionAmount = 0.0;</span>
+<span class="fc" id="L17">        this.portionMeasure = &quot;&quot;;</span>
+<span class="fc" id="L18">    }</span>
+
+<span class="fc" id="L20">    public Ingredient(String ingredientName, double portionAmount, String portionMeasure) {</span>
+<span class="fc" id="L21">        this.ingredientId = 0;</span>
+<span class="fc" id="L22">        this.ingredientName = ingredientName;</span>
+<span class="fc" id="L23">        this.portionAmount = portionAmount;</span>
+<span class="fc" id="L24">        this.portionMeasure = portionMeasure;</span>
+<span class="fc" id="L25">    }</span>
+
+<span class="fc" id="L27">    public Ingredient(int ingredientId, String ingredientName, double portionAmount, String portionMeasure) {</span>
+<span class="fc" id="L28">        this.ingredientId = ingredientId;</span>
+<span class="fc" id="L29">        this.ingredientName = ingredientName;</span>
+<span class="fc" id="L30">        this.portionAmount = portionAmount;</span>
+<span class="fc" id="L31">        this.portionMeasure = portionMeasure;</span>
+<span class="fc" id="L32">    }</span>
+    // end region
+
+    /**
+     * getIngredientId - Getter for ingredient's id number.
+     * 
+     * @return - Ingredient id int.
+     */
+    public int getIngredientId() {
+<span class="fc" id="L41">        return this.ingredientId;</span>
+    }
+
+    /**
+     * getIngredientName - Getter for ingredient's name.
+     * 
+     * @return - Ingredient name String.
+     */
+    public String getIngredientName() {
+<span class="fc" id="L50">        return this.ingredientName;</span>
+    }
+
+    /**
+     * getPortionAmount - Getter for the ingredient portion amount.
+     * 
+     * @return - Portion amount double.
+     */
+    public double getPortionAmount() {
+<span class="fc" id="L59">        return this.portionAmount;</span>
+    }
+
+    /**
+     * getPortionMeasure - Getter for a portion's measure.
+     * 
+     * @return - Portion Measure.
+     */
+    public String getPortionMeasure() {
+<span class="fc" id="L68">        return this.portionMeasure;</span>
+    }
+
+    /**
+     * setPortionAmount - Mutator for ingredients portion amount.
+     * 
+     * @param portionAmount - New double portion amount.
+     */
+    public void setPortionAmount(double portionAmount) {
+<span class="fc" id="L77">        this.portionAmount = portionAmount;</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * setPortionMeasure - Mutator for portion's measure.
+     * 
+     * @param portionMeasure - New Measure for portion.
+     */
+    public void setPortionMeasure(String portionMeasure) {
+<span class="fc" id="L86">        this.portionMeasure = portionMeasure;</span>
+<span class="fc" id="L87">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

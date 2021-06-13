@@ -15,14 +15,18 @@
     "axios": "^0.20.0-0",
     "bootstrap": "^5.0.1",
     "core-js": "^3.6.5",
+    "file-system": "^2.2.2",
+    "form-data": "^4.0.0",
     "jquery": "^3.6.0",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "vee-validate": "^4.4.3",
     "vue": "^3.0.0",
+    "vue-next-select": "^2.5.0",
     "vue-router": "^4.0.8",
     "vue-universal-modal": "^1.1.2",
     "vuex": "^4.0.1",
+    "vuex-persistedstate": "^4.0.0-beta.3",
     "yup": "^0.32.9"
   },
   "devDependencies": {

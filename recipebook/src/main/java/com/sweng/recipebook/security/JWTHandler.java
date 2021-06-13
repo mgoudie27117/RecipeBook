@@ -7,8 +7,12 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sweng.recipebook.models.RecipeBookUser;
+import com.sweng.recipebook.models.User;
 import java.util.Date;
 
+/**
+ * JWTHandler - Class to handle methods related to token handling.
+ */
 public class JWTHandler {
 
     public static final String SECRET = "AmazingRecipes";
@@ -18,8 +22,13 @@ public class JWTHandler {
 
     }
 
-    // TEST ME NEW
-    public String generateToken(RecipeBookUser user) {
+    /**
+     * generateToken - Method to generate a token String for the given User object.
+     * 
+     * @param user - User object to create token for.
+     * @return - Token String
+     */
+    public String generateToken(User user) {
         return JWT.create().withIssuer("auth0").withClaim("userId", user.getUserId())
                 .withClaim("userName", user.getUserId()).withClaim("firstName", user.getFirstName())
                 .withClaim("lastName", user.getLastName())
@@ -27,15 +36,38 @@ public class JWTHandler {
                 .sign(Algorithm.HMAC256(SECRET));
     }
 
-    // TEST ME NEW
+    /**
+     * getUserId - Method to parse the user id from the token.
+     * 
+     * @param token - User token.
+     * @return - User id int.
+     */
+    public int getUserId(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getClaim("userId").asInt();
+    }
+
+    /**
+     * refreshToken - Method to take the old token and generate a new one with
+     * refreshed expiration.
+     * 
+     * @param token - Old token String.
+     * @return - New token String to replace the given token.
+     */
     public String refreshToken(String token) {
         DecodedJWT jwt = JWT.decode(token);
-        RecipeBookUser user = new RecipeBookUser(jwt.getClaim("firstName").toString(),
-                jwt.getClaim("lastName").toString(), "", 0, jwt.getClaim("userName").toString());
+        User user = new RecipeBookUser(jwt.getClaim("firstName").toString(), jwt.getClaim("lastName").toString(), "", 0,
+                jwt.getClaim("userName").toString());
         return generateToken(user);
     }
 
-    // TEST ME NEW
+    /**
+     * verifyToken - Method to verify a given token.
+     * 
+     * @param token - Token string.
+     * @return - JWTStatus of valid if verified, otherwise invalid or expired if
+     *         detected.
+     */
     public JWTStatus verifyToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);

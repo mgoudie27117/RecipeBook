@@ -1,56 +1,60 @@
 <template>
-    <div class="vue-tempalte">
-    <form novalidate @submit.prevent="onSubmit()">
-      <div class="form-group-signup">
-        <h3>RecipeBook Sign Up</h3>
-        <div class="alert alert-info" v-if="isBusy">Loading...</div>
-        <div class="alert alert-danger" v-if="error">{{ error }}</div>
-        <div class="alert alert-success" v-if="success">{{ success }}</div>
+    <div class="vue-template">
+      <div class="vertical-center">
+        <div class="inner-block">
+          <form novalidate @submit.prevent="onSubmit()">
+            <div class="form-group-signup">
+              <h3>RecipeBook Sign Up</h3>
+              <div class="alert alert-info" v-if="isBusy">Loading...</div>
+              <div class="alert alert-danger" v-if="error">{{ error }}</div>
+              <div class="alert alert-success" v-if="success">{{ success }}</div>
+            </div>
+            <div class="form-group form-group-signup">
+                <label>First Name</label>
+                <input type="text" 
+                  v-model="model.firstName"
+                  placeholder="Enter your first name"
+                  class="form-control form-control-lg" 
+                  required />
+            </div>
+            <div class="form-group form-group-signup">
+                <label>Last Name</label>
+                <input type="text" 
+                  v-model="model.lastName"
+                  placeholder="Enter your last name"
+                  class="form-control form-control-lg" 
+                  required />
+            </div>
+            <div class="form-group form-group-signup">
+                <label>Username</label>
+                <input type="text" 
+                  v-model="model.userName"
+                  placeholder="Enter your chosen username"
+                  class="form-control form-control-lg" 
+                  required />
+            </div>
+            <div class="form-group form-group-signup">
+                <label>Password</label>
+                <input type="password" 
+                  v-model="model.password"
+                  placeholder="Enter your chosen password"
+                  class="form-control form-control-lg" 
+                  autocomplete="off" 
+                  required />
+            </div>
+            <div class="form-group form-group-signup">
+                <label>Verify Password</label>
+                <input type="password" 
+                  v-model="model.verificationPassword"
+                  placeholder="Re-enter your chosen password"
+                  class="form-control form-control-lg"  
+                  autocomplete="off" 
+                  required />
+            </div>
+            <button type="submit" @click.stop.prevent="onSubmit()" class="btn btn-dark btn-lg btn-block">Sign Up</button>
+          </form>
+        </div>
       </div>
-      <div class="form-group form-group-signup">
-          <label>First Name</label>
-          <input type="text" 
-            v-model="model.firstName"
-            placeholder="Enter your first name"
-            class="form-control form-control-lg" 
-            required />
-      </div>
-      <div class="form-group form-group-signup">
-          <label>Last Name</label>
-          <input type="text" 
-            v-model="model.lastName"
-            placeholder="Enter your last name"
-            class="form-control form-control-lg" 
-            required />
-      </div>
-      <div class="form-group form-group-signup">
-          <label>Username</label>
-          <input type="text" 
-            v-model="model.userName"
-            placeholder="Enter your chosen username"
-            class="form-control form-control-lg" 
-            required />
-      </div>
-      <div class="form-group form-group-signup">
-          <label>Password</label>
-          <input type="password" 
-            v-model="model.password"
-            placeholder="Enter your chosen password"
-            class="form-control form-control-lg" 
-            autocomplete="off" 
-            required />
-      </div>
-      <div class="form-group form-group-signup">
-          <label>Verify Password</label>
-          <input type="password" 
-            v-model="model.verificationPassword"
-            placeholder="Re-enter your chosen password"
-            class="form-control form-control-lg"  
-            autocomplete="off" 
-            required />
-      </div>
-      <button type="submit" @click.stop.prevent="onSubmit()" class="btn btn-dark btn-lg btn-block">Sign Up</button>
-    </form>
   </div>
 </template>
 

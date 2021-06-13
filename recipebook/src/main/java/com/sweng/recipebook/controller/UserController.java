@@ -1,8 +1,10 @@
 package com.sweng.recipebook.controller;
 
+import com.sweng.recipebook.data.DataAccessConcreteCreator;
+import com.sweng.recipebook.data.UserDataAccess;
 import com.sweng.recipebook.models.RecipeBookUser;
-import com.sweng.recipebook.security.JWTHandler;
-
+import com.sweng.recipebook.models.User;
+import java.sql.SQLException;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController extends Controller {
 
-	private static final JWTHandler JWT = new JWTHandler();
+	private UserDataAccess userDataAccess = (UserDataAccess) new DataAccessConcreteCreator().createDataAccess("user");
 
 	/**
 	 * createuser - API call to create a user for the application and add to the
@@ -29,14 +31,13 @@ public class UserController {
 	 * @return - RecipeBookUser object of the created user.
 	 */
 	@RequestMapping(value = "/createuser", method = RequestMethod.POST)
-	public RecipeBookUser createuser(@RequestBody Map<String, String> payload) {
-		RecipeBookUser result = new RecipeBookUser();
+	public User createuser(@RequestBody Map<String, String> payload) throws SQLException {
 		if (!payload.isEmpty()) {
-			result = new RecipeBookUser(payload.get("firstName"), payload.get("lastName"), payload.get("password"), 0,
-					payload.get("userName"));
-			result.createUser();
+			User result = userDataAccess.createUser(payload.get("firstName"), payload.get("lastName"),
+					payload.get("password"), payload.get("userName"));
+			return result;
 		}
-		return result;
+		return new RecipeBookUser();
 	}
 
 	/**
@@ -44,19 +45,19 @@ public class UserController {
 	 * 
 	 * @param payload - JSON object passed in request body containing user
 	 *                information.
+	 * @throws SQLException
 	 * @return- RecipeBookUser object of the login result user.
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public RecipeBookUser login(@RequestBody Map<String, String> payload) {
-		RecipeBookUser result = null;
+	public User login(@RequestBody Map<String, String> payload) throws SQLException {
 		if (!payload.isEmpty()) {
-			result = new RecipeBookUser(payload.get("password"), payload.get("userName"));
-			result.login();
+			User result = userDataAccess.validateUser(payload.get("password"), payload.get("userName"));
 			if (result.getAuthenticated()) {
 				result.setAccessToken(JWT.generateToken(result));
 			}
+			return result;
 		}
-		return result;
+		return new RecipeBookUser();
 	}
 
 	/**
@@ -65,9 +66,10 @@ public class UserController {
 	 * 
 	 * @param userName - The username passed as a URL parameter.
 	 * @return True if the username already exists, otherwise false.
+	 * @throws SQLException
 	 */
 	@RequestMapping(value = "/usernameexists", method = RequestMethod.GET)
-	public Boolean usernameexists(@RequestParam String userName) {
-		return (userName.length() > 0) ? new RecipeBookUser("", userName).verifyDuplicateUsername() : false;
+	public Boolean usernameexists(@RequestParam String userName) throws SQLException {
+		return (userName.length() > 0) ? userDataAccess.verifyDuplicateUsername(userName) : false;
 	}
 }

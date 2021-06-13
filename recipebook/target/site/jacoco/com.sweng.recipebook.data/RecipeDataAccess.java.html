@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecipeDataAccess.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.data</a> &gt; <span class="el_source">RecipeDataAccess.java</span></div><h1>RecipeDataAccess.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.data;
+
+import java.sql.Blob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import com.sweng.recipebook.models.Recipe;
+
+/**
+ * RecipeDataAccess - DataAccess class for application recipes.
+ */
+public class RecipeDataAccess extends DataAccess {
+
+    public RecipeDataAccess() {
+<span class="fc" id="L15">        super();</span>
+<span class="fc" id="L16">    }</span>
+
+    /**
+     * addRecipe - Method to add a recipe to the recipes table.
+     * 
+     * @param recipe - Recipe to be added.
+     * @param userId - User id adding the recipe.
+     * @return - Added recipe id int.
+     * @throws SQLException
+     */
+    public int addRecipe(Recipe recipe, int userId) throws SQLException {
+<span class="fc" id="L27">        String dml = &quot;INSERT INTO recipebook_recipes (recipe_name, recipe_description, serving_size, instructions, user_id) VALUES (?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L28">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L29">        Blob blob = connection.createBlob();</span>
+<span class="fc" id="L30">        blob.setBytes(1, recipe.getInstructions().getBytes());</span>
+<span class="fc" id="L31">        statement.setString(1, recipe.getRecipeName());</span>
+<span class="fc" id="L32">        statement.setString(2, recipe.getRecipeDescription());</span>
+<span class="fc" id="L33">        statement.setInt(3, recipe.getServingSize());</span>
+<span class="fc" id="L34">        statement.setBlob(4, blob);</span>
+<span class="fc" id="L35">        statement.setInt(5, userId);</span>
+<span class="fc" id="L36">        statement.execute();</span>
+<span class="fc" id="L37">        return getRecipeId(recipe.getRecipeName(), userId);</span>
+    }
+
+    /**
+     * getRecipeId - Method to retrieve the recipe id for the given recipe and user
+     * id.
+     * 
+     * @param recipeName - Shared recipe.
+     * @param userId     - User id of shared recipe.
+     * @return - Recipe id int.
+     * @throws SQLException
+     */
+    public int getRecipeId(String recipeName, int userId) throws SQLException {
+<span class="fc" id="L50">        int result = 0;</span>
+<span class="fc" id="L51">        String query = &quot;SELECT recipe_id FROM recipebook_recipes WHERE user_id = ? AND recipe_name = ?&quot;;</span>
+<span class="fc" id="L52">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L53">        statement.setInt(1, userId);</span>
+<span class="fc" id="L54">        statement.setString(2, recipeName);</span>
+<span class="fc" id="L55">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L57">            result = resultSet.getInt(&quot;recipe_id&quot;);</span>
+        }
+<span class="fc" id="L59">        return result;</span>
+    }
+
+    /**
+     * removeRecipe - Method to remove a user from the application user table.
+     * 
+     * @param userId - Recipe id number to be removed.
+     * @throws SQLException
+     */
+    public void removeRecipe(int recipeId) throws SQLException {
+<span class="fc" id="L69">        String dml = &quot;DELETE FROM recipebook_recipes WHERE recipe_id = ?&quot;;</span>
+<span class="fc" id="L70">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L71">        statement.setInt(1, recipeId);</span>
+<span class="fc" id="L72">        statement.executeUpdate();</span>
+<span class="fc" id="L73">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
