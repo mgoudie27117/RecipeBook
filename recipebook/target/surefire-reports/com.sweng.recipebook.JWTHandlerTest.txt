@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.sweng.recipebook.JWTHandlerTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.061 s - in com.sweng.recipebook.JWTHandlerTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 72.234 s - in com.sweng.recipebook.JWTHandlerTest

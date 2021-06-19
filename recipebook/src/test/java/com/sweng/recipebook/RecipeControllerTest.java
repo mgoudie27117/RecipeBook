@@ -48,12 +48,12 @@ public class RecipeControllerTest {
         payload2.put("Ingredients",
                 new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
-        String testResult1 = recipeControllerTest.sharerecipe(payload2);
-        assertEquals(testResult1, "SUCCESS");
+        int testResult1 = recipeControllerTest.sharerecipe(payload2);
+        assertEquals(true, testResult1 > 0);
         assertEquals(recipeControllerTest.checkuserrecipeexists(payload1), true);
         Map<String, Object> payload3 = new HashMap<String, Object>();
-        String testResult2 = recipeControllerTest.sharerecipe(payload3);
-        assertEquals(testResult2, "MISSING_REQUEST_INFORMATION");
+        int testResult2 = recipeControllerTest.sharerecipe(payload3);
+        assertEquals(true, testResult2 == 0);
         new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
     }
 }

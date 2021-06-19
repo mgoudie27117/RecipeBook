@@ -75,7 +75,7 @@ public class JWTHandlerTest {
         assertEquals(JWTStatus.INVALID, JWT.verifyToken(TestUser.getAccessToken()));
         String testToken = JWT.generateToken(TestUser);
         assertEquals(JWTStatus.VALID, JWT.verifyToken(testToken));
-        // Thread.sleep(70000);
-        // assertEquals(JWTStatus.EXPIRED, JWT.verifyToken(testToken));
+        Thread.sleep(70000);
+        assertEquals(JWTStatus.EXPIRED, JWT.verifyToken(testToken));
     }
 }

@@ -2,6 +2,7 @@ C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\RecipeDataAcces
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\UserController.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DataAccessCreator.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\IngredientDataAccess.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeImage.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\MeasureType.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\Ingredient.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\User.java
@@ -15,12 +16,17 @@ C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\Controlle
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\RecipeController.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\security\JWTHandler.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\SharedRecipe.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\ConfigDataAccess.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeMeasure.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\RecipebookApplication.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeMediaCreator.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\MeasureController.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DataAccessConcreteCreator.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\MeasureDataAccess.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeMedia.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DatabaseConnection.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeBookUser.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\Recipe.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeMediaConcreteCreator.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeVideo.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeIngredient.java

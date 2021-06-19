@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.sweng.recipebook.RecipeMediaControllerTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.892 s - in com.sweng.recipebook.RecipeMediaControllerTest

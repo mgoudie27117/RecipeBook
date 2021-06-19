@@ -25,6 +25,8 @@ public abstract class DataAccessCreator {
                 return new IngredientDataAccess();
             case "measure":
                 return new MeasureDataAccess();
+            case "config":
+                return new ConfigDataAccess();
             default:
                 return null;
         }

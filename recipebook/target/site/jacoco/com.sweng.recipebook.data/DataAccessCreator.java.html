@@ -16,7 +16,7 @@ public abstract class DataAccessCreator {
      * @return DataAccess object.
      */
     public DataAccess createDataAccess(String access) {
-<span class="pc bpc" id="L19" title="1 of 5 branches missed.">        switch (access) {</span>
+<span class="pc bpc" id="L19" title="1 of 6 branches missed.">        switch (access) {</span>
             case &quot;user&quot;:
 <span class="fc" id="L21">                return new UserDataAccess();</span>
             case &quot;recipe&quot;:
@@ -25,8 +25,10 @@ public abstract class DataAccessCreator {
 <span class="fc" id="L25">                return new IngredientDataAccess();</span>
             case &quot;measure&quot;:
 <span class="fc" id="L27">                return new MeasureDataAccess();</span>
+            case &quot;config&quot;:
+<span class="fc" id="L29">                return new ConfigDataAccess();</span>
             default:
-<span class="nc" id="L29">                return null;</span>
+<span class="nc" id="L31">                return null;</span>
         }
     }
 }

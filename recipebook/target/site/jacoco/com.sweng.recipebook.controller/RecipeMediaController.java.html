@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecipeMediaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.controller</a> &gt; <span class="el_source">RecipeMediaController.java</span></div><h1>RecipeMediaController.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.controller;
 
-//import org.springframework.util.StringUtils;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Arrays;
+import com.sweng.recipebook.data.ConfigDataAccess;
+import com.sweng.recipebook.data.DataAccessConcreteCreator;
+import com.sweng.recipebook.models.RecipeMedia;
+import com.sweng.recipebook.models.RecipeMediaConcreteCreator;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-//import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * RecipeMediaController - REST controller for all API calls related to
@@ -12,14 +19,50 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(&quot;/api/recipemedia&quot;)
-<span class="fc" id="L15">public class RecipeMediaController extends Controller {</span>
+<span class="fc" id="L22">public class RecipeMediaController extends Controller {</span>
 
-    // @RequestMapping(value = &quot;/uploadrecipemedia&quot;)
-    // public String uploadrecipemedia(@RequestParam(&quot;file&quot;) MultipartFile file) {
-    // String result = &quot;SUCCESS&quot;;
-    // String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-    // System.out.println(fileName);
-    // return result;
-    // }
+<span class="fc" id="L24">    private ConfigDataAccess configDataAccess = (ConfigDataAccess) new DataAccessConcreteCreator()</span>
+<span class="fc" id="L25">            .createDataAccess(&quot;config&quot;);</span>
+
+    /**
+     * directoryVerfication - Helper method to create directories as needed for
+     * recipe media storage.
+     * 
+     * @param directoryPath - Directory path to check and create if does not exist.
+     */
+    private void directoryVerfication(String directoryPath) {
+<span class="fc" id="L34">        File directory = new File(directoryPath);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (!directory.exists()) {</span>
+<span class="fc" id="L36">            directory.mkdir();</span>
+        }
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * sharerecipe - API call to add recipe media to the application file share.
+     * 
+     * @param files    - File array of 1 or more files to be saved to the recipe id
+     *                 directory.
+     * @param recipeId - Recipe id of the related files.
+     * @return - String message of file share upload status.
+     * @throws SQLException
+     */
+    @RequestMapping(value = &quot;/uploadrecipemedia/{recipeId}&quot;)
+    public String uploadrecipemedia(@RequestParam(value = &quot;files&quot;, required = false) MultipartFile[] files,
+            @PathVariable String recipeId) throws SQLException {
+        try {
+<span class="fc" id="L53">            String dbConfig = configDataAccess.getConfig(&quot;FILESHARE_PATH&quot;);</span>
+<span class="fc" id="L54">            directoryVerfication(dbConfig);</span>
+<span class="fc" id="L55">            String fileSharePath = dbConfig + &quot;\\&quot; + recipeId;</span>
+<span class="fc" id="L56">            directoryVerfication(fileSharePath);</span>
+<span class="nc" id="L57">            Arrays.asList(files).stream().forEach(file -&gt; {</span>
+<span class="nc" id="L58">                RecipeMedia recipeMedia = new RecipeMediaConcreteCreator().createRecipeMedia(file, fileSharePath);</span>
+<span class="nc" id="L59">                recipeMedia.save();</span>
+<span class="nc" id="L60">            });</span>
+<span class="pc" id="L61">        } catch (Exception e) {</span>
+<span class="fc" id="L62">            e.printStackTrace();</span>
+<span class="fc" id="L63">            return &quot;FAILED&quot;;</span>
+        }
+<span class="nc" id="L65">        return &quot;SUCCESS&quot;;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

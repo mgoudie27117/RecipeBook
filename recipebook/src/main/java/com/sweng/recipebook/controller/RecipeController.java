@@ -44,11 +44,11 @@ public class RecipeController extends Controller {
      * sharerecipe - API call to add recipes to the database.
      * 
      * @param payload - Map of request body information.
-     * @return - String result message.
+     * @return - Recipe id.
      * @throws SQLException
      */
     @RequestMapping(value = "/sharerecipe", method = RequestMethod.POST)
-    public String sharerecipe(@RequestBody Map<String, Object> payload) throws SQLException {
+    public int sharerecipe(@RequestBody Map<String, Object> payload) throws SQLException {
         if (payload.containsKey("SharedRecipe") && payload.containsKey("Ingredients") && payload.containsKey("Token")) {
             Gson gson = new Gson();
             SharedRecipe parseRecipe = gson.fromJson(payload.get("SharedRecipe").toString(), SharedRecipe.class);
@@ -59,9 +59,9 @@ public class RecipeController extends Controller {
             int userId = JWT.getUserId(payload.get("Token").toString());
             int recipeId = recipeDataAccess.addRecipe(recipe, userId);
             ingredientDataAccess.addRecipeIngredient(recipeId, recipe.getIngredients());
-            return "SUCCESS";
+            return recipeId;
         } else {
-            return "MISSING_REQUEST_INFORMATION";
+            return 0;
         }
     }
 }

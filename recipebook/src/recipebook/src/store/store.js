@@ -105,20 +105,30 @@ const store = createStore({
                         commit("setError", "Recipe name already created by this user!");
                     } else {
                         axios.post('/api/recipe/sharerecipe', recipe)
-                            .then((message) => {
+                            .then((shareResponse) => {
                                 commit("clearBusy");
-                                if (message.data === "SUCCESS") {
-                                    commit("setSuccess", "Successfully shared recipe!"); // <-- if none single or many
-                                    // console.log(recipe.Files[0].media.file);
-                                    // var formData = new FormData();
-                                    // formData.append('file', recipe.Files[0].media.file);
-                                    // const config = { headers: { 'content-type': 'multipart/form-data' } };
-                                    // axios.post('/api/recipemedia/uploadrecipemedia', formData, config).then((message) => { console.log(message); });
-                                } else if (message.data === "FAILED_TO_INSERT_RECIPE") {
+                                if (shareResponse.data > 0) {
+                                    if (recipe.Files.length == 0) {
+                                        commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
+                                    } else {
+                                        var formData = new FormData();
+                                        recipe.Files.forEach(file => {
+                                            console.log(file);
+                                            formData.append('files', file.mediaAdd);
+                                        });
+                                        const config = { headers: { 'content-type': 'multipart/form-data' } };
+                                        axios.post('/api/recipemedia/uploadrecipemedia/' + shareResponse.data, formData, config)
+                                            .then((uploadResponse) => {
+                                                if (uploadResponse.data === "SUCCESS") {
+                                                    commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
+                                                } else {
+                                                    commit("setError", "Failed to upload recipe media.");
+                                                }
+                                            });
+                                    }
+                                } else {
                                     commit("setError", "Failed to share recipe.");
-                                } else if (message.data === "MISSING_REQUEST_INFORMATION") {
-                                    commit("setError", "Request missing required information.");
-                                }
+                                } 
                             });
                     }
             });

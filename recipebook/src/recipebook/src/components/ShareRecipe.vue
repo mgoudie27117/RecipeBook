@@ -172,10 +172,10 @@
             }));
           model.media.forEach(media => {
             if (media.file && media.file.name && media.file.name.length > 0) {
-              recipe.Files.push({ media })
+              let mediaAdd = media.file;
+              recipe.Files.push({ mediaAdd })
             }
           });
-          console.log(recipe);
           store.dispatch("shareRecipe", recipe);
         }
       }
