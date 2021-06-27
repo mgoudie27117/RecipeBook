@@ -6,6 +6,9 @@ import com.sweng.recipebook.models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,8 +18,8 @@ import org.springframework.stereotype.Component;
 public class UserDataAccess extends DataAccess {
 
     public UserDataAccess() {
-<span class="fc" id="L18">        super();</span>
-<span class="fc" id="L19">    }</span>
+<span class="fc" id="L21">        super();</span>
+<span class="fc" id="L22">    }</span>
 
     /**
      * createUser - Method to insert a user into the application user table.
@@ -28,15 +31,54 @@ public class UserDataAccess extends DataAccess {
      * @return - A new created User object, null if table insert fails.
      * @throws SQLException
      */
-    public User createUser(String firstName, String lastName, String password, String userName) throws SQLException {
-<span class="fc" id="L32">        String dml = &quot;INSERT INTO recipebook_user (user_name, password, first_name, last_name) VALUES (?, ?, ?, ?)&quot;;</span>
-<span class="fc" id="L33">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L34">        statement.setString(1, userName);</span>
-<span class="fc" id="L35">        statement.setString(2, password);</span>
-<span class="fc" id="L36">        statement.setString(3, firstName);</span>
-<span class="fc" id="L37">        statement.setString(4, lastName);</span>
-<span class="fc" id="L38">        statement.executeUpdate();</span>
-<span class="fc" id="L39">        return validateUser(password, userName);</span>
+    public User createUser(String firstName, String lastName, String password, String userName, String securityQuestion,
+            String securityAnswer) throws SQLException {
+<span class="fc" id="L36">        String dml = &quot;INSERT INTO recipebook_user (user_name, password, first_name, last_name, security_question_id, security_answer) VALUES (?, ?, ?, ?, (SELECT security_question_id FROM recipebook_security_questions WHERE security_question = ?), ?)&quot;;</span>
+<span class="fc" id="L37">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L38">        statement.setString(1, userName);</span>
+<span class="fc" id="L39">        statement.setString(2, password);</span>
+<span class="fc" id="L40">        statement.setString(3, firstName);</span>
+<span class="fc" id="L41">        statement.setString(4, lastName);</span>
+<span class="fc" id="L42">        statement.setString(5, securityQuestion);</span>
+<span class="fc" id="L43">        statement.setString(6, securityAnswer);</span>
+<span class="fc" id="L44">        statement.executeUpdate();</span>
+<span class="fc" id="L45">        return validateUser(password, userName);</span>
+    }
+
+    /**
+     * getSecurityQuestion - Method to retrieve a user's security question.
+     * 
+     * @param userName - Username requesting security question.
+     * @return - String security question.
+     * @throws SQLException
+     */
+    public String getSecurityQuestion(String userName) throws SQLException {
+<span class="fc" id="L56">        String result = &quot;&quot;;</span>
+<span class="fc" id="L57">        String query = &quot;SELECT security_question FROM recipebook_security_questions WHERE security_question_id = (SELECT security_question_id FROM recipebook_user WHERE user_name = ?)&quot;;</span>
+<span class="fc" id="L58">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L59">        statement.setString(1, userName);</span>
+<span class="fc" id="L60">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L62">            result = resultSet.getString(&quot;security_question&quot;);</span>
+        }
+<span class="fc" id="L64">        return result;</span>
+    }
+
+    /**
+     * getSecurityQuestions - Method to retrieve all application security questions.
+     * 
+     * @return - List of security questions.
+     * @throws SQLException
+     */
+    public List&lt;String&gt; getSecurityQuestions() throws SQLException {
+<span class="fc" id="L74">        List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L75">        String query = &quot;SELECT security_question FROM recipebook_security_questions&quot;;</span>
+<span class="fc" id="L76">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L77">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L79">            result.add(resultSet.getString(&quot;security_question&quot;));</span>
+        }
+<span class="fc" id="L81">        return result;</span>
     }
 
     /**
@@ -46,11 +88,48 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void removeUser(int userId) throws SQLException {
-<span class="fc" id="L49">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
-<span class="fc" id="L50">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L51">        statement.setInt(1, userId);</span>
-<span class="fc" id="L52">        statement.executeUpdate();</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L91">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L92">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L93">        statement.setInt(1, userId);</span>
+<span class="fc" id="L94">        statement.executeUpdate();</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * updatePassword - Method to update a user's password.
+     * 
+     * @param userName    - Username associated with password update.
+     * @param newPassword - New password to be updated.
+     * @throws SQLException
+     */
+    public void updatePassword(String userName, String newPassword) throws SQLException {
+<span class="fc" id="L105">        String dml = &quot;UPDATE recipebook_user SET password = ? WHERE user_name = ?&quot;;</span>
+<span class="fc" id="L106">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L107">        statement.setString(1, userName);</span>
+<span class="fc" id="L108">        statement.setString(2, newPassword);</span>
+<span class="fc" id="L109">        statement.executeUpdate();</span>
+<span class="fc" id="L110">    }</span>
+
+    /**
+     * validateSecurityAnswer - Method to validate the user's security question
+     * answer.
+     * 
+     * @param userName       - Username to validate for.
+     * @param securityAnswer - Security answer to be validated.
+     * @return - True if valid, otherwise false.
+     * @throws SQLException
+     */
+    public Boolean validateSecurityAnswer(String userName, String securityAnswer) throws SQLException {
+<span class="fc" id="L122">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ? and security_answer = ?&quot;;</span>
+<span class="fc" id="L123">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L124">        statement.setString(1, userName);</span>
+<span class="fc" id="L125">        statement.setString(2, securityAnswer);</span>
+<span class="fc" id="L126">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (resultSet.next()) {</span>
+<span class="fc" id="L128">            return resultSet.getString(&quot;user_name&quot;).equals(userName);</span>
+        } else {
+<span class="fc" id="L130">            return false;</span>
+        }
+    }
 
     /**
      * validateUser - Method to validate the user's username and password in the
@@ -62,18 +141,18 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public User validateUser(String password, String userName) throws SQLException {
-<span class="fc" id="L65">        User result = new RecipeBookUser(password, userName);</span>
-<span class="fc" id="L66">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
-<span class="fc" id="L67">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L68">        statement.setString(1, userName);</span>
-<span class="fc" id="L69">        statement.setString(2, password);</span>
-<span class="fc" id="L70">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L71" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L72">            result = new RecipeBookUser(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
-<span class="fc" id="L73">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
-<span class="fc" id="L74">            result.setAuthenticated(true);</span>
+<span class="fc" id="L144">        User result = new RecipeBookUser(password, userName);</span>
+<span class="fc" id="L145">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
+<span class="fc" id="L146">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L147">        statement.setString(1, userName);</span>
+<span class="fc" id="L148">        statement.setString(2, password);</span>
+<span class="fc" id="L149">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L151">            result = new RecipeBookUser(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
+<span class="fc" id="L152">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
+<span class="fc" id="L153">            result.setAuthenticated(true);</span>
         }
-<span class="fc" id="L76">        return result;</span>
+<span class="fc" id="L155">        return result;</span>
     }
 
     /**
@@ -85,15 +164,15 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public Boolean verifyDuplicateUsername(String userName) throws SQLException {
-<span class="fc" id="L88">        int result = 0;</span>
-<span class="fc" id="L89">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
-<span class="fc" id="L90">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L91">        statement.setString(1, userName);</span>
-<span class="fc" id="L92">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L93" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L94">            result++;</span>
+<span class="fc" id="L167">        int result = 0;</span>
+<span class="fc" id="L168">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
+<span class="fc" id="L169">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L170">        statement.setString(1, userName);</span>
+<span class="fc" id="L171">        ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        while (resultSet.next()) {</span>
+<span class="fc" id="L173">            result++;</span>
         }
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        return result &gt; 0;</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        return result &gt; 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

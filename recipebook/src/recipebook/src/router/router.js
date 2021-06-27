@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import FavoriteRecipes from "../components/FavoriteRecipes.vue";
+import ForgotPassword from "../components/ForgotPassword.vue";
 import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
 import Signup from "../components/Signup.vue";
@@ -20,6 +21,11 @@ const routes = [
         name: "favoriterecipes",
         component: FavoriteRecipes,
         beforeEnter: authenticationGuard
+    },
+    {
+        path: "/forgotpassword",
+        name: "forgotpassword",
+        component: ForgotPassword
     },
     {
         path: "/home",

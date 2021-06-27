@@ -24,7 +24,13 @@
                         autocomplete="off" 
                         required />
                 </div>
-                <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-dark btn-lg btn-block col-5">Sign In</button>
+                    <div class="col-2"></div>
+                    <p class="forgot-password text-right mt-2 mb-4 col-5">
+                        <router-link to="/forgotpassword">Forgot password?</router-link>
+                    </p>
+                </div>
               </form>  
             </div>
         </div>
@@ -35,6 +41,9 @@
     import { computed, reactive } from "vue";
     import store from "../store/store";
     export default {
+        beforeMount() {
+            store.dispatch('logoutURLHandler');
+        },
         setup() {
             const model = reactive({ userName: "", password: "" });
             function onSubmit() {

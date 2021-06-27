@@ -5,7 +5,10 @@ import com.sweng.recipebook.data.UserDataAccess;
 import com.sweng.recipebook.models.RecipeBookUser;
 import com.sweng.recipebook.models.User;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +37,8 @@ public class UserController extends Controller {
 	public User createuser(@RequestBody Map<String, String> payload) throws SQLException {
 		if (!payload.isEmpty()) {
 			User result = userDataAccess.createUser(payload.get("firstName"), payload.get("lastName"),
-					payload.get("password"), payload.get("userName"));
+					payload.get("password"), payload.get("userName"), payload.get("securityQuestion"),
+					payload.get("securityAnswer"));
 			return result;
 		}
 		return new RecipeBookUser();
@@ -58,6 +62,65 @@ public class UserController extends Controller {
 			return result;
 		}
 		return new RecipeBookUser();
+	}
+
+	/**
+	 * securityquestion - API call to validate a user security answer.
+	 * 
+	 * @param payload - JSON object passed in request body containing username and
+	 *                security answer.
+	 * @return - Token if valid, otherwise empty String.
+	 * @throws SQLException
+	 */
+	@RequestMapping(value = "/securityanswer", method = RequestMethod.POST)
+	public String securityanswer(@RequestBody Map<String, String> payload) throws SQLException {
+		if (!payload.isEmpty()
+				&& userDataAccess.validateSecurityAnswer(payload.get("userName"), payload.get("securityAnswer"))) {
+			return JWT.generateToken(new RecipeBookUser("", payload.get("userName")));
+		}
+		return "";
+	}
+
+	/**
+	 * securityquestion - API call to retrieve a security question for a given
+	 * username.
+	 * 
+	 * @param userName - Username requesting security question.
+	 * @return - String security question.
+	 * @throws SQLException
+	 */
+	@RequestMapping(value = "/securityquestion/{userName}", method = RequestMethod.GET)
+	public String securityquestion(@PathVariable String userName) throws SQLException {
+		return userDataAccess.getSecurityQuestion(userName);
+	}
+
+	/**
+	 * securityquestions -API call to retrieve a list of all security questions.
+	 * 
+	 * @return - List of security questions.
+	 * @throws SQLException
+	 */
+	@RequestMapping(value = "/securityquestions", method = RequestMethod.GET)
+	public List<String> securityquestions() throws SQLException {
+		return userDataAccess.getSecurityQuestions();
+	}
+
+	/**
+	 * updatepassword - API call to update a user's password.
+	 * 
+	 * @param payload - JSON object passed in request body containing token and new
+	 *                password.
+	 * @return - String message.
+	 * @throws SQLException
+	 */
+	@RequestMapping(value = "/updatepassword", method = RequestMethod.POST)
+	public String updatepassword(@RequestBody Map<String, String> payload) throws SQLException {
+		if (!payload.isEmpty()) {
+			String userName = JWT.getUserName(payload.get("token"));
+			userDataAccess.updatePassword(userName, payload.get("password"));
+			return "SUCCESS";
+		}
+		return "FAILED";
 	}
 
 	/**

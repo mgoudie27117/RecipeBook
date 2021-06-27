@@ -49,11 +49,11 @@ import org.springframework.web.bind.annotation.RestController;
      */
     @RequestMapping(value = &quot;/sharerecipe&quot;, method = RequestMethod.POST)
     public int sharerecipe(@RequestBody Map&lt;String, Object&gt; payload) throws SQLException {
-<span class="pc bpc" id="L52" title="2 of 6 branches missed.">        if (payload.containsKey(&quot;SharedRecipe&quot;) &amp;&amp; payload.containsKey(&quot;Ingredients&quot;) &amp;&amp; payload.containsKey(&quot;Token&quot;)) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (!payload.isEmpty()) {</span>
 <span class="fc" id="L53">            Gson gson = new Gson();</span>
 <span class="fc" id="L54">            SharedRecipe parseRecipe = gson.fromJson(payload.get(&quot;SharedRecipe&quot;).toString(), SharedRecipe.class);</span>
 <span class="fc" id="L55">            RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get(&quot;Ingredients&quot;).toString(),</span>
-                    RecipeIngredient[].class);
+<span class="fc" id="L56">                    RecipeIngredient[].class);</span>
 <span class="fc" id="L57">            Recipe recipe = new SharedRecipe(parseRecipe.getRecipeName(), parseRecipe.getRecipeDescription(),</span>
 <span class="fc" id="L58">                    parseRecipe.getServingSize(), parseRecipe.getInstructions(), pareseIngredients);</span>
 <span class="fc" id="L59">            int userId = JWT.getUserId(payload.get(&quot;Token&quot;).toString());</span>

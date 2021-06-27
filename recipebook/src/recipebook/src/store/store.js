@@ -12,6 +12,7 @@ const store = createStore({
         isBusy: false,
         measureUnits: [],
         model: {},
+        securityQuestions: [],
         success: "",
         token: ""
     },
@@ -50,7 +51,7 @@ const store = createStore({
                                 });
                             }, 3000);
                         } else {
-                            commit("setError", "Username already exists!");
+                            commit("setError", "Username already exists! Please enter a new one.");
                         }
                     });
             }  catch {
@@ -94,46 +95,57 @@ const store = createStore({
             sessionStorage.clear();
             router.push("/");
         },
+        logoutURLHandler: ({ commit }) => {
+            commit("clearToken");
+            sessionStorage.clear();
+        },
         setComponentError: ({ commit }, message) => {
             commit("setError", message);
         },
         shareRecipe: ({ commit }, recipe) => {
             commit("setBusy");
-            axios.post('/api/recipe/checkuserrecipeexists', { recipeName: recipe.SharedRecipe.recipeName, token: recipe.Token })
-                .then(message => {
-                    if (message.data) {
-                        commit("setError", "Recipe name already created by this user!");
-                    } else {
-                        axios.post('/api/recipe/sharerecipe', recipe)
-                            .then((shareResponse) => {
-                                commit("clearBusy");
-                                if (shareResponse.data > 0) {
-                                    if (recipe.Files.length == 0) {
-                                        commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
-                                    } else {
-                                        var formData = new FormData();
-                                        recipe.Files.forEach(file => {
-                                            console.log(file);
-                                            formData.append('files', file.mediaAdd);
-                                        });
-                                        const config = { headers: { 'content-type': 'multipart/form-data' } };
-                                        axios.post('/api/recipemedia/uploadrecipemedia/' + shareResponse.data, formData, config)
-                                            .then((uploadResponse) => {
-                                                if (uploadResponse.data === "SUCCESS") {
-                                                    commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
-                                                } else {
-                                                    commit("setError", "Failed to upload recipe media.");
-                                                }
+            try {
+                axios.post('/api/recipe/checkuserrecipeexists', { recipeName: recipe.SharedRecipe.recipeName, token: recipe.Token })
+                    .then(message => {
+                        if (message.data) {
+                            commit("setError", "Recipe name already created by this user!");
+                        } else {
+                            axios.post('/api/recipe/sharerecipe', recipe)
+                                .then((shareResponse) => {
+                                    commit("clearBusy");
+                                    if (shareResponse.data > 0) {
+                                        if (recipe.Files.length == 0) {
+                                            commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
+                                        } else {
+                                            var formData = new FormData();
+                                            recipe.Files.forEach(file => {
+                                                console.log(file);
+                                                formData.append('files', file.mediaAdd);
                                             });
-                                    }
-                                } else {
-                                    commit("setError", "Failed to share recipe.");
-                                } 
-                            });
-                    }
-            });
+                                            const config = { headers: { 'content-type': 'multipart/form-data' } };
+                                            axios.post('/api/recipemedia/uploadrecipemedia/' + shareResponse.data, formData, config)
+                                                .then((uploadResponse) => {
+                                                    if (uploadResponse.data === "SUCCESS") {
+                                                        commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
+                                                    } else {
+                                                        commit("setError", "Failed to upload recipe media.");
+                                                    }
+                                                });
+                                        }
+                                    } else {
+                                        commit("setError", "Failed to share recipe.");
+                                    } 
+                                });
+                        }
+                    });
+            }  catch {
+                commit("setError", "Failed to share recipe!");
+            } finally {
+                commit("clearBusy");
+            }
         },
-        requiredIndication: ({ commit }) => {
+        requiredIndication: ({ commit }, questions) => {
+            console.log(questions);
             let check = false;
             let good = "1px solid #ced4da";
             let error = "3px solid #FF0000";
@@ -144,6 +156,28 @@ const store = createStore({
                 } else {
                     inputs[i].style.border = error;
                     check = true;
+                }
+            }
+            let passwords = document.querySelectorAll('input[type=password]');
+            for (let i = 0; i < passwords.length; i++) {
+                if (passwords[i].value.length > 0) {
+                    passwords[i].style.border = good;
+                } else {
+                    passwords[i].style.border = error;
+                    check = true;
+                }
+            }
+            let security = document.getElementsByTagName('input');
+            for (let i = 0; i < security.length; i++) {
+                if (security[i].getAttribute('placeholder') && security[i].getAttribute('placeholder') === 'Select option') {
+                    security[i].style.border = error;
+                    check = true;
+                } else if (security[i].getAttribute('placeholder')) {
+                    questions.forEach(item => {
+                        if (item === security[i].getAttribute('placeholder')) {
+                            security[i].style.border = good;
+                        }
+                    });
                 }
             }
             if (check) {

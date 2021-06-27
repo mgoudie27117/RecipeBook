@@ -49,7 +49,7 @@ public class RecipeController extends Controller {
      */
     @RequestMapping(value = "/sharerecipe", method = RequestMethod.POST)
     public int sharerecipe(@RequestBody Map<String, Object> payload) throws SQLException {
-        if (payload.containsKey("SharedRecipe") && payload.containsKey("Ingredients") && payload.containsKey("Token")) {
+        if (!payload.isEmpty()) {
             Gson gson = new Gson();
             SharedRecipe parseRecipe = gson.fromJson(payload.get("SharedRecipe").toString(), SharedRecipe.class);
             RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get("Ingredients").toString(),

@@ -51,6 +51,24 @@
                   autocomplete="off" 
                   required />
             </div>
+
+            <div class="form-group form-group-signup">
+                <label>Security Question</label>
+                <div id="security-selector">
+                  <vue-select 
+                    :options="security.questions"
+                    v-model="model.securityQuestion"
+                    :close-on-select="true" />
+                </div>
+            </div>
+            <div class="form-group form-group-signup">
+                <label>Security Answer</label>
+                <input type="text" 
+                  v-model="model.securityAnswer"
+                  placeholder="Enter your security question answer"
+                  class="form-control form-control-lg" 
+                  required />
+            </div>
             <button type="submit" @click.stop.prevent="onSubmit()" class="btn btn-dark btn-lg btn-block">Sign Up</button>
           </form>
         </div>
@@ -61,21 +79,31 @@
 <script>
     import { computed, reactive } from "vue";
     import store from "../store/store";
+    import axios from "../axios-connection";
     export default {
+      beforeMount() {
+            store.dispatch('logoutURLHandler');
+            axios.get('/api/user/securityquestions').then(message => { this.security.questions = message.data; });
+        },
         setup() {
+            const security = reactive({ questions: [] });
             const model = reactive({ userName: "", 
                                       password: "", 
                                       verificationPassword: "", 
                                       firstName: "", 
-                                      lastName: ""
+                                      lastName: "",
+                                      securityQuestion: "",
+                                      securityAnswer: ""
                                     });
             function onSubmit() {
-                store.dispatch("requiredIndication");
+                store.dispatch("requiredIndication", security.questions);
                 if (model.verificationPassword === model.password) {
                   if ((model.userName.length > 0) &&
                     (model.password.length > 0) &&
                     (model.firstName.length > 0) &&
-                    (model.lastName.length > 0)) {
+                    (model.lastName.length > 0) && 
+                    (model.securityQuestion.length > 0) &&
+                    (model.securityAnswer.length > 0)) {
                       store.dispatch("create", model);
                     }
                 } else {
@@ -88,8 +116,20 @@
                 error: computed(() => store.state.error),
                 isBusy: computed(() => store.state.isBusy),
                 model,
+                security,
                 onSubmit
             }
         }
     };
 </script>
+
+<style> 
+#security-selector div.vue-select {
+  min-height: calc(1.5em + 1rem + 2px);
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  border-radius: .3rem;
+  border-color: #ced4da !important;
+  width: 100%;
+}
+</style>

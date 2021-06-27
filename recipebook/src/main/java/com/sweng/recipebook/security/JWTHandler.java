@@ -48,6 +48,17 @@ public class JWTHandler {
     }
 
     /**
+     * getUserName - Method to parse the username from the token.
+     * 
+     * @param token - User token.
+     * @return - Username String.
+     */
+    public String getUserName(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getClaim("userName").asString();
+    }
+
+    /**
      * refreshToken - Method to take the old token and generate a new one with
      * refreshed expiration.
      * 
