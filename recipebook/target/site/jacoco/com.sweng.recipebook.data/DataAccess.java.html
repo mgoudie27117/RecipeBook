@@ -11,5 +11,16 @@ public abstract class DataAccess {
 <span class="fc" id="L11">    public DataAccess() {</span>
 <span class="fc" id="L12">        connection = DatabaseConnection.getConnection();</span>
 <span class="fc" id="L13">    }</span>
+
+    /**
+     * correctJSONCharacters - Method to replace string characters from JSON passed
+     * from message requests.
+     * 
+     * @param characters - String characters to be corrected.
+     * @return - Corrected String.
+     */
+    protected String correctJSONCharacters(String characters) {
+<span class="fc" id="L23">        return (characters.replaceAll(&quot;__&quot;, &quot; &quot;)).replaceAll(&quot;---&quot;, &quot;,&quot;);</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

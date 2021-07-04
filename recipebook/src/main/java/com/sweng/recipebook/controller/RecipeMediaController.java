@@ -1,14 +1,23 @@
 package com.sweng.recipebook.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import com.sweng.recipebook.data.ConfigDataAccess;
 import com.sweng.recipebook.data.DataAccessConcreteCreator;
 import com.sweng.recipebook.models.RecipeMedia;
 import com.sweng.recipebook.models.RecipeMediaConcreteCreator;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +44,57 @@ public class RecipeMediaController extends Controller {
         if (!directory.exists()) {
             directory.mkdir();
         }
+    }
+
+    /**
+     * retrieverecipemedia - API call to retrieve a request media file.
+     * 
+     * @param recipeId - Recipe id number.
+     * @param file     - File name.
+     * @return - Recipe media file.
+     * @throws SQLException
+     * @throws FileNotFoundException
+     */
+    @RequestMapping(value = "/retrieverecipemedia/{recipeId}/{file}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Object> retrieverecipemedia(@PathVariable String recipeId, @PathVariable String file)
+            throws SQLException, FileNotFoundException {
+        File requestFile = new File(configDataAccess.getConfig("FILESHARE_PATH") + "\\" + recipeId + "\\" + file);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(requestFile));
+        HttpHeaders headers = new HttpHeaders();
+        String mediaType = "image/jpeg";
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", requestFile.getName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        ResponseEntity<Object> responseEntity = ResponseEntity.ok().headers(headers).contentLength(requestFile.length())
+                .contentType(MediaType.parseMediaType(mediaType)).body(resource);
+        return responseEntity;
+    }
+
+    /**
+     * retrieverecipemedianames - API call to retrieve a list of recipe media file
+     * names for recipe id.
+     * 
+     * @param recipeId - Recipe id number.
+     * @return - List of media file names.
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/retrieverecipemedianames/{recipeId}", method = RequestMethod.GET)
+    public List<String> retrieverecipemedianames(@PathVariable String recipeId) throws SQLException {
+        String dbConfig = configDataAccess.getConfig("FILESHARE_PATH") + "\\" + recipeId;
+        List<String> result = new ArrayList<String>();
+        if (new File(dbConfig).exists() && (new File(dbConfig).listFiles()).length > 0) {
+            for (File file : new File(dbConfig).listFiles()) {
+                if (file.getName().toUpperCase().contains(".JPEG") || file.getName().toUpperCase().contains(".JPG")
+                        || file.getName().toUpperCase().contains(".MP4")) {
+                    result.add(file.getName());
+                }
+            }
+        }
+        if (result.size() == 0) {
+            result.add("DEFAULT.JPG");
+        }
+        return result;
     }
 
     /**

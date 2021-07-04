@@ -25,10 +25,14 @@ public class ConfigDataAccess extends DataAccess {
         String result = "";
         String query = "SELECT config_variable FROM recipebook_config WHERE config_name = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, configName);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            result = resultSet.getString("config_variable");
+        try {
+            statement.setString(1, configName);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result = resultSet.getString("config_variable");
+            }
+        } finally {
+            statement.close();
         }
         return result;
     }

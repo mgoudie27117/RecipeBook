@@ -29,13 +29,17 @@ public class MeasureDataAccess extends DataAccess {
 <span class="fc" id="L29">        ArrayList&lt;Measure&gt; result = new ArrayList&lt;Measure&gt;();</span>
 <span class="fc" id="L30">        String query = &quot;SELECT measure_unit_id, measure_unit FROM recipebook_measure_unit WHERE measure_type = ? ORDER BY measure_unit ASC&quot;;</span>
 <span class="fc" id="L31">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L32">        statement.setString(1, type.toString());</span>
-<span class="fc" id="L33">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L34" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L35">            result.add(</span>
-<span class="fc" id="L36">                    new RecipeMeasure(resultSet.getInt(&quot;measure_unit_id&quot;), resultSet.getString(&quot;measure_unit&quot;), type));</span>
+        try {
+<span class="fc" id="L33">            statement.setString(1, type.toString());</span>
+<span class="fc" id="L34">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L36">                result.add(new RecipeMeasure(resultSet.getInt(&quot;measure_unit_id&quot;), resultSet.getString(&quot;measure_unit&quot;),</span>
+<span class="fc" id="L37">                        type));</span>
+            }
+<span class="fc" id="L39">        } finally {</span>
+<span class="fc" id="L40">            statement.close();</span>
         }
-<span class="fc" id="L38">        return result;</span>
+<span class="fc" id="L42">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

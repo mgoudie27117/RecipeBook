@@ -11,4 +11,15 @@ public abstract class DataAccess {
     public DataAccess() {
         connection = DatabaseConnection.getConnection();
     }
+
+    /**
+     * correctJSONCharacters - Method to replace string characters from JSON passed
+     * from message requests.
+     * 
+     * @param characters - String characters to be corrected.
+     * @return - Corrected String.
+     */
+    protected String correctJSONCharacters(String characters) {
+        return (characters.replaceAll("__", " ")).replaceAll("---", ",");
+    }
 }

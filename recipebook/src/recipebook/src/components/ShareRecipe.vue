@@ -39,7 +39,8 @@
         </div>
         <div class="form-group share-item share-entry-recipe">
             <label>Recipe Instructions</label>
-            <input type="text" 
+            <textarea 
+                rows="10"
                 v-model="model.instructions"
                 class="form-control form-control-lg" 
                 autocomplete="off" 
@@ -156,17 +157,17 @@
         if (store.state.error.length < 1) {
           const recipe = {
             SharedRecipe: {
-              recipeName: model.recipeName,
-              recipeDescription: model.recipeDescription,
+              recipeName: prepareJSON(model.recipeName),
+              recipeDescription: prepareJSON(model.recipeDescription),
               servingSize: model.servingSize,
-              instructions: model.instructions
+              instructions: prepareJSON(model.instructions)
             },
             Ingredients: [],
             Token: store.state.token,
             Files: []
           };
           model.ingredients.forEach(ingredient => recipe.Ingredients.push({
-              ingredientName: ingredient.ingredientName,
+              ingredientName: prepareJSON(ingredient.ingredientName),
               portionAmount: ingredient.portionAmount,
               portionMeasure: ingredient.measureUnit
             }));
@@ -219,6 +220,9 @@
           store.commit("setError", "Only .jpg, .jpeg, or .mp4 files are accepted for sharing!");
         }
       }
+      function prepareJSON(string) {
+            return (string.replaceAll(" ", "__")).replaceAll(",", "---");
+        }
       function removeIngredient(index) {
         if (model.ingredients.length > 1 && index > -1) {
           model.ingredients.splice(index, 1);

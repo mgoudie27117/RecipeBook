@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecipeMediaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.controller</a> &gt; <span class="el_source">RecipeMediaController.java</span></div><h1>RecipeMediaController.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import com.sweng.recipebook.data.ConfigDataAccess;
 import com.sweng.recipebook.data.DataAccessConcreteCreator;
 import com.sweng.recipebook.models.RecipeMedia;
 import com.sweng.recipebook.models.RecipeMediaConcreteCreator;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping(&quot;/api/recipemedia&quot;)
-<span class="fc" id="L22">public class RecipeMediaController extends Controller {</span>
+<span class="fc" id="L31">public class RecipeMediaController extends Controller {</span>
 
-<span class="fc" id="L24">    private ConfigDataAccess configDataAccess = (ConfigDataAccess) new DataAccessConcreteCreator()</span>
-<span class="fc" id="L25">            .createDataAccess(&quot;config&quot;);</span>
+<span class="fc" id="L33">    private ConfigDataAccess configDataAccess = (ConfigDataAccess) new DataAccessConcreteCreator()</span>
+<span class="fc" id="L34">            .createDataAccess(&quot;config&quot;);</span>
 
     /**
      * directoryVerfication - Helper method to create directories as needed for
@@ -31,11 +40,62 @@ import org.springframework.web.multipart.MultipartFile;
      * @param directoryPath - Directory path to check and create if does not exist.
      */
     private void directoryVerfication(String directoryPath) {
-<span class="nc" id="L34">        File directory = new File(directoryPath);</span>
-<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (!directory.exists()) {</span>
-<span class="nc" id="L36">            directory.mkdir();</span>
+<span class="nc" id="L43">        File directory = new File(directoryPath);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (!directory.exists()) {</span>
+<span class="nc" id="L45">            directory.mkdir();</span>
         }
-<span class="nc" id="L38">    }</span>
+<span class="nc" id="L47">    }</span>
+
+    /**
+     * retrieverecipemedia - API call to retrieve a request media file.
+     * 
+     * @param recipeId - Recipe id number.
+     * @param file     - File name.
+     * @return - Recipe media file.
+     * @throws SQLException
+     * @throws FileNotFoundException
+     */
+    @RequestMapping(value = &quot;/retrieverecipemedia/{recipeId}/{file}&quot;, method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity&lt;Object&gt; retrieverecipemedia(@PathVariable String recipeId, @PathVariable String file)
+            throws SQLException, FileNotFoundException {
+<span class="fc" id="L61">        File requestFile = new File(configDataAccess.getConfig(&quot;FILESHARE_PATH&quot;) + &quot;\\&quot; + recipeId + &quot;\\&quot; + file);</span>
+<span class="fc" id="L62">        InputStreamResource resource = new InputStreamResource(new FileInputStream(requestFile));</span>
+<span class="fc" id="L63">        HttpHeaders headers = new HttpHeaders();</span>
+<span class="fc" id="L64">        String mediaType = &quot;image/jpeg&quot;;</span>
+<span class="fc" id="L65">        headers.add(&quot;Content-Disposition&quot;, String.format(&quot;attachment; filename=\&quot;%s\&quot;&quot;, requestFile.getName()));</span>
+<span class="fc" id="L66">        headers.add(&quot;Cache-Control&quot;, &quot;no-cache, no-store, must-revalidate&quot;);</span>
+<span class="fc" id="L67">        headers.add(&quot;Pragma&quot;, &quot;no-cache&quot;);</span>
+<span class="fc" id="L68">        headers.add(&quot;Expires&quot;, &quot;0&quot;);</span>
+<span class="fc" id="L69">        ResponseEntity&lt;Object&gt; responseEntity = ResponseEntity.ok().headers(headers).contentLength(requestFile.length())</span>
+<span class="fc" id="L70">                .contentType(MediaType.parseMediaType(mediaType)).body(resource);</span>
+<span class="fc" id="L71">        return responseEntity;</span>
+    }
+
+    /**
+     * retrieverecipemedianames - API call to retrieve a list of recipe media file
+     * names for recipe id.
+     * 
+     * @param recipeId - Recipe id number.
+     * @return - List of media file names.
+     * @throws SQLException
+     */
+    @RequestMapping(value = &quot;/retrieverecipemedianames/{recipeId}&quot;, method = RequestMethod.GET)
+    public List&lt;String&gt; retrieverecipemedianames(@PathVariable String recipeId) throws SQLException {
+<span class="fc" id="L84">        String dbConfig = configDataAccess.getConfig(&quot;FILESHARE_PATH&quot;) + &quot;\\&quot; + recipeId;</span>
+<span class="fc" id="L85">        List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L86" title="All 4 branches covered.">        if (new File(dbConfig).exists() &amp;&amp; (new File(dbConfig).listFiles()).length &gt; 0) {</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            for (File file : new File(dbConfig).listFiles()) {</span>
+<span class="fc bfc" id="L88" title="All 4 branches covered.">                if (file.getName().toUpperCase().contains(&quot;.JPEG&quot;) || file.getName().toUpperCase().contains(&quot;.JPG&quot;)</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">                        || file.getName().toUpperCase().contains(&quot;.MP4&quot;)) {</span>
+<span class="fc" id="L90">                    result.add(file.getName());</span>
+                }
+            }
+        }
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (result.size() == 0) {</span>
+<span class="fc" id="L95">            result.add(&quot;DEFAULT.JPG&quot;);</span>
+        }
+<span class="fc" id="L97">        return result;</span>
+    }
 
     /**
      * sharerecipe - API call to add recipe media to the application file share.
@@ -50,21 +110,21 @@ import org.springframework.web.multipart.MultipartFile;
     public String uploadrecipemedia(@RequestParam(value = &quot;files&quot;, required = false) MultipartFile[] files,
             @PathVariable String recipeId) throws SQLException {
         try {
-<span class="nc" id="L53">            String dbConfig = configDataAccess.getConfig(&quot;FILESHARE_PATH&quot;);</span>
-<span class="nc" id="L54">            directoryVerfication(dbConfig);</span>
-<span class="nc" id="L55">            String fileSharePath = dbConfig + &quot;\\&quot; + recipeId;</span>
-<span class="nc" id="L56">            directoryVerfication(fileSharePath);</span>
-<span class="nc" id="L57">            Arrays.asList(files).stream().forEach(file -&gt; {</span>
-<span class="nc" id="L58">                RecipeMedia recipeMedia = new RecipeMediaConcreteCreator().createRecipeMedia(file, fileSharePath);</span>
-<span class="nc bnc" id="L59" title="All 2 branches missed.">                if (recipeMedia != null) {</span>
-<span class="nc" id="L60">                    recipeMedia.save();</span>
+<span class="nc" id="L113">            String dbConfig = configDataAccess.getConfig(&quot;FILESHARE_PATH&quot;);</span>
+<span class="nc" id="L114">            directoryVerfication(dbConfig);</span>
+<span class="nc" id="L115">            String fileSharePath = dbConfig + &quot;\\&quot; + recipeId;</span>
+<span class="nc" id="L116">            directoryVerfication(fileSharePath);</span>
+<span class="nc" id="L117">            Arrays.asList(files).stream().forEach(file -&gt; {</span>
+<span class="nc" id="L118">                RecipeMedia recipeMedia = new RecipeMediaConcreteCreator().createRecipeMedia(file, fileSharePath);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                if (recipeMedia != null) {</span>
+<span class="nc" id="L120">                    recipeMedia.save();</span>
                 }
-<span class="nc" id="L62">            });</span>
-<span class="nc" id="L63">        } catch (Exception e) {</span>
-<span class="nc" id="L64">            e.printStackTrace();</span>
-<span class="nc" id="L65">            return &quot;FAILED&quot;;</span>
+<span class="nc" id="L122">            });</span>
+<span class="nc" id="L123">        } catch (Exception e) {</span>
+<span class="nc" id="L124">            e.printStackTrace();</span>
+<span class="nc" id="L125">            return &quot;FAILED&quot;;</span>
         }
-<span class="nc" id="L67">        return &quot;SUCCESS&quot;;</span>
+<span class="nc" id="L127">        return &quot;SUCCESS&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

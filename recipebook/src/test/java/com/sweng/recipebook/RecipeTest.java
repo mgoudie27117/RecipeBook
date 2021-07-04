@@ -6,6 +6,7 @@ import com.sweng.recipebook.models.Ingredient;
 import com.sweng.recipebook.models.IngredientComposite;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeIngredient;
+import com.sweng.recipebook.models.RecipeMediaComposite;
 import com.sweng.recipebook.models.SharedRecipe;
 
 import org.junit.jupiter.api.Test;
@@ -66,5 +67,14 @@ public class RecipeTest {
         assertEquals(recipeTest5.getServingSize(), 1);
         assertEquals(recipeTest5.getInstructions(), "TEST_INSTRUCTIONS");
         assertEquals(recipeTest5.getIngredients().size(), 1);
+
+        Recipe recipeTest6 = new SharedRecipe(1, "TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS",
+                new IngredientComposite(), new RecipeMediaComposite());
+        assertEquals(recipeTest6.getRecipeId(), 1);
+        assertEquals(recipeTest6.getRecipeName(), "TEST_NAME");
+        assertEquals(recipeTest6.getRecipeDescription(), "TEST_DESCRIPTION");
+        assertEquals(recipeTest6.getServingSize(), 1);
+        assertEquals(recipeTest6.getInstructions(), "TEST_INSTRUCTIONS");
+        assertEquals(recipeTest6.getIngredients().size(), 0);
     }
 }

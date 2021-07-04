@@ -12,6 +12,7 @@ public abstract class Recipe {
     protected int servingSize;
     protected String instructions;
     protected IngredientComposite ingredients;
+    protected RecipeMediaComposite recipeMedia;
 
     // region Constructors
     public Recipe() {
@@ -21,6 +22,17 @@ public abstract class Recipe {
         this.servingSize = 0;
         this.instructions = "";
         this.ingredients = new IngredientComposite();
+        this.recipeMedia = new RecipeMediaComposite();
+    }
+
+    public Recipe(int recipeId, String recipeName) {
+        this.recipeId = recipeId;
+        this.recipeName = recipeName;
+        this.recipeDescription = "";
+        this.servingSize = 0;
+        this.instructions = "";
+        this.ingredients = new IngredientComposite();
+        this.recipeMedia = new RecipeMediaComposite();
     }
 
     public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions) {
@@ -30,6 +42,7 @@ public abstract class Recipe {
         this.servingSize = servingSize;
         this.instructions = instructions;
         this.ingredients = new IngredientComposite();
+        this.recipeMedia = new RecipeMediaComposite();
     }
 
     public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions,
@@ -40,6 +53,7 @@ public abstract class Recipe {
         this.servingSize = servingSize;
         this.instructions = instructions;
         this.ingredients = ingredients;
+        this.recipeMedia = new RecipeMediaComposite();
     }
 
     public Recipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
@@ -50,6 +64,7 @@ public abstract class Recipe {
         this.servingSize = servingSize;
         this.instructions = instructions;
         this.ingredients = ingredients;
+        this.recipeMedia = new RecipeMediaComposite();
     }
 
     public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions,
@@ -63,6 +78,18 @@ public abstract class Recipe {
         for (Ingredient ingredient : ingredients) {
             this.ingredients.addIngredient(ingredient);
         }
+        this.recipeMedia = new RecipeMediaComposite();
+    }
+
+    public Recipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
+            IngredientComposite ingredients, RecipeMediaComposite recipeMedia) {
+        this.recipeId = recipeId;
+        this.recipeName = recipeName;
+        this.recipeDescription = recipeDescription;
+        this.servingSize = servingSize;
+        this.instructions = instructions;
+        this.ingredients = ingredients;
+        this.recipeMedia = recipeMedia;
     }
     // end region
 
@@ -118,5 +145,14 @@ public abstract class Recipe {
      */
     public ArrayList<Ingredient> getIngredients() {
         return this.ingredients.getIngredients();
+    }
+
+    /**
+     * getRecipeMedia - Getter for recipe's media elements.
+     * 
+     * @return - ArrayList of recipe media.
+     */
+    public ArrayList<RecipeMedia> getRecipeMedia() {
+        return this.recipeMedia.getRecipeMedia();
     }
 }

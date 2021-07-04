@@ -6,13 +6,19 @@ import com.sweng.recipebook.data.IngredientDataAccess;
 import com.sweng.recipebook.data.RecipeDataAccess;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeIngredient;
+import com.sweng.recipebook.models.RecipeMediaComposite;
 import com.sweng.recipebook.models.SharedRecipe;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import com.google.gson.stream.JsonReader;
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * RecipeController - REST controller for all API calls related to application
@@ -41,6 +47,31 @@ public class RecipeController extends Controller {
     }
 
     /**
+     * getrecipe - API call to retieve a recipe for a given recipe id number.
+     * 
+     * @param recipeId - Recipe id number.
+     * @return - Recipe for given parameter.
+     * @throws SQLException
+     * @throws IOException
+     */
+    @RequestMapping(value = "/getrecipe/{recipeId}", method = RequestMethod.GET)
+    public Recipe getrecipe(@PathVariable int recipeId) throws SQLException, IOException {
+        return recipeDataAccess.getRecipe(recipeId, ingredientDataAccess.getRecipeIngredients(recipeId),
+                new RecipeMediaComposite());
+    }
+
+    /**
+     * gethomerecipes - API call to retrieve recipes for the home page.
+     * 
+     * @return - List of Recipes.
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/gethomerecipes", method = RequestMethod.GET)
+    public List<Recipe> gethomerecipes() throws SQLException {
+        return recipeDataAccess.getHomeRecipes();
+    }
+
+    /**
      * sharerecipe - API call to add recipes to the database.
      * 
      * @param payload - Map of request body information.
@@ -51,7 +82,9 @@ public class RecipeController extends Controller {
     public int sharerecipe(@RequestBody Map<String, Object> payload) throws SQLException {
         if (!payload.isEmpty()) {
             Gson gson = new Gson();
-            SharedRecipe parseRecipe = gson.fromJson(payload.get("SharedRecipe").toString(), SharedRecipe.class);
+            JsonReader reader = new JsonReader(new StringReader(payload.get("SharedRecipe").toString()));
+            reader.setLenient(true);
+            SharedRecipe parseRecipe = gson.fromJson(reader, SharedRecipe.class);
             RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get("Ingredients").toString(),
                     RecipeIngredient[].class);
             Recipe recipe = new SharedRecipe(parseRecipe.getRecipeName(), parseRecipe.getRecipeDescription(),

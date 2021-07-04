@@ -115,11 +115,10 @@ const store = createStore({
                                     commit("clearBusy");
                                     if (shareResponse.data > 0) {
                                         if (recipe.Files.length == 0) {
-                                            commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
+                                            commit("setSuccess", "Successfully shared recipe " + ((recipe.SharedRecipe.recipeName.replaceAll("__", " ")).replaceAll("---", ",")) + "!");
                                         } else {
                                             var formData = new FormData();
                                             recipe.Files.forEach(file => {
-                                                console.log(file);
                                                 formData.append('files', file.mediaAdd);
                                             });
                                             const config = { headers: { 'content-type': 'multipart/form-data' } };
@@ -145,39 +144,55 @@ const store = createStore({
             }
         },
         requiredIndication: ({ commit }, questions) => {
-            console.log(questions);
             let check = false;
             let good = "1px solid #ced4da";
             let error = "3px solid #FF0000";
             let inputs = document.querySelectorAll('input[type=text]');
-            for (let i = 0; i < inputs.length; i++) {
-                if (inputs[i].value.length > 0) {
-                    inputs[i].style.border = good;
-                } else {
-                    inputs[i].style.border = error;
-                    check = true;
+            if (inputs && inputs.length > 0) {
+                for (let i = 0; i < inputs.length; i++) {
+                    if (inputs[i].value.length > 0) {
+                        inputs[i].style.border = good;
+                    } else {
+                        inputs[i].style.border = error;
+                        check = true;
+                    }
+                }
+            }
+            inputs = document.querySelectorAll('textarea');
+            if (inputs && inputs.length > 0) {
+                for (let i = 0; i < inputs.length; i++) {
+                    if (inputs[i].value.length > 0) {
+                        inputs[i].style.border = good;
+                    } else {
+                        inputs[i].style.border = error;
+                        check = true;
+                    }
                 }
             }
             let passwords = document.querySelectorAll('input[type=password]');
-            for (let i = 0; i < passwords.length; i++) {
-                if (passwords[i].value.length > 0) {
-                    passwords[i].style.border = good;
-                } else {
-                    passwords[i].style.border = error;
-                    check = true;
+            if (passwords && passwords.lengt > 0) {
+                for (let i = 0; i < passwords.length; i++) {
+                    if (passwords[i].value.length > 0) {
+                        passwords[i].style.border = good;
+                    } else {
+                        passwords[i].style.border = error;
+                        check = true;
+                    }
                 }
             }
-            let security = document.getElementsByTagName('input');
-            for (let i = 0; i < security.length; i++) {
-                if (security[i].getAttribute('placeholder') && security[i].getAttribute('placeholder') === 'Select option') {
-                    security[i].style.border = error;
-                    check = true;
-                } else if (security[i].getAttribute('placeholder')) {
-                    questions.forEach(item => {
-                        if (item === security[i].getAttribute('placeholder')) {
-                            security[i].style.border = good;
-                        }
-                    });
+            if (questions && questions.length > 0) {
+                let security = document.getElementsByTagName('input');
+                for (let i = 0; i < security.length; i++) {
+                    if (security[i].getAttribute('placeholder') && security[i].getAttribute('placeholder') === 'Select option') {
+                        security[i].style.border = error;
+                        check = true;
+                    } else if (security[i].getAttribute('placeholder')) {
+                        questions.forEach(item => {
+                            if (item === security[i].getAttribute('placeholder')) {
+                                security[i].style.border = good;
+                            }
+                        });
+                    }
                 }
             }
             if (check) {

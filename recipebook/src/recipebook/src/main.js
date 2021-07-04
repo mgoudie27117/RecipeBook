@@ -10,6 +10,7 @@ import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueNextSelect from "vue-next-select";
 import "vue-next-select/dist/index.min.css";
+import VueSwappableCard from "@dafcoe/vue-swappable-card";
 
 library.add(faPlus, faMinus);
 
@@ -31,4 +32,5 @@ createApp(App)
   .component('vue-select', VueNextSelect)
   .use(store)
   .use(router)
+  .use(VueSwappableCard)
   .mount("#app");

@@ -1,0 +1,321 @@
+# Created at 2021-07-02T21:38:04.048
+TestSet has not finished before stream error has appeared >> initializing exit by non-null configuration: null
+java.io.EOFException
+	at java.base/java.io.DataInputStream.readInt(DataInputStream.java:397)
+	at org.apache.maven.surefire.booter.MasterProcessCommand.decode(MasterProcessCommand.java:115)
+	at org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:391)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+
+
+# Created at 2021-07-02T21:38:15.011
+Unexpected IOException: 6,1,com.sweng.recipebook.JWTHandlerTest,verifyTokenTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.013
+Unexpected IOException: 5,1,com.sweng.recipebook.JWTHandlerTest,getUserIdTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.529
+Unexpected IOException: 6,1,com.sweng.recipebook.JWTHandlerTest,getUserIdTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.531
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.JWTHandlerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.536
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.MeasureControllerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.539
+Unexpected IOException: 5,1,com.sweng.recipebook.MeasureControllerTest,recipeMeasuresTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.553
+Unexpected IOException: 6,1,com.sweng.recipebook.MeasureControllerTest,recipeMeasuresTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.555
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.MeasureControllerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.557
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.MeasureTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.559
+Unexpected IOException: 5,1,com.sweng.recipebook.MeasureTest,measureObjectGetterTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.561
+Unexpected IOException: 6,1,com.sweng.recipebook.MeasureTest,measureObjectGetterTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.562
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.MeasureTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.564
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.MeasureTypeTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.567
+Unexpected IOException: 5,1,com.sweng.recipebook.MeasureTypeTest,measureTypeToStringTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.569
+Unexpected IOException: 6,1,com.sweng.recipebook.MeasureTypeTest,measureTypeToStringTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.570
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.MeasureTypeTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.572
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipebookApplicationTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:15.574
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipebookApplicationTest,applicationEntryTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:16.443
+Unexpected IOException with stream: 
+
+
+# Created at 2021-07-02T21:38:16.444
+Unexpected IOException with stream:   .   ____          _            __ _ _
+
+
+# Created at 2021-07-02T21:38:16.446
+Unexpected IOException with stream:  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+
+
+# Created at 2021-07-02T21:38:16.447
+Unexpected IOException with stream: ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+
+
+# Created at 2021-07-02T21:38:16.449
+Unexpected IOException with stream:  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+
+
+# Created at 2021-07-02T21:38:16.451
+Unexpected IOException with stream:   '  |____| .__|_| |_|_| |_\__, | / / / /
+
+
+# Created at 2021-07-02T21:38:16.452
+Unexpected IOException with stream:  =========|_|==============|___/=/_/_/_/
+
+
+# Created at 2021-07-02T21:38:16.458
+Unexpected IOException with stream:  :: Spring Boot ::                (v2.5.0)
+
+
+# Created at 2021-07-02T21:38:16.459
+Unexpected IOException with stream: 
+
+
+# Created at 2021-07-02T21:38:16.674
+Unexpected IOException with stream: 2021-07-02 21:38:16.670  INFO 12164 --- [           main] c.s.recipebook.RecipebookApplication     : Starting RecipebookApplication using Java 13.0.2 on DESKTOP-B1I9PMJ with PID 12164 (started by Michael in C:\RecipeBook\recipebook)
+
+
+# Created at 2021-07-02T21:38:16.675
+Unexpected IOException with stream: 2021-07-02 21:38:16.674  INFO 12164 --- [           main] c.s.recipebook.RecipebookApplication     : No active profile set, falling back to default profiles: default
+
+
+# Created at 2021-07-02T21:38:18.609
+Unexpected IOException with stream: 2021-07-02 21:38:18.608  INFO 12164 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+
+
+# Created at 2021-07-02T21:38:18.629
+Unexpected IOException with stream: 2021-07-02 21:38:18.628  INFO 12164 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+
+
+# Created at 2021-07-02T21:38:18.630
+Unexpected IOException with stream: 2021-07-02 21:38:18.629  INFO 12164 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]
+
+
+# Created at 2021-07-02T21:38:18.785
+Unexpected IOException with stream: 2021-07-02 21:38:18.784  INFO 12164 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+
+
+# Created at 2021-07-02T21:38:18.788
+Unexpected IOException with stream: 2021-07-02 21:38:18.786  INFO 12164 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1992 ms
+
+
+# Created at 2021-07-02T21:38:19.674
+Unexpected IOException with stream: 2021-07-02 21:38:19.673  INFO 12164 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+
+
+# Created at 2021-07-02T21:38:19.694
+Unexpected IOException with stream: 2021-07-02 21:38:19.693  INFO 12164 --- [           main] c.s.recipebook.RecipebookApplication     : Started RecipebookApplication in 3.825 seconds (JVM running for 77.632)
+
+
+# Created at 2021-07-02T21:38:19.698
+Unexpected IOException with stream: 2021-07-02 21:38:19.696  INFO 12164 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+
+
+# Created at 2021-07-02T21:38:19.702
+Unexpected IOException with stream: 2021-07-02 21:38:19.701  INFO 12164 --- [           main] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+
+
+# Created at 2021-07-02T21:38:19.703
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipebookApplicationTest,applicationEntryTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.705
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipebookApplicationTest,defaultDataAccess,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.707
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipebookApplicationTest,defaultDataAccess,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.708
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipebookApplicationTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.710
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeBookUserTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.711
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipeBookUserTest,recipeBookUserObjectGetterTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.712
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipeBookUserTest,recipeBookUserObjectGetterTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.713
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeBookUserTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.715
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeControllerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.716
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipeControllerTest,checkUserRecipeExistsAndShareTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.787
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipeControllerTest,checkUserRecipeExistsAndShareTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.788
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeControllerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.789
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeMediaTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.790
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipeMediaTest,recipeMediaObjectGetterTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.796
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipeMediaTest,recipeMediaObjectGetterTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.797
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipeMediaTest,recipeMediaSaveTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.806
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipeMediaTest,recipeMediaSaveTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.807
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipeMediaTest,recipeMediaFactoryTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.808
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipeMediaTest,recipeMediaFactoryTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.809
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeMediaTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.810
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.811
+Unexpected IOException: 5,1,com.sweng.recipebook.RecipeTest,recipeObjectGettersTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.813
+Unexpected IOException: 6,1,com.sweng.recipebook.RecipeTest,recipeObjectGettersTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.813
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.RecipeTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.815
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.UserControllerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.816
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,loginTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.820
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,loginTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.821
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,verifyDuplicateUsernameTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.823
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,verifyDuplicateUsernameTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.824
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,updatepasswordTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.833
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,updatepasswordTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.835
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,createUserTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.841
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,createUserTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.843
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,securityQuestionsTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.847
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,securityQuestionsTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.848
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,securityAnswerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.856
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,securityAnswerTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.859
+Unexpected IOException: 5,1,com.sweng.recipebook.UserControllerTest,securityQuestionTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.862
+Unexpected IOException: 6,1,com.sweng.recipebook.UserControllerTest,securityQuestionTest,null,null,null
+
+
+# Created at 2021-07-02T21:38:19.863
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,com.sweng.recipebook.UserControllerTest,null,null,null
+
+

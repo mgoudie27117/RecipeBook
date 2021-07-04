@@ -1,17 +1,10 @@
 com\sweng\recipebook\security\JWTStatus.class
 com\sweng\recipebook\data\DataAccessConcreteCreator.class
 com\sweng\recipebook\models\MeasureType$2.class
-com\sweng\recipebook\controller\RecipeController.class
-com\sweng\recipebook\models\RecipeIngredient.class
 com\sweng\recipebook\controller\UserController.class
-com\sweng\recipebook\models\RecipeMeasure.class
 com\sweng\recipebook\data\DatabaseConnection.class
 com\sweng\recipebook\controller\Controller.class
-com\sweng\recipebook\models\SharedRecipe.class
 com\sweng\recipebook\models\Measure.class
-com\sweng\recipebook\data\RecipeDataAccess.class
-com\sweng\recipebook\controller\MeasureController.class
-com\sweng\recipebook\RecipebookApplication.class
 com\sweng\recipebook\data\DataAccessCreator.class
 com\sweng\recipebook\security\JWTHandler.class
 com\sweng\recipebook\models\User.class
@@ -20,9 +13,7 @@ com\sweng\recipebook\data\MeasureDataAccess.class
 com\sweng\recipebook\data\UserDataAccess.class
 com\sweng\recipebook\models\MeasureType$1.class
 com\sweng\recipebook\models\Recipe.class
-com\sweng\recipebook\models\RecipeBookUser.class
 com\sweng\recipebook\models\MeasureType$3.class
 com\sweng\recipebook\models\MeasureType.class
 com\sweng\recipebook\models\Ingredient.class
 com\sweng\recipebook\models\IngredientComposite.class
-com\sweng\recipebook\data\IngredientDataAccess.class

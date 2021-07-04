@@ -29,11 +29,15 @@ public class MeasureDataAccess extends DataAccess {
         ArrayList<Measure> result = new ArrayList<Measure>();
         String query = "SELECT measure_unit_id, measure_unit FROM recipebook_measure_unit WHERE measure_type = ? ORDER BY measure_unit ASC";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, type.toString());
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            result.add(
-                    new RecipeMeasure(resultSet.getInt("measure_unit_id"), resultSet.getString("measure_unit"), type));
+        try {
+            statement.setString(1, type.toString());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(new RecipeMeasure(resultSet.getInt("measure_unit_id"), resultSet.getString("measure_unit"),
+                        type));
+            }
+        } finally {
+            statement.close();
         }
         return result;
     }

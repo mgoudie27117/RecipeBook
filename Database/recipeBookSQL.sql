@@ -150,6 +150,7 @@ INSERT ALL
     INTO recipebook_measure_unit (measure_unit, measure_type) VALUES ('centimeter', 'recipe')
     INTO recipebook_measure_unit (measure_unit, measure_type) VALUES ('meter', 'recipe')
     INTO recipebook_measure_unit (measure_unit, measure_type) VALUES ('inch', 'recipe')
+	INTO recipebook_measure_unit (measure_unit, measure_type) VALUES ('unit', 'recipe')
 SELECT 1 FROM dual;
 COMMIT;
 

@@ -12,58 +12,85 @@ public abstract class Recipe {
     protected int servingSize;
     protected String instructions;
     protected IngredientComposite ingredients;
+    protected RecipeMediaComposite recipeMedia;
 
     // region Constructors
-<span class="fc" id="L17">    public Recipe() {</span>
-<span class="fc" id="L18">        this.recipeId = 0;</span>
-<span class="fc" id="L19">        this.recipeName = &quot;&quot;;</span>
-<span class="fc" id="L20">        this.recipeDescription = &quot;&quot;;</span>
-<span class="fc" id="L21">        this.servingSize = 0;</span>
-<span class="fc" id="L22">        this.instructions = &quot;&quot;;</span>
-<span class="fc" id="L23">        this.ingredients = new IngredientComposite();</span>
-<span class="fc" id="L24">    }</span>
+<span class="fc" id="L18">    public Recipe() {</span>
+<span class="fc" id="L19">        this.recipeId = 0;</span>
+<span class="fc" id="L20">        this.recipeName = &quot;&quot;;</span>
+<span class="fc" id="L21">        this.recipeDescription = &quot;&quot;;</span>
+<span class="fc" id="L22">        this.servingSize = 0;</span>
+<span class="fc" id="L23">        this.instructions = &quot;&quot;;</span>
+<span class="fc" id="L24">        this.ingredients = new IngredientComposite();</span>
+<span class="fc" id="L25">        this.recipeMedia = new RecipeMediaComposite();</span>
+<span class="fc" id="L26">    }</span>
 
-<span class="fc" id="L26">    public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions) {</span>
-<span class="fc" id="L27">        this.recipeId = 0;</span>
-<span class="fc" id="L28">        this.recipeName = recipeName;</span>
-<span class="fc" id="L29">        this.recipeDescription = recipeDescription;</span>
-<span class="fc" id="L30">        this.servingSize = servingSize;</span>
-<span class="fc" id="L31">        this.instructions = instructions;</span>
-<span class="fc" id="L32">        this.ingredients = new IngredientComposite();</span>
-<span class="fc" id="L33">    }</span>
+<span class="fc" id="L28">    public Recipe(int recipeId, String recipeName) {</span>
+<span class="fc" id="L29">        this.recipeId = recipeId;</span>
+<span class="fc" id="L30">        this.recipeName = recipeName;</span>
+<span class="fc" id="L31">        this.recipeDescription = &quot;&quot;;</span>
+<span class="fc" id="L32">        this.servingSize = 0;</span>
+<span class="fc" id="L33">        this.instructions = &quot;&quot;;</span>
+<span class="fc" id="L34">        this.ingredients = new IngredientComposite();</span>
+<span class="fc" id="L35">        this.recipeMedia = new RecipeMediaComposite();</span>
+<span class="fc" id="L36">    }</span>
 
-    public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions,
-<span class="fc" id="L36">            IngredientComposite ingredients) {</span>
-<span class="fc" id="L37">        this.recipeId = 0;</span>
-<span class="fc" id="L38">        this.recipeName = recipeName;</span>
-<span class="fc" id="L39">        this.recipeDescription = recipeDescription;</span>
-<span class="fc" id="L40">        this.servingSize = servingSize;</span>
-<span class="fc" id="L41">        this.instructions = instructions;</span>
-<span class="fc" id="L42">        this.ingredients = ingredients;</span>
-<span class="fc" id="L43">    }</span>
+<span class="fc" id="L38">    public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions) {</span>
+<span class="fc" id="L39">        this.recipeId = 0;</span>
+<span class="fc" id="L40">        this.recipeName = recipeName;</span>
+<span class="fc" id="L41">        this.recipeDescription = recipeDescription;</span>
+<span class="fc" id="L42">        this.servingSize = servingSize;</span>
+<span class="fc" id="L43">        this.instructions = instructions;</span>
+<span class="fc" id="L44">        this.ingredients = new IngredientComposite();</span>
+<span class="fc" id="L45">        this.recipeMedia = new RecipeMediaComposite();</span>
+<span class="fc" id="L46">    }</span>
 
-    public Recipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
-<span class="fc" id="L46">            IngredientComposite ingredients) {</span>
-<span class="fc" id="L47">        this.recipeId = recipeId;</span>
-<span class="fc" id="L48">        this.recipeName = recipeName;</span>
-<span class="fc" id="L49">        this.recipeDescription = recipeDescription;</span>
-<span class="fc" id="L50">        this.servingSize = servingSize;</span>
-<span class="fc" id="L51">        this.instructions = instructions;</span>
-<span class="fc" id="L52">        this.ingredients = ingredients;</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L48">    public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions,</span>
+            IngredientComposite ingredients) {
+<span class="fc" id="L50">        this.recipeId = 0;</span>
+<span class="fc" id="L51">        this.recipeName = recipeName;</span>
+<span class="fc" id="L52">        this.recipeDescription = recipeDescription;</span>
+<span class="fc" id="L53">        this.servingSize = servingSize;</span>
+<span class="fc" id="L54">        this.instructions = instructions;</span>
+<span class="fc" id="L55">        this.ingredients = ingredients;</span>
+<span class="fc" id="L56">        this.recipeMedia = new RecipeMediaComposite();</span>
+<span class="fc" id="L57">    }</span>
 
-    public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions,
-<span class="fc" id="L56">            Ingredient[] ingredients) {</span>
-<span class="fc" id="L57">        this.recipeId = 0;</span>
-<span class="fc" id="L58">        this.recipeName = recipeName;</span>
-<span class="fc" id="L59">        this.recipeDescription = recipeDescription;</span>
-<span class="fc" id="L60">        this.servingSize = servingSize;</span>
-<span class="fc" id="L61">        this.instructions = instructions;</span>
-<span class="fc" id="L62">        this.ingredients = new IngredientComposite();</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (Ingredient ingredient : ingredients) {</span>
-<span class="fc" id="L64">            this.ingredients.addIngredient(ingredient);</span>
+<span class="fc" id="L59">    public Recipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,</span>
+            IngredientComposite ingredients) {
+<span class="fc" id="L61">        this.recipeId = recipeId;</span>
+<span class="fc" id="L62">        this.recipeName = recipeName;</span>
+<span class="fc" id="L63">        this.recipeDescription = recipeDescription;</span>
+<span class="fc" id="L64">        this.servingSize = servingSize;</span>
+<span class="fc" id="L65">        this.instructions = instructions;</span>
+<span class="fc" id="L66">        this.ingredients = ingredients;</span>
+<span class="fc" id="L67">        this.recipeMedia = new RecipeMediaComposite();</span>
+<span class="fc" id="L68">    }</span>
+
+<span class="fc" id="L70">    public Recipe(String recipeName, String recipeDescription, int servingSize, String instructions,</span>
+            Ingredient[] ingredients) {
+<span class="fc" id="L72">        this.recipeId = 0;</span>
+<span class="fc" id="L73">        this.recipeName = recipeName;</span>
+<span class="fc" id="L74">        this.recipeDescription = recipeDescription;</span>
+<span class="fc" id="L75">        this.servingSize = servingSize;</span>
+<span class="fc" id="L76">        this.instructions = instructions;</span>
+<span class="fc" id="L77">        this.ingredients = new IngredientComposite();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        for (Ingredient ingredient : ingredients) {</span>
+<span class="fc" id="L79">            this.ingredients.addIngredient(ingredient);</span>
         }
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L81">        this.recipeMedia = new RecipeMediaComposite();</span>
+<span class="fc" id="L82">    }</span>
+
+<span class="fc" id="L84">    public Recipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,</span>
+            IngredientComposite ingredients, RecipeMediaComposite recipeMedia) {
+<span class="fc" id="L86">        this.recipeId = recipeId;</span>
+<span class="fc" id="L87">        this.recipeName = recipeName;</span>
+<span class="fc" id="L88">        this.recipeDescription = recipeDescription;</span>
+<span class="fc" id="L89">        this.servingSize = servingSize;</span>
+<span class="fc" id="L90">        this.instructions = instructions;</span>
+<span class="fc" id="L91">        this.ingredients = ingredients;</span>
+<span class="fc" id="L92">        this.recipeMedia = recipeMedia;</span>
+<span class="fc" id="L93">    }</span>
     // end region
 
     /**
@@ -72,7 +99,7 @@ public abstract class Recipe {
      * @return - Recipe id int.
      */
     public int getRecipeId() {
-<span class="fc" id="L75">        return this.recipeId;</span>
+<span class="fc" id="L102">        return this.recipeId;</span>
     }
 
     /**
@@ -81,7 +108,7 @@ public abstract class Recipe {
      * @return - Recipe name String.
      */
     public String getRecipeName() {
-<span class="fc" id="L84">        return this.recipeName;</span>
+<span class="fc" id="L111">        return this.recipeName;</span>
     }
 
     /**
@@ -90,7 +117,7 @@ public abstract class Recipe {
      * @return - Recipe description String.
      */
     public String getRecipeDescription() {
-<span class="fc" id="L93">        return this.recipeDescription;</span>
+<span class="fc" id="L120">        return this.recipeDescription;</span>
     }
 
     /**
@@ -99,7 +126,7 @@ public abstract class Recipe {
      * @return - Serving size int.
      */
     public int getServingSize() {
-<span class="fc" id="L102">        return this.servingSize;</span>
+<span class="fc" id="L129">        return this.servingSize;</span>
     }
 
     /**
@@ -108,7 +135,7 @@ public abstract class Recipe {
      * @return - Instruction String.
      */
     public String getInstructions() {
-<span class="fc" id="L111">        return this.instructions;</span>
+<span class="fc" id="L138">        return this.instructions;</span>
     }
 
     /**
@@ -117,7 +144,16 @@ public abstract class Recipe {
      * @return - ArrayList of recipe ingredients.
      */
     public ArrayList&lt;Ingredient&gt; getIngredients() {
-<span class="fc" id="L120">        return this.ingredients.getIngredients();</span>
+<span class="fc" id="L147">        return this.ingredients.getIngredients();</span>
+    }
+
+    /**
+     * getRecipeMedia - Getter for recipe's media elements.
+     * 
+     * @return - ArrayList of recipe media.
+     */
+    public ArrayList&lt;RecipeMedia&gt; getRecipeMedia() {
+<span class="nc" id="L156">        return this.recipeMedia.getRecipeMedia();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

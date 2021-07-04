@@ -5,6 +5,7 @@ import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
 import Signup from "../components/Signup.vue";
 import ShareRecipe from "../components/ShareRecipe.vue";
+import SharedRecipe from "../components/SharedRecipe.vue";
 import store from "../store/store";
 
 const authenticationGuard = (to, from, next) => {
@@ -42,6 +43,13 @@ const routes = [
         path: "/sharerecipe",
         name: "sharerecipe",
         component: ShareRecipe,
+        beforeEnter: authenticationGuard
+    },
+    {
+        path: "/sharedrecipe",
+        name: "sharedrecipe",
+        component: SharedRecipe,
+        props: true,
         beforeEnter: authenticationGuard
     },
     {

@@ -35,13 +35,17 @@ public class UserDataAccess extends DataAccess {
             String securityAnswer) throws SQLException {
         String dml = "INSERT INTO recipebook_user (user_name, password, first_name, last_name, security_question_id, security_answer) VALUES (?, ?, ?, ?, (SELECT security_question_id FROM recipebook_security_questions WHERE security_question = ?), ?)";
         PreparedStatement statement = connection.prepareStatement(dml);
-        statement.setString(1, userName);
-        statement.setString(2, password);
-        statement.setString(3, firstName);
-        statement.setString(4, lastName);
-        statement.setString(5, securityQuestion);
-        statement.setString(6, securityAnswer);
-        statement.executeUpdate();
+        try {
+            statement.setString(1, userName);
+            statement.setString(2, password);
+            statement.setString(3, firstName);
+            statement.setString(4, lastName);
+            statement.setString(5, securityQuestion);
+            statement.setString(6, securityAnswer);
+            statement.executeUpdate();
+        } finally {
+            statement.close();
+        }
         return validateUser(password, userName);
     }
 
@@ -56,10 +60,14 @@ public class UserDataAccess extends DataAccess {
         String result = "";
         String query = "SELECT security_question FROM recipebook_security_questions WHERE security_question_id = (SELECT security_question_id FROM recipebook_user WHERE user_name = ?)";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, userName);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            result = resultSet.getString("security_question");
+        try {
+            statement.setString(1, userName);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result = resultSet.getString("security_question");
+            }
+        } finally {
+            statement.close();
         }
         return result;
     }
@@ -74,9 +82,13 @@ public class UserDataAccess extends DataAccess {
         List<String> result = new ArrayList<String>();
         String query = "SELECT security_question FROM recipebook_security_questions";
         PreparedStatement statement = connection.prepareStatement(query);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            result.add(resultSet.getString("security_question"));
+        try {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(resultSet.getString("security_question"));
+            }
+        } finally {
+            statement.close();
         }
         return result;
     }
@@ -90,8 +102,12 @@ public class UserDataAccess extends DataAccess {
     public void removeUser(int userId) throws SQLException {
         String dml = "DELETE FROM recipebook_user WHERE user_id = ?";
         PreparedStatement statement = connection.prepareStatement(dml);
-        statement.setInt(1, userId);
-        statement.executeUpdate();
+        try {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } finally {
+            statement.close();
+        }
     }
 
     /**
@@ -104,9 +120,13 @@ public class UserDataAccess extends DataAccess {
     public void updatePassword(String userName, String newPassword) throws SQLException {
         String dml = "UPDATE recipebook_user SET password = ? WHERE user_name = ?";
         PreparedStatement statement = connection.prepareStatement(dml);
-        statement.setString(1, userName);
-        statement.setString(2, newPassword);
-        statement.executeUpdate();
+        try {
+            statement.setString(1, userName);
+            statement.setString(2, newPassword);
+            statement.executeUpdate();
+        } finally {
+            statement.close();
+        }
     }
 
     /**
@@ -121,14 +141,17 @@ public class UserDataAccess extends DataAccess {
     public Boolean validateSecurityAnswer(String userName, String securityAnswer) throws SQLException {
         String query = "SELECT user_name FROM recipebook_user WHERE user_name = ? and security_answer = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, userName);
-        statement.setString(2, securityAnswer);
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return resultSet.getString("user_name").equals(userName);
-        } else {
-            return false;
+        try {
+            statement.setString(1, userName);
+            statement.setString(2, securityAnswer);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("user_name").equals(userName);
+            }
+        } finally {
+            statement.close();
         }
+        return false;
     }
 
     /**
@@ -144,13 +167,17 @@ public class UserDataAccess extends DataAccess {
         User result = new RecipeBookUser(password, userName);
         String query = "SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, userName);
-        statement.setString(2, password);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            result = new RecipeBookUser(resultSet.getString("first_name"), resultSet.getString("last_name"),
-                    resultSet.getString("password"), resultSet.getInt("user_id"), resultSet.getString("user_name"));
-            result.setAuthenticated(true);
+        try {
+            statement.setString(1, userName);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result = new RecipeBookUser(resultSet.getString("first_name"), resultSet.getString("last_name"),
+                        resultSet.getString("password"), resultSet.getInt("user_id"), resultSet.getString("user_name"));
+                result.setAuthenticated(true);
+            }
+        } finally {
+            statement.close();
         }
         return result;
     }
@@ -167,10 +194,14 @@ public class UserDataAccess extends DataAccess {
         int result = 0;
         String query = "SELECT user_name FROM recipebook_user WHERE user_name = ?";
         PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, userName);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            result++;
+        try {
+            statement.setString(1, userName);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result++;
+            }
+        } finally {
+            statement.close();
         }
         return result > 0;
     }

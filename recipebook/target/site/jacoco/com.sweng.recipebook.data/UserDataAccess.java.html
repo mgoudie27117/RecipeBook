@@ -35,14 +35,18 @@ public class UserDataAccess extends DataAccess {
             String securityAnswer) throws SQLException {
 <span class="fc" id="L36">        String dml = &quot;INSERT INTO recipebook_user (user_name, password, first_name, last_name, security_question_id, security_answer) VALUES (?, ?, ?, ?, (SELECT security_question_id FROM recipebook_security_questions WHERE security_question = ?), ?)&quot;;</span>
 <span class="fc" id="L37">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L38">        statement.setString(1, userName);</span>
-<span class="fc" id="L39">        statement.setString(2, password);</span>
-<span class="fc" id="L40">        statement.setString(3, firstName);</span>
-<span class="fc" id="L41">        statement.setString(4, lastName);</span>
-<span class="fc" id="L42">        statement.setString(5, securityQuestion);</span>
-<span class="fc" id="L43">        statement.setString(6, securityAnswer);</span>
-<span class="fc" id="L44">        statement.executeUpdate();</span>
-<span class="fc" id="L45">        return validateUser(password, userName);</span>
+        try {
+<span class="fc" id="L39">            statement.setString(1, userName);</span>
+<span class="fc" id="L40">            statement.setString(2, password);</span>
+<span class="fc" id="L41">            statement.setString(3, firstName);</span>
+<span class="fc" id="L42">            statement.setString(4, lastName);</span>
+<span class="fc" id="L43">            statement.setString(5, securityQuestion);</span>
+<span class="fc" id="L44">            statement.setString(6, securityAnswer);</span>
+<span class="fc" id="L45">            statement.executeUpdate();</span>
+<span class="fc" id="L46">        } finally {</span>
+<span class="fc" id="L47">            statement.close();</span>
+        }
+<span class="fc" id="L49">        return validateUser(password, userName);</span>
     }
 
     /**
@@ -53,15 +57,19 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public String getSecurityQuestion(String userName) throws SQLException {
-<span class="fc" id="L56">        String result = &quot;&quot;;</span>
-<span class="fc" id="L57">        String query = &quot;SELECT security_question FROM recipebook_security_questions WHERE security_question_id = (SELECT security_question_id FROM recipebook_user WHERE user_name = ?)&quot;;</span>
-<span class="fc" id="L58">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L59">        statement.setString(1, userName);</span>
-<span class="fc" id="L60">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L62">            result = resultSet.getString(&quot;security_question&quot;);</span>
+<span class="fc" id="L60">        String result = &quot;&quot;;</span>
+<span class="fc" id="L61">        String query = &quot;SELECT security_question FROM recipebook_security_questions WHERE security_question_id = (SELECT security_question_id FROM recipebook_user WHERE user_name = ?)&quot;;</span>
+<span class="fc" id="L62">        PreparedStatement statement = connection.prepareStatement(query);</span>
+        try {
+<span class="fc" id="L64">            statement.setString(1, userName);</span>
+<span class="fc" id="L65">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L67">                result = resultSet.getString(&quot;security_question&quot;);</span>
+            }
+<span class="fc" id="L69">        } finally {</span>
+<span class="fc" id="L70">            statement.close();</span>
         }
-<span class="fc" id="L64">        return result;</span>
+<span class="fc" id="L72">        return result;</span>
     }
 
     /**
@@ -71,14 +79,18 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public List&lt;String&gt; getSecurityQuestions() throws SQLException {
-<span class="fc" id="L74">        List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L75">        String query = &quot;SELECT security_question FROM recipebook_security_questions&quot;;</span>
-<span class="fc" id="L76">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L77">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L79">            result.add(resultSet.getString(&quot;security_question&quot;));</span>
+<span class="fc" id="L82">        List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L83">        String query = &quot;SELECT security_question FROM recipebook_security_questions&quot;;</span>
+<span class="fc" id="L84">        PreparedStatement statement = connection.prepareStatement(query);</span>
+        try {
+<span class="fc" id="L86">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L88">                result.add(resultSet.getString(&quot;security_question&quot;));</span>
+            }
+<span class="fc" id="L90">        } finally {</span>
+<span class="fc" id="L91">            statement.close();</span>
         }
-<span class="fc" id="L81">        return result;</span>
+<span class="fc" id="L93">        return result;</span>
     }
 
     /**
@@ -88,11 +100,15 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void removeUser(int userId) throws SQLException {
-<span class="fc" id="L91">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
-<span class="fc" id="L92">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L93">        statement.setInt(1, userId);</span>
-<span class="fc" id="L94">        statement.executeUpdate();</span>
-<span class="fc" id="L95">    }</span>
+<span class="fc" id="L103">        String dml = &quot;DELETE FROM recipebook_user WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L104">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+        try {
+<span class="fc" id="L106">            statement.setInt(1, userId);</span>
+<span class="fc" id="L107">            statement.executeUpdate();</span>
+<span class="fc" id="L108">        } finally {</span>
+<span class="fc" id="L109">            statement.close();</span>
+        }
+<span class="fc" id="L111">    }</span>
 
     /**
      * updatePassword - Method to update a user's password.
@@ -102,12 +118,16 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void updatePassword(String userName, String newPassword) throws SQLException {
-<span class="fc" id="L105">        String dml = &quot;UPDATE recipebook_user SET password = ? WHERE user_name = ?&quot;;</span>
-<span class="fc" id="L106">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L107">        statement.setString(1, userName);</span>
-<span class="fc" id="L108">        statement.setString(2, newPassword);</span>
-<span class="fc" id="L109">        statement.executeUpdate();</span>
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L121">        String dml = &quot;UPDATE recipebook_user SET password = ? WHERE user_name = ?&quot;;</span>
+<span class="fc" id="L122">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+        try {
+<span class="fc" id="L124">            statement.setString(1, userName);</span>
+<span class="fc" id="L125">            statement.setString(2, newPassword);</span>
+<span class="fc" id="L126">            statement.executeUpdate();</span>
+<span class="fc" id="L127">        } finally {</span>
+<span class="fc" id="L128">            statement.close();</span>
+        }
+<span class="fc" id="L130">    }</span>
 
     /**
      * validateSecurityAnswer - Method to validate the user's security question
@@ -119,16 +139,19 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public Boolean validateSecurityAnswer(String userName, String securityAnswer) throws SQLException {
-<span class="fc" id="L122">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ? and security_answer = ?&quot;;</span>
-<span class="fc" id="L123">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L124">        statement.setString(1, userName);</span>
-<span class="fc" id="L125">        statement.setString(2, securityAnswer);</span>
-<span class="fc" id="L126">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (resultSet.next()) {</span>
-<span class="fc" id="L128">            return resultSet.getString(&quot;user_name&quot;).equals(userName);</span>
-        } else {
-<span class="fc" id="L130">            return false;</span>
+<span class="fc" id="L142">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ? and security_answer = ?&quot;;</span>
+<span class="fc" id="L143">        PreparedStatement statement = connection.prepareStatement(query);</span>
+        try {
+<span class="fc" id="L145">            statement.setString(1, userName);</span>
+<span class="fc" id="L146">            statement.setString(2, securityAnswer);</span>
+<span class="fc" id="L147">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (resultSet.next()) {</span>
+<span class="fc" id="L149">                return resultSet.getString(&quot;user_name&quot;).equals(userName);</span>
+            }
+        } finally {
+<span class="fc" id="L152">            statement.close();</span>
         }
+<span class="fc" id="L154">        return false;</span>
     }
 
     /**
@@ -141,18 +164,22 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public User validateUser(String password, String userName) throws SQLException {
-<span class="fc" id="L144">        User result = new RecipeBookUser(password, userName);</span>
-<span class="fc" id="L145">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
-<span class="fc" id="L146">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L147">        statement.setString(1, userName);</span>
-<span class="fc" id="L148">        statement.setString(2, password);</span>
-<span class="fc" id="L149">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L150" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L151">            result = new RecipeBookUser(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
-<span class="fc" id="L152">                    resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
-<span class="fc" id="L153">            result.setAuthenticated(true);</span>
+<span class="fc" id="L167">        User result = new RecipeBookUser(password, userName);</span>
+<span class="fc" id="L168">        String query = &quot;SELECT user_id, user_name, password, first_name, last_name FROM recipebook_user WHERE user_name = ? AND password = ?&quot;;</span>
+<span class="fc" id="L169">        PreparedStatement statement = connection.prepareStatement(query);</span>
+        try {
+<span class="fc" id="L171">            statement.setString(1, userName);</span>
+<span class="fc" id="L172">            statement.setString(2, password);</span>
+<span class="fc" id="L173">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L175">                result = new RecipeBookUser(resultSet.getString(&quot;first_name&quot;), resultSet.getString(&quot;last_name&quot;),</span>
+<span class="fc" id="L176">                        resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
+<span class="fc" id="L177">                result.setAuthenticated(true);</span>
+            }
+<span class="fc" id="L179">        } finally {</span>
+<span class="fc" id="L180">            statement.close();</span>
         }
-<span class="fc" id="L155">        return result;</span>
+<span class="fc" id="L182">        return result;</span>
     }
 
     /**
@@ -164,15 +191,19 @@ public class UserDataAccess extends DataAccess {
      * @throws SQLException
      */
     public Boolean verifyDuplicateUsername(String userName) throws SQLException {
-<span class="fc" id="L167">        int result = 0;</span>
-<span class="fc" id="L168">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
-<span class="fc" id="L169">        PreparedStatement statement = connection.prepareStatement(query);</span>
-<span class="fc" id="L170">        statement.setString(1, userName);</span>
-<span class="fc" id="L171">        ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L172" title="All 2 branches covered.">        while (resultSet.next()) {</span>
-<span class="fc" id="L173">            result++;</span>
+<span class="fc" id="L194">        int result = 0;</span>
+<span class="fc" id="L195">        String query = &quot;SELECT user_name FROM recipebook_user WHERE user_name = ?&quot;;</span>
+<span class="fc" id="L196">        PreparedStatement statement = connection.prepareStatement(query);</span>
+        try {
+<span class="fc" id="L198">            statement.setString(1, userName);</span>
+<span class="fc" id="L199">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L201">                result++;</span>
+            }
+<span class="fc" id="L203">        } finally {</span>
+<span class="fc" id="L204">            statement.close();</span>
         }
-<span class="fc bfc" id="L175" title="All 2 branches covered.">        return result &gt; 0;</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        return result &gt; 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
