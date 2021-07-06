@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import com.sweng.recipebook.models.RecipeImage;
 import com.sweng.recipebook.models.RecipeMedia;
+import com.sweng.recipebook.models.RecipeMediaComposite;
 import com.sweng.recipebook.models.RecipeMediaConcreteCreator;
 import com.sweng.recipebook.models.RecipeVideo;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +43,12 @@ public class RecipeMediaTest {
                 RecipeMedia recipeMediaTest4 = new RecipeMediaConcreteCreator().createRecipeMedia(new MockMultipartFile(
                                 "text", "TEST.txt", MediaType.TEXT_PLAIN_VALUE, "NULL TEST".getBytes()), "\\TESTPATH");
                 assertEquals(recipeMediaTest4, null);
+
+                RecipeMediaComposite composite = new RecipeMediaComposite();
+                composite.addRecipeMedia(recipeMediaTest1);
+                assertEquals(composite.getRecipeMedia().size(), 1);
+                composite.removeRecipeMedia(recipeMediaTest1);
+                assertEquals(composite.getRecipeMedia().size(), 0);
         }
 
         /**

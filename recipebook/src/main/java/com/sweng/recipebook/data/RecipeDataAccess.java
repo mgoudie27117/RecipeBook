@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.sweng.recipebook.models.IngredientComposite;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeMediaComposite;
@@ -19,6 +18,25 @@ public class RecipeDataAccess extends DataAccess {
 
     public RecipeDataAccess() {
         super();
+    }
+
+    /**
+     * addFavoriteRecipe - Method to add a favorite recipe to the favorites table.
+     * 
+     * @param userId   - User id number.
+     * @param recipeId - Recipe id number.
+     * @throws SQLException
+     */
+    public void addFavoriteRecipe(int userId, int recipeId) throws SQLException {
+        String dml = "MERGE INTO recipebook_favorite_recipes r USING ( SELECT ? AS user_id, ? AS recipe_id FROM dual) a ON (a.user_id = r.user_id AND a.recipe_id = r.recipe_id) WHEN NOT MATCHED THEN INSERT (user_id, recipe_id) VALUES (a.user_id, a.recipe_id)";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        try {
+            statement.setInt(1, userId);
+            statement.setInt(2, recipeId);
+            statement.execute();
+        } finally {
+            statement.close();
+        }
     }
 
     /**
@@ -62,6 +80,30 @@ public class RecipeDataAccess extends DataAccess {
             while (resultSet.next()) {
                 result.add(new SharedRecipe(resultSet.getInt("recipe_id"), resultSet.getString("recipe_name"),
                         resultSet.getString("recipe_description"), 0, "", new IngredientComposite()));
+            }
+        } finally {
+            statement.close();
+        }
+        return result;
+    }
+
+    /**
+     * getFavoriteRecipeIds - Method to retrieve favorite recipe ids for a given
+     * user id number.
+     * 
+     * @param userId - User id number.
+     * @return - List of favorite recipe ids.
+     * @throws SQLException
+     */
+    public List<Integer> getFavoriteRecipeIds(int userId) throws SQLException {
+        List<Integer> result = new ArrayList<Integer>();
+        String query = "SELECT recipe_id FROM recipebook_favorite_recipes WHERE user_id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(resultSet.getInt("recipe_id"));
             }
         } finally {
             statement.close();
@@ -125,7 +167,49 @@ public class RecipeDataAccess extends DataAccess {
     }
 
     /**
-     * removeRecipe - Method to remove a user from the application user table.
+     * isFavoriteRecipe - Method to test if a given recipe id for a user id is a
+     * favorite.
+     * 
+     * @param recipeId - Recipe id number.
+     * @param userId   - User id number.
+     * @return - True if favorite, otherwise false.
+     * @throws SQLException
+     */
+    public boolean isFavoriteRecipe(int recipeId, int userId) throws SQLException {
+        String query = "SELECT recipe_id, user_id FROM recipebook_favorite_recipes WHERE recipe_id = ? user_id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setInt(1, recipeId);
+            statement.setInt(2, userId);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.isBeforeFirst();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
+     * removeFavoriteRecipe - Method to remove a favorite recipe from the favorites
+     * table.
+     * 
+     * @param userId   - User id number.
+     * @param recipeId - Recipe id number.
+     * @throws SQLException
+     */
+    public void removeFavoriteRecipe(int userId, int recipeId) throws SQLException {
+        String dml = "DELETE FROM recipebook_favorite_recipes WHERE user_id = ? AND recipe_id = ?";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        try {
+            statement.setInt(1, userId);
+            statement.setInt(2, recipeId);
+            statement.execute();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
+     * removeRecipe - Method to remove a recipe from the application recipe table.
      * 
      * @param userId - Recipe id number to be removed.
      * @throws SQLException
@@ -136,6 +220,29 @@ public class RecipeDataAccess extends DataAccess {
         try {
             statement.setInt(1, recipeId);
             statement.executeUpdate();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
+     * updateRecipe - Method to update a recipe in the recipe table.
+     * 
+     * @param recipeId - Recipe id number to be updated.
+     * @param recipe   - Recipe information.
+     * @throws SQLException
+     */
+    public void updateRecipe(int recipeId, Recipe recipe) throws SQLException {
+        String dml = "UPDATE recipebook_recipes SET recipe_description = ?, serving_size = ?, instructions = ? WHERE recipe_id = ?";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        Blob blob = connection.createBlob();
+        try {
+            blob.setBytes(1, this.correctJSONCharacters(recipe.getInstructions()).getBytes());
+            statement.setString(1, this.correctJSONCharacters(recipe.getRecipeDescription()));
+            statement.setInt(2, recipe.getServingSize());
+            statement.setBlob(3, blob);
+            statement.setInt(4, recipeId);
+            statement.execute();
         } finally {
             statement.close();
         }

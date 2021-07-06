@@ -18,19 +18,40 @@ public class IngredientDataAccess extends DataAccess {
     }
 
     /**
+     * addRecipeIngredient - Method to add an ingredient for a given recipeId.
+     * 
+     * @param recipeId   - Recipe id for ingredient to be added.
+     * @param ingredient - Ingredient to be added.
+     * @throws SQLException
+     */
+    public void addRecipeIngredient(int recipeId, Ingredient ingredient) throws SQLException {
+        String dml = "INSERT INTO recipebook_ingredients (recipe_id, ingredient_name, portion_measure, measure_unit_id) VALUES (?, ?, ?, (SELECT measure_unit_id FROM recipebook_measure_unit WHERE measure_unit = ?))";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        try {
+            statement.setInt(1, recipeId);
+            statement.setString(2, ingredient.getIngredientName().replaceAll("_", " "));
+            statement.setDouble(3, ingredient.getPortionAmount());
+            statement.setString(4, ingredient.getPortionMeasure());
+            statement.executeUpdate();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
      * addRecipeIngredient - Method to add ingredients for a given recipe id.
      * 
      * @param recipeId    - Recipe id of ingredients to be added.
      * @param ingredients - Ingredients to the added.
      * @throws SQLException
      */
-    public void addRecipeIngredient(int recipeId, ArrayList<Ingredient> ingredients) throws SQLException {
+    public void addRecipeIngredients(int recipeId, ArrayList<Ingredient> ingredients) throws SQLException {
         for (Ingredient ingredient : ingredients) {
             String dml = "INSERT INTO recipebook_ingredients (recipe_id, ingredient_name, portion_measure, measure_unit_id) VALUES (?, ?, ?, (SELECT measure_unit_id FROM recipebook_measure_unit WHERE measure_unit = ?))";
             PreparedStatement statement = connection.prepareStatement(dml);
             try {
                 statement.setInt(1, recipeId);
-                statement.setString(2, ingredient.getIngredientName().replaceAll("_", " "));
+                statement.setString(2, this.correctJSONCharacters(ingredient.getIngredientName()));
                 statement.setDouble(3, ingredient.getPortionAmount());
                 statement.setString(4, ingredient.getPortionMeasure());
                 statement.executeUpdate();
@@ -63,5 +84,44 @@ public class IngredientDataAccess extends DataAccess {
             statement.close();
         }
         return result;
+    }
+
+    /**
+     * removeIngredient - Method to remove an ingredient for a given id number.
+     * 
+     * @param recipeId       - Recipe id number of ingredient to be removed.
+     * @param ingredientName - Ingredient name to be removed.
+     * @throws SQLException
+     */
+    public void removeIngredient(int recipeId, String ingredientName) throws SQLException {
+        String dml = "DELETE FROM recipebook_ingredients WHERE recipe_id = ? AND ingredient_name = ?";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        try {
+            statement.setInt(1, recipeId);
+            statement.setString(2, ingredientName);
+            statement.execute();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
+     * updateIngredient - Method to update an ingredient in the database table.
+     * 
+     * @param ingredient - Ingredient to be updated.
+     * @throws SQLException
+     */
+    public void updateIngredient(Ingredient ingredient) throws SQLException {
+        String dml = "UPDATE recipebook_ingredients SET ingredient_name = ?, portion_measure = ?, measure_unit_id = (SELECT measure_unit_id FROM recipebook_measure_unit WHERE measure_unit = ?) WHERE ingredient_id = ?";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        try {
+            statement.setString(1, this.correctJSONCharacters(ingredient.getIngredientName()));
+            statement.setDouble(2, ingredient.getPortionAmount());
+            statement.setString(3, ingredient.getPortionMeasure());
+            statement.setInt(4, ingredient.getIngredientId());
+            statement.execute();
+        } finally {
+            statement.close();
+        }
     }
 }

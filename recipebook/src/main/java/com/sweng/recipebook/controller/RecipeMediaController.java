@@ -47,6 +47,21 @@ public class RecipeMediaController extends Controller {
     }
 
     /**
+     * removerecipemedia - API call to remove a media file.
+     * 
+     * @param recipeId - Recipe id number.
+     * @param file     - File name.
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/removerecipemedia/{recipeId}/{file}", method = RequestMethod.POST)
+    public void removerecipemedia(@PathVariable String recipeId, @PathVariable String file) throws SQLException {
+        File requestFile = new File(configDataAccess.getConfig("FILESHARE_PATH") + "\\" + recipeId + "\\" + file);
+        if (requestFile.exists()) {
+            requestFile.delete();
+        }
+    }
+
+    /**
      * retrieverecipemedia - API call to retrieve a request media file.
      * 
      * @param recipeId - Recipe id number.
