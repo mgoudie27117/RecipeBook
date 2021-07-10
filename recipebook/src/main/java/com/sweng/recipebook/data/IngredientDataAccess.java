@@ -98,7 +98,7 @@ public class IngredientDataAccess extends DataAccess {
         PreparedStatement statement = connection.prepareStatement(dml);
         try {
             statement.setInt(1, recipeId);
-            statement.setString(2, ingredientName);
+            statement.setString(2, correctJSONCharacters(ingredientName));
             statement.execute();
         } finally {
             statement.close();

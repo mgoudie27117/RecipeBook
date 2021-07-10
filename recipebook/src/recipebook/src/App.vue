@@ -38,6 +38,13 @@
           </li>
           <li class="nav-item me-3">
             <span v-if="isAuthenticated">
+              <router-link class="nav-link" to="/favoriterecipes"
+                >Favorite Recipes</router-link
+              >
+            </span>
+          </li>
+          <li class="nav-item me-3">
+            <span v-if="isAuthenticated">
               <router-link  class="nav-link"
                 @click.prevent="onLogout"
                 to="/"

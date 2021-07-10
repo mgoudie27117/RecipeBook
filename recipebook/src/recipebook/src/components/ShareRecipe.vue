@@ -215,7 +215,7 @@
         if (files.value.files[0].name.toLowerCase().includes(".mp4")
           || files.value.files[0].name.toLowerCase().includes(".jpeg")
           || files.value.files[0].name.toLowerCase().includes(".jpg")) {
-            model.media[index].file = files.value.files[0];
+            this.model.media[index].file = files.value.files[0];
         } else {
           store.commit("setError", "Only .jpg, .jpeg, or .mp4 files are accepted for sharing!");
         }

@@ -85,7 +85,7 @@ public class RecipeController extends Controller {
      * @return - List of favorite user recipes.
      * @throws SQLException
      */
-    @RequestMapping(value = "/getfavoriterecipes", method = RequestMethod.GET)
+    @RequestMapping(value = "/getfavoriterecipes", method = RequestMethod.POST)
     public List<SharedRecipe> getfavoriterecipes(@RequestBody Map<String, String> payload) throws SQLException {
         return getfavoriterecipes(payload.get("token"));
     }
@@ -117,6 +117,36 @@ public class RecipeController extends Controller {
     @RequestMapping(value = "/gethomerecipes", method = RequestMethod.GET)
     public List<Recipe> gethomerecipes() throws SQLException {
         return recipeDataAccess.getHomeRecipes();
+    }
+
+    /**
+     * isfavoriterecipe - API call to determine if a recipe is a favorite of the
+     * user.
+     * 
+     * @param payload - Request containing user token and recipe id.
+     * @return - True if recipe is favorite of user, otherwise false.
+     * @throws NumberFormatException
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/isfavoriterecipe", method = RequestMethod.POST)
+    public boolean isfavoriterecipe(@RequestBody Map<String, String> payload)
+            throws NumberFormatException, SQLException {
+        return recipeDataAccess.isFavoriteRecipe(Integer.parseInt(payload.get("recipeId")),
+                JWT.getUserId(payload.get("token")));
+    }
+
+    /**
+     * isuserrecipe - API call to determine if a recipe was shared by the user.
+     * 
+     * @param payload - Request containing user token and recipe id.
+     * @return - True if the user shared the recipe, otherwise false.
+     * @throws NumberFormatException
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/isuserrecipe", method = RequestMethod.POST)
+    public boolean isuserrecipe(@RequestBody Map<String, String> payload) throws NumberFormatException, SQLException {
+        return recipeDataAccess.isUserRecipe(Integer.parseInt(payload.get("recipeId")),
+                JWT.getUserId(payload.get("token")));
     }
 
     /**

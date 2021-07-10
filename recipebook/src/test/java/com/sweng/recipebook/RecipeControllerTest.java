@@ -43,12 +43,12 @@ public class RecipeControllerTest {
         userPayload.put("password", "TEST");
         User testUser = userControllerTest.login(userPayload);
         Map<String, String> payload1 = new HashMap<String, String>();
-        payload1.put("recipeName", "TEST_NAME");
+        payload1.put("recipeName", "TEST_NAME_1");
         payload1.put("token", testUser.getAccessToken());
         assertEquals(recipeControllerTest.checkuserrecipeexists(payload1), false);
         Map<String, Object> payload2 = new HashMap<String, Object>();
         payload2.put("SharedRecipe",
-                new Gson().toJson(new SharedRecipe("TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS")));
+                new Gson().toJson(new SharedRecipe("TEST_NAME_1", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS")));
         payload2.put("Ingredients",
                 new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
@@ -58,7 +58,7 @@ public class RecipeControllerTest {
         Map<String, Object> payload3 = new HashMap<String, Object>();
         int testResult2 = recipeControllerTest.sharerecipe(payload3);
         assertEquals(true, testResult2 == 0);
-        new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
+        new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME_1", testUser.getUserId()));
     }
 
     /**
@@ -135,8 +135,42 @@ public class RecipeControllerTest {
         List<SharedRecipe> favorites = recipeControllerTest.getfavoriterecipes(payload3);
         assertEquals(favorites.size(), 1);
         assertEquals(favorites.get(0).getRecipeName(), "TEST_NAME");
+        Map<String, String> payload4 = new HashMap<String, String>();
+        payload4.put("recipeId", recipeId + "");
+        payload4.put("token", testUser.getAccessToken());
+        assertEquals(recipeControllerTest.isfavoriterecipe(payload4), true);
         favorites = recipeControllerTest.removefavoriterecipe(payload3);
         assertEquals(favorites.size(), 0);
+        new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
+    }
+
+    /**
+     * checkIsUserRecipe - Test method for RecipeController verification of user
+     * association with a recipe.
+     * 
+     * Related Test Case Number(s): T41
+     * 
+     * @throws SQLException
+     */
+    @Test
+    public void checkIsUserRecipe() throws SQLException {
+        Map<String, String> userPayload = new HashMap<String, String>();
+        userPayload.put("userName", "mgoudie");
+        userPayload.put("password", "TEST");
+        User testUser = userControllerTest.login(userPayload);
+        Map<String, Object> payload2 = new HashMap<String, Object>();
+        payload2.put("SharedRecipe",
+                new Gson().toJson(new SharedRecipe("TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS")));
+        payload2.put("Ingredients", new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup"),
+                new RecipeIngredient("TEST_I2", 2.02, "cup") }));
+        payload2.put("Token", testUser.getAccessToken());
+        int recipeId = recipeControllerTest.sharerecipe(payload2);
+        Map<String, String> payload3 = new HashMap<String, String>();
+        payload3.put("recipeId", recipeId + "");
+        payload3.put("token", testUser.getAccessToken());
+        assertEquals(true, recipeControllerTest.isuserrecipe(payload3));
+        payload3.put("recipeId", "0");
+        assertEquals(false, recipeControllerTest.isuserrecipe(payload3));
         new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
     }
 

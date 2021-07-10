@@ -176,7 +176,28 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public boolean isFavoriteRecipe(int recipeId, int userId) throws SQLException {
-        String query = "SELECT recipe_id, user_id FROM recipebook_favorite_recipes WHERE recipe_id = ? user_id = ?";
+        String query = "SELECT recipe_id, user_id FROM recipebook_favorite_recipes WHERE recipe_id = ? AND user_id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setInt(1, recipeId);
+            statement.setInt(2, userId);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.isBeforeFirst();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
+     * isUserRecipe - Method to test if a given recipe id was shared by the user id.
+     * 
+     * @param recipeId - Recipe id number.
+     * @param userId   - User id number.
+     * @return - True if it is the user's recipe, otherwise false.
+     * @throws SQLException
+     */
+    public boolean isUserRecipe(int recipeId, int userId) throws SQLException {
+        String query = "SELECT recipe_id, user_id FROM recipebook_recipes WHERE recipe_id = ? AND user_id = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             statement.setInt(1, recipeId);

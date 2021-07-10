@@ -9,6 +9,7 @@ const store = createStore({
     })],
     state: {
         error: "",
+        favoriteRecipes: [],
         isBusy: false,
         measureUnits: [],
         model: {},
@@ -23,6 +24,7 @@ const store = createStore({
         clearToken: (state) => state.token = "",
         setBusy: (state) => state.isBusy = true,
         setError: (state, error) => state.error = error,
+        setFavorites: (state, favorites) => state.favoriteRecipes = favorites,
         setMeasureUnits: (state, units) => state.measureUnits = units,
         setSuccess: (state, success) => state.success = success,
         setToken: (state, responseData) => {
@@ -125,7 +127,7 @@ const store = createStore({
                                             axios.post('/api/recipemedia/uploadrecipemedia/' + shareResponse.data, formData, config)
                                                 .then((uploadResponse) => {
                                                     if (uploadResponse.data === "SUCCESS") {
-                                                        commit("setSuccess", "Successfully shared recipe " + recipe.SharedRecipe.recipeName + "!");
+                                                        commit("setSuccess", "Successfully shared recipe " + ((recipe.SharedRecipe.recipeName.replaceAll("__", " ")).replaceAll("---", ",")) + "!");
                                                     } else {
                                                         commit("setError", "Failed to upload recipe media.");
                                                     }
@@ -228,6 +230,59 @@ const store = createStore({
                 commit("clearError");
             }
             return check;
+        },
+        updateRecipe: ({ commit }, recipe) => {
+            commit("setBusy");
+            try {
+                axios.post('/api/recipe/checkuserrecipeexists', { recipeName: recipe.SharedRecipe.recipeName, token: recipe.Token })
+                    .then(message => {
+                        if (message.data) {
+                        axios.post('/api/recipe/updaterecipe', recipe)
+                            .then((updateResponse) => {
+                                commit("clearBusy");
+                                if (updateResponse.data.recipeId > 0) {
+                                    if (recipe.Files.length == 0) {
+                                        if (recipe.MediaRemoval.length == 0) {
+                                            commit("setSuccess", "Successfully updated recipe " + ((recipe.SharedRecipe.recipeName.replaceAll("__", " ")).replaceAll("---", ",")) + "!");
+                                        } else {
+                                            recipe.MediaRemoval.forEach(removeFile => {
+                                                axios.post("/api/recipemedia/removerecipemedia/" + updateResponse.data.recipeId + "/" + removeFile);
+                                            });
+                                            commit("setSuccess", "Successfully updated recipe " + ((recipe.SharedRecipe.recipeName.replaceAll("__", " ")).replaceAll("---", ",")) + "!");
+                                        }
+                                    } else {
+                                        var formData = new FormData();
+                                        recipe.Files.forEach(file => {
+                                            formData.append('files', file.mediaAdd);
+                                        });
+                                        const config = { headers: { 'content-type': 'multipart/form-data' } };
+                                        axios.post('/api/recipemedia/uploadrecipemedia/' + updateResponse.data.recipeId, formData, config)
+                                            .then((uploadResponse) => {
+                                                if (uploadResponse.data === "SUCCESS") {
+                                                    if (recipe.MediaRemoval.length == 0) {
+                                                        commit("setSuccess", "Successfully updated recipe " + ((recipe.SharedRecipe.recipeName.replaceAll("__", " ")).replaceAll("---", ",")) + "!");
+                                                    } else {
+                                                        recipe.MediaRemoval.forEach(removeFile => {
+                                                            axios.post("/api/recipemedia/removerecipemedia/" + updateResponse.data.recipeId + "/" + removeFile);
+                                                        });
+                                                        commit("setSuccess", "Successfully updated recipe " + ((recipe.SharedRecipe.recipeName.replaceAll("__", " ")).replaceAll("---", ",")) + "!");
+                                                    }
+                                                } else {
+                                                    commit("setError", "Failed to upload recipe media.");
+                                                }
+                                            });
+                                    }
+                                } else {
+                                    commit("setError", "Failed to update recipe.");
+                                } 
+                            });
+                        }
+                    });
+            }  catch {
+                commit("setError", "Failed to update recipe!");
+            } finally {
+                commit("clearBusy");
+            }
         }
     },
     getters: {

@@ -28,6 +28,11 @@ import store from "../store/store";
 import axios from "../axios-connection";
 import "@dafcoe/vue-swappable-card/dist/vue-swappable-card.css";
 export default {
+  beforeMount() {
+    axios.post("/api/recipe/getfavoriterecipes", { token: store.state.token }).then((message) => {
+      store.commit("setFavorites", message.data);
+    });
+  },
   mounted() {
       axios.get("/api/recipe/gethomerecipes").then((message) => {
       this.model.recipes = message.data;

@@ -4,18 +4,18 @@ recipebook,com.sweng.recipebook.security,JWTStatus,0,44,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook,RecipebookApplication,0,8,0,0,0,3,0,2,0,2
 recipebook,com.sweng.recipebook.data,UserDataAccess,0,258,0,12,0,80,0,15,0,9
 recipebook,com.sweng.recipebook.data,ConfigDataAccess,0,31,0,2,0,12,0,3,0,2
-recipebook,com.sweng.recipebook.data,RecipeDataAccess,0,329,0,8,0,94,0,14,0,10
+recipebook,com.sweng.recipebook.data,RecipeDataAccess,0,377,0,8,0,108,0,16,0,12
 recipebook,com.sweng.recipebook.data,DataAccessConcreteCreator,0,3,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook.data,MeasureDataAccess,0,43,0,2,0,13,0,3,0,2
 recipebook,com.sweng.recipebook.data,DatabaseConnection,6,20,0,0,2,9,1,2,1,2
 recipebook,com.sweng.recipebook.data,DataAccessCreator,0,30,0,6,0,9,0,7,0,2
-recipebook,com.sweng.recipebook.data,IngredientDataAccess,0,182,0,4,0,53,0,8,0,6
+recipebook,com.sweng.recipebook.data,IngredientDataAccess,0,184,0,4,0,53,0,8,0,6
 recipebook,com.sweng.recipebook.data,DataAccess,0,13,0,0,0,4,0,2,0,2
 recipebook,com.sweng.recipebook.controller,MeasureController,0,16,0,0,0,4,0,2,0,2
 recipebook,com.sweng.recipebook.controller,RecipeMediaController,8,248,3,17,3,42,3,14,0,7
 recipebook,com.sweng.recipebook.controller,UserController,0,150,0,14,0,26,0,15,0,8
 recipebook,com.sweng.recipebook.controller,Controller,0,8,0,0,0,2,0,2,0,2
-recipebook,com.sweng.recipebook.controller,RecipeController,0,343,0,14,0,60,0,17,0,10
+recipebook,com.sweng.recipebook.controller,RecipeController,0,373,0,14,0,64,0,19,0,12
 recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
 recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
 recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
