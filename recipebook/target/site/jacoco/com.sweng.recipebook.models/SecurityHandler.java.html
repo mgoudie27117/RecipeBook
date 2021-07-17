@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recipebook</a> &gt; <a href="index.source.html" class="el_package">com.sweng.recipebook.models</a> &gt; <span class="el_source">SecurityHandler.java</span></div><h1>SecurityHandler.java</h1><pre class="source lang-java linenums">package com.sweng.recipebook.models;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import java.util.Date;
+
+public abstract class SecurityHandler {
+
+    public static final String SECRET = &quot;AmazingRecipes&quot;;
+    public static final int EXPIRATION = 1;
+
+<span class="fc" id="L17">    public SecurityHandler() {</span>
+<span class="fc" id="L18">    }</span>
+
+    /**
+     * generateToken - Method to generate a token String for the given User object.
+     * 
+     * @param user - User object to create token for.
+     * @return - Token String
+     */
+    public String generateToken(User user) {
+<span class="fc" id="L27">        return JWT.create().withIssuer(&quot;auth0&quot;).withClaim(&quot;userId&quot;, user.getUserId())</span>
+<span class="fc" id="L28">                .withClaim(&quot;userName&quot;, user.getUserId()).withClaim(&quot;firstName&quot;, user.getFirstName())</span>
+<span class="fc" id="L29">                .withClaim(&quot;lastName&quot;, user.getLastName())</span>
+<span class="fc" id="L30">                .withExpiresAt(new Date(System.currentTimeMillis() + (EXPIRATION * 60 * 1000)))</span>
+<span class="fc" id="L31">                .sign(Algorithm.HMAC256(SECRET));</span>
+    }
+
+    /**
+     * getUserId - Method to parse the user id from the token.
+     * 
+     * @param token - User token.
+     * @return - User id int.
+     */
+    public int getUserId(String token) {
+<span class="fc" id="L41">        DecodedJWT jwt = JWT.decode(token);</span>
+<span class="fc" id="L42">        return jwt.getClaim(&quot;userId&quot;).asInt();</span>
+    }
+
+    /**
+     * getUserName - Method to parse the username from the token.
+     * 
+     * @param token - User token.
+     * @return - Username String.
+     */
+    public String getUserName(String token) {
+<span class="fc" id="L52">        DecodedJWT jwt = JWT.decode(token);</span>
+<span class="fc" id="L53">        return jwt.getClaim(&quot;userName&quot;).asString();</span>
+    }
+
+    /**
+     * refreshToken - Method to take the old token and generate a new one with
+     * refreshed expiration.
+     * 
+     * @param token - Old token String.
+     * @return - New token String to replace the given token.
+     */
+    public String refreshToken(String token) {
+<span class="fc" id="L64">        DecodedJWT jwt = JWT.decode(token);</span>
+<span class="fc" id="L65">        User user = new RecipeBookUser(jwt.getClaim(&quot;firstName&quot;).toString(), jwt.getClaim(&quot;lastName&quot;).toString(), &quot;&quot;, 0,</span>
+<span class="fc" id="L66">                jwt.getClaim(&quot;userName&quot;).toString());</span>
+<span class="fc" id="L67">        return generateToken(user);</span>
+    }
+
+    /**
+     * verifyToken - Method to verify a given token.
+     * 
+     * @param token - Token string.
+     * @return - True if verified, otherwise false.
+     */
+    public boolean verifyToken(String token) {
+        try {
+<span class="fc" id="L78">            Algorithm algorithm = Algorithm.HMAC256(SECRET);</span>
+<span class="fc" id="L79">            JWTVerifier verifier = JWT.require(algorithm).withIssuer(&quot;auth0&quot;).build();</span>
+<span class="fc" id="L80">            verifier.verify(token);</span>
+<span class="fc" id="L81">        } catch (TokenExpiredException e) {</span>
+<span class="fc" id="L82">            return false;</span>
+<span class="fc" id="L83">        } catch (JWTVerificationException e) {</span>
+<span class="fc" id="L84">            return false;</span>
+        }
+<span class="fc" id="L86">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

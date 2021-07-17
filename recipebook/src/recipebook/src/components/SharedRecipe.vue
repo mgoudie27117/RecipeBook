@@ -8,10 +8,25 @@
             <div class="alert alert-danger share-entry-recipe" v-if="error">{{ error }}</div>
             <div class="alert alert-success share-entry-recipe" v-if="success">{{ success }}</div>
         </div>
+        <div id="Btn-Container" class="form-group share-item share-entry-recipe d-flex flex-row">
+          <button id="print-button" @click.stop.prevent="print()" class="btn btn-dark btn-lg btn-block col-3">Print Recipe</button>
+          <div class="col-1"></div>
+          <button id="update-button" type="submit" @click.stop.prevent="updateRecipe()" class="btn btn-dark btn-lg btn-block col-3">Update Recipe</button>
+          <div class="col-1"></div>
+          <button id="fav-button" type="submit" @click.stop.prevent="favoriteRecipe()" class="btn btn-dark btn-lg btn-block col-3">{{model.buttonText}}</button>
+          <div class="col-1"></div>
+        </div>
+        <div class="form-group share-item share-entry-recipe">
+          <label>Recipe Description</label>
+          <input type="text" 
+              v-bind="{ id: model.recipe.recipeId }"
+              v-model="model.recipe.recipeDescription"
+              class="form-control form-control-lg dis-func" 
+              autocomplete="off" 
+              disabled />
+        </div>
         <div class="form-group share-item share-entry-recipe d-flex flex-row">
             <div class="col-2 ">
-              <button id="update-button" type="submit" @click.stop.prevent="updateRecipe()" class="btn btn-dark btn-lg btn-block">Update Recipe</button>
-              <button id="fav-button" type="submit" @click.stop.prevent="favoriteRecipe()" class="btn btn-dark btn-lg btn-block">{{model.buttonText}}</button>
               <div class="inner-container">
                 <label>Servings: </label>
                 <input type="number" 
@@ -35,129 +50,122 @@
               </div>
             </div>
         </div>
-        <div class="form-group share-item share-entry-recipe">
-            <label>Recipe Description</label>
-            <input type="text" 
-                v-bind="{ id: model.recipe.recipeId }"
-                v-model="model.recipe.recipeDescription"
-                class="form-control form-control-lg dis-func" 
-                autocomplete="off" 
-                disabled />
-        </div>
-        <div class="form-group share-item share-entry-recipe">
-            <label>Recipe Instructions</label>
-            <textarea 
-                rows="10"
-                v-bind="{ id: model.recipe.recipeId }"
-                v-model="model.recipe.instructions"
-                class="form-control form-control-lg dis-func" 
-                autocomplete="off" 
-                disabled />
-        </div>
-        <div>
-          <div class="form-group share-item share-entry-recipe rounded border ingredient-border mt-3 mb-3 pb-3">
-            <label class="p-2">Ingredient(s):</label>
-            <div class="share-item">
-              <ul v-for="(ingredient, index) in model.recipe.ingredients" :key="ingredient" class="p-0">
-                <li class="list-unstyled d-flex">
-                  <div class="col-1 m-auto text-center" @click.stop.prevent="removeIngredient(index, ingredient)">
-                    <font-awesome-icon icon="minus" class="fa-lg icon-remove mt-4" v-if="model.updateAvailable"></font-awesome-icon>
-                  </div>
-                  <div class="col-4">
-                    <label>Ingredient Name</label>
-                    <input type="text" 
-                        v-bind="{ id: model.recipe.recipeId }"
-                        v-model="ingredient.ingredientName"
-                        class="form-control form-control-lg dis-func" 
-                        autocomplete="off" 
-                        disabled />
-                  </div>
-                  <div class="col-1"></div>
-                  <div class="col-2">
-                      <label>Portion Amount</label>
-                      <input type="number" 
-                          v-bind="{ id: model.recipe.recipeId }"
-                          v-model="ingredient.portionAmount"
-                          step="0.01"
-                          min="0.01"
-                          class="form-control form-control-lg dis-func" 
-                          autocomplete="off" 
-                          disabled />
-                  </div>
-                  <div class="col-1"></div>
-                  <div class="col-2">
-                      <label>Measure Unit</label>
-                      <div id="measure-selector">
-                        <vue-select 
-                          :options="options"
-                          v-model="ingredient.portionMeasure"
-                          :close-on-select="true" 
-                          :disabled="!model.updateAvailable" />
+        <div id="Printable">
+          <div>
+            <div class="form-group share-item share-entry-recipe">
+                <label>Recipe Instructions</label>
+                <textarea 
+                    rows="10"
+                    v-bind="{ id: model.recipe.recipeId }"
+                    v-model="model.recipe.instructions"
+                    class="form-control form-control-lg dis-func" 
+                    autocomplete="off" 
+                    disabled />
+            </div>
+            <div class="form-group share-item share-entry-recipe rounded border ingredient-border mt-3 mb-3 pb-3">
+                <label class="p-2">Ingredient(s):</label>
+                <div class="share-item">
+                  <ul v-for="(ingredient, index) in model.recipe.ingredients" :key="ingredient" class="p-0">
+                    <li class="list-unstyled d-flex">
+                      <div class="col-1 m-auto text-center" @click.stop.prevent="removeIngredient(index, ingredient)">
+                        <font-awesome-icon icon="minus" class="fa-lg icon-remove mt-4" v-if="model.updateAvailable"></font-awesome-icon>
                       </div>
-                  </div>
-                  <div class="col-1"></div>
-                </li>
-              </ul>
-              <ul class="p-0" v-if="model.updateAvailable">
-                <li class="list-unstyled d-flex">
-                  <div class="col-1 m-auto text-center" @click.stop.prevent="addIngredient()">
-                    <font-awesome-icon icon="plus" class="fa-lg icon-add plus-work"></font-awesome-icon>
-                  </div>
-                  <div class="col-11"></div>
-                </li>
-              </ul>
+                      <div class="col-4">
+                        <label>Ingredient Name</label>
+                        <input type="text" 
+                            v-bind="{ id: model.recipe.recipeId }"
+                            v-model="ingredient.ingredientName"
+                            class="form-control form-control-lg dis-func" 
+                            autocomplete="off" 
+                            disabled />
+                      </div>
+                      <div class="col-1"></div>
+                      <div class="col-2">
+                          <label>Portion Amount</label>
+                          <input type="number" 
+                              v-bind="{ id: model.recipe.recipeId }"
+                              v-model="ingredient.portionAmount"
+                              step="0.01"
+                              min="0.01"
+                              class="form-control form-control-lg dis-func" 
+                              autocomplete="off" 
+                              disabled />
+                      </div>
+                      <div class="col-1"></div>
+                      <div class="col-2">
+                          <label>Measure Unit</label>
+                          <div id="measure-selector">
+                            <vue-select 
+                              :options="options"
+                              v-model="ingredient.portionMeasure"
+                              :close-on-select="true" 
+                              :disabled="!model.updateAvailable" />
+                          </div>
+                      </div>
+                      <div class="col-1"></div>
+                    </li>
+                  </ul>
+                  <ul class="p-0" v-if="model.updateAvailable">
+                    <li class="list-unstyled d-flex">
+                      <div class="col-1 m-auto text-center" @click.stop.prevent="addIngredient()">
+                        <font-awesome-icon icon="plus" class="fa-lg icon-add plus-work"></font-awesome-icon>
+                      </div>
+                      <div class="col-11"></div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-group share-item share-entry-recipe" v-if="model.updateAvailable">
-          <div class="form-group share-item share-entry-recipe rounded border ingredient-border mt-3 mb-3 pb-3 col-12">
-            <label class="p-2">Add Recipe Media:</label>
-            <div class="share-item">
-              <ul v-for="(media, index) in model.media" :key="media" class="p-0">
-                <li class="list-unstyled d-flex">
-                  <div class="col-1 m-auto text-center" @click.stop.prevent="removeMedia(index)">
-                    <font-awesome-icon icon="minus" class="fa-lg icon-remove mt-4"></font-awesome-icon>
-                  </div>
-                  <div class="col-10">
-                    <label>Recipe File</label>
-                    <input type="file" 
-                      class="form-control form-control-lg" 
-                      ref="files" 
-                      v-on:change="handleFileUpload(index)" />
-                  </div>
-                  <div class="col-1"></div>
-                </li>
-              </ul>
-              <ul class="p-0">
-                <li class="list-unstyled d-flex">
-                  <div class="col-1 m-auto text-center" @click.stop.prevent="addMedia">
-                    <font-awesome-icon icon="plus" class="fa-lg icon-add plus-work"></font-awesome-icon>
-                  </div>
-                  <div class="col-11"></div>
-                </li>
-              </ul>
+          <div class="form-group share-item share-entry-recipe" v-if="model.updateAvailable">
+            <div class="form-group share-item share-entry-recipe rounded border ingredient-border mt-3 mb-3 pb-3 col-12">
+              <label class="p-2">Add Recipe Media:</label>
+              <div class="share-item">
+                <ul v-for="(media, index) in model.media" :key="media" class="p-0">
+                  <li class="list-unstyled d-flex">
+                    <div class="col-1 m-auto text-center" @click.stop.prevent="removeMedia(index)">
+                      <font-awesome-icon icon="minus" class="fa-lg icon-remove mt-4"></font-awesome-icon>
+                    </div>
+                    <div class="col-10">
+                      <label>Recipe File</label>
+                      <input type="file" 
+                        class="form-control form-control-lg" 
+                        ref="files" 
+                        v-on:change="handleFileUpload(index)" />
+                    </div>
+                    <div class="col-1"></div>
+                  </li>
+                </ul>
+                <ul class="p-0">
+                  <li class="list-unstyled d-flex">
+                    <div class="col-1 m-auto text-center" @click.stop.prevent="addMedia">
+                      <font-awesome-icon icon="plus" class="fa-lg icon-add plus-work"></font-awesome-icon>
+                    </div>
+                    <div class="col-11"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group share-item share-entry-recipe rounded border ingredient-border mt-3 mb-3 pb-3 col-12" v-if="model.mediaNames.length > 0">
+              <label class="p-2">Remove Recipe Media:</label>
+              <div class="share-item">
+                <ul v-for="(media, index) in model.mediaNames" :key="media" class="p-0">
+                  <li class="list-unstyled d-flex" v-if="media != 'DEFAULT.JPG'">
+                    <div class="col-1 m-auto text-center" @click.stop.prevent="removeRecipeMedia(index)">
+                      <font-awesome-icon icon="minus" class="fa-lg icon-remove mt-4"></font-awesome-icon>
+                    </div>
+                    <div class="col-10">
+                      <label>Recipe File</label>
+                      <input type="text" 
+                        v-model="model.mediaNames[index]"
+                        class="form-control form-control-lg" />
+                    </div>
+                    <div class="col-1"></div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-          <div class="form-group share-item share-entry-recipe rounded border ingredient-border mt-3 mb-3 pb-3 col-12" v-if="model.mediaNames.length > 0">
-            <label class="p-2">Remove Recipe Media:</label>
-            <div class="share-item">
-              <ul v-for="(media, index) in model.mediaNames" :key="media" class="p-0">
-                <li class="list-unstyled d-flex" v-if="media != 'DEFAULT.JPG'">
-                  <div class="col-1 m-auto text-center" @click.stop.prevent="removeRecipeMedia(index)">
-                    <font-awesome-icon icon="minus" class="fa-lg icon-remove mt-4"></font-awesome-icon>
-                  </div>
-                  <div class="col-10">
-                    <label>Recipe File</label>
-                    <input type="text" 
-                      v-model="model.mediaNames[index]"
-                      class="form-control form-control-lg" />
-                  </div>
-                  <div class="col-1"></div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
         <div class="share-item share-entry-recipe">
           <button v-if="model.updateAvailable" type="submit" @click.stop.prevent="submitUpdate()" class="btn btn-dark btn-lg btn-block space mb-5">Submit Update</button>
         </div>
@@ -300,6 +308,78 @@ export default {
         function prepareJSON(string) {
             return (string.replaceAll(" ", "__")).replaceAll(",", "---");
         }
+        function print() {
+          const WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+          var ingredientHtml = `<div class="row">
+                                  <div class="col-1"></div>
+                                  <div class="col-3 ingredient-item"><b>Ingredient Name</b></div>
+                                  <div class="col-1"></div>
+                                  <div class="col-3 ingredient-item"><b>Portion Amount</b></div>
+                                  <div class="col-1"></div>
+                                  <div class="col-3 ingredient-item"><b>Portion Measure</b></div>
+                                </div>`;
+          model.recipe.ingredients.forEach((ingredient) => {
+            ingredientHtml = ingredientHtml + `
+                                <div class="row">
+                                  <div class="col-1"></div>
+                                  <div class="col-3 ingredient-item">${ingredient.ingredientName}</div>
+                                  <div class="col-1"></div>
+                                  <div class="col-3 ingredient-item">${ingredient.portionAmount}</div>
+                                  <div class="col-1"></div>
+                                  <div class="col-3 ingredient-item">${ingredient.portionMeasure}</div>
+                                </div>
+                              `;
+          });
+          WinPrint.document.write(`<!DOCTYPE html>
+                                    <html>
+                                      <head>
+                                        <h1>${model.recipe.recipeName}</h1>
+                                      </head>
+                                      <body>
+                                        <div>
+                                          <p><br /><br /><b>Recipe Description: </b><br />${model.recipe.recipeDescription}<br /><br /></p>
+                                        </div>
+                                        <div>
+                                          <p><b>Recipe Instructions: </b><br />${model.recipe.instructions}<br /><br /></p>
+                                        </div>
+                                        ` + ingredientHtml + `
+                                      </body>
+                                      <style>
+                                        h1, .ingredient-item {
+                                          text-align: center;
+                                        }
+                                        .row::after {
+                                            content: "";
+                                            clear: both;
+                                            display: table;
+                                        }
+                                        [class*="col-"] {
+                                            float: left;
+                                            padding: 15px;
+                                        }
+                                        .col-1 {width: 8.33%;}
+                                        .col-2 {width: 16.66%;}
+                                        .col-3 {width: 25%;}
+                                        .col-4 {width: 33.33%;}
+                                        .col-5 {width: 41.66%;}
+                                        .col-6 {width: 50%;}
+                                        .col-7 {width: 58.33%;}
+                                        .col-8 {width: 66.66%;}
+                                        .col-9 {width: 75%;}
+                                        .col-10 {width: 83.33%;}
+                                        .col-11 {width: 91.66%;}
+                                        .col-12 {width: 100%;}
+                                        * {
+                                          box-sizing: border-box;
+                                        }
+                                      </style>
+                                    </html>`);
+
+          WinPrint.document.close();
+          WinPrint.focus();
+          WinPrint.print();
+          WinPrint.close();
+        }
         function removeIngredient(index, ingredient) {
           if (model.recipe.ingredients.length > 1 && index > -1) {
             model.recipe.ingredients.splice(index, 1);
@@ -376,6 +456,7 @@ export default {
             nodes[j].disabled = false;
           }
           document.getElementById("update-button").disabled = true;
+          document.getElementById("print-button").disabled = true;
         }
         function updateRecipeReset() {
           model.updateAvailable = false;
@@ -384,6 +465,7 @@ export default {
             nodes[j].disabled = true;
           }
           document.getElementById("update-button").disabled = false;
+          document.getElementById("print-button").disabled = false;
           if (model.mediaNames.length == 0) {
             var header = document.createElement("p");
             var text = document.createTextNode("No media was shared, but don't let that stop you for trying the recipe out!");
@@ -411,6 +493,7 @@ export default {
             favoriteRecipe,
             handleFileUpload,
             paginate,
+            print,
             removeIngredient,
             removeMedia,
             removeRecipeMedia,
@@ -468,10 +551,11 @@ img, video {
 }
 
 .share-header {
-  padding-bottom: 5%;
+  padding-bottom: 2%;
 }
 
-#fav-button, #update-button {
-  margin-bottom: 15%;
+#Btn-Container {
+  padding-bottom: 2%;
 }
+
 </style>

@@ -1,17 +1,19 @@
 package com.sweng.recipebook;
 
-import com.sweng.recipebook.controller.UserController;
-import com.sweng.recipebook.data.UserDataAccess;
-import com.sweng.recipebook.models.User;
-import com.sweng.recipebook.security.JWTHandler;
-import com.sweng.recipebook.security.JWTStatus;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.sweng.recipebook.controller.UserController;
+import com.sweng.recipebook.data.UserDataAccess;
+import com.sweng.recipebook.models.JWTHandler;
+import com.sweng.recipebook.models.User;
+
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * UserControllerTest - Test class for the UserController class.
@@ -91,17 +93,16 @@ public class UserControllerTest {
         Map<String, String> payload = new HashMap<String, String>();
         String result1 = controllerTest.securityanswer(payload);
         assertEquals(result1.length() == 0, true);
-        assertEquals(JWTStatus.INVALID, new JWTHandler().verifyToken(result1));
+        assertEquals(false, new JWTHandler().verifyToken(result1));
         payload.put("userName", "mgoudie");
         payload.put("securityAnswer", "Burlington");
         String result2 = controllerTest.securityanswer(payload);
         assertEquals(result2.length() > 0, true);
-        assertEquals(JWTStatus.VALID, new JWTHandler().verifyToken(result2));
-
+        assertEquals(true, new JWTHandler().verifyToken(result2));
         payload.replace("securityAnswer", "WRONG");
         String result3 = controllerTest.securityanswer(payload);
         assertEquals(result3.length() == 0, true);
-        assertEquals(JWTStatus.INVALID, new JWTHandler().verifyToken(result3));
+        assertEquals(false, new JWTHandler().verifyToken(result3));
     }
 
     /**

@@ -1,6 +1,4 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-recipebook,com.sweng.recipebook.security,JWTHandler,0,104,0,0,0,23,0,6,0,6
-recipebook,com.sweng.recipebook.security,JWTStatus,0,44,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook,RecipebookApplication,0,8,0,0,0,3,0,2,0,2
 recipebook,com.sweng.recipebook.data,UserDataAccess,0,258,0,12,0,80,0,15,0,9
 recipebook,com.sweng.recipebook.data,ConfigDataAccess,0,31,0,2,0,12,0,3,0,2
@@ -25,8 +23,10 @@ recipebook,com.sweng.recipebook.models,RecipeMediaCreator,0,33,0,4,0,8,0,5,0,2
 recipebook,com.sweng.recipebook.models,Ingredient,0,65,0,0,0,26,0,9,0,9
 recipebook,com.sweng.recipebook.models,RecipeIngredient,0,16,0,0,0,6,0,3,0,3
 recipebook,com.sweng.recipebook.models,IngredientComposite,0,23,0,0,0,8,0,4,0,4
+recipebook,com.sweng.recipebook.models,JWTHandler,0,3,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook.models,RecipeImage,0,8,0,0,0,4,0,2,0,2
 recipebook,com.sweng.recipebook.models,RecipeMedia,0,51,0,0,0,16,0,5,0,5
+recipebook,com.sweng.recipebook.models,SecurityHandler,0,104,0,0,0,23,0,6,0,6
 recipebook,com.sweng.recipebook.models,User,0,101,0,0,0,37,0,11,0,11
 recipebook,com.sweng.recipebook.models,RecipeMeasure,0,17,0,0,0,8,0,4,0,4
 recipebook,com.sweng.recipebook.models,MeasureType,0,34,0,0,0,4,0,1,0,1

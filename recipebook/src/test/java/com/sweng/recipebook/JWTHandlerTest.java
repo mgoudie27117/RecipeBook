@@ -2,14 +2,16 @@ package com.sweng.recipebook;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
 import com.sweng.recipebook.controller.UserController;
+import com.sweng.recipebook.models.JWTHandler;
 import com.sweng.recipebook.models.RecipeBookUser;
 import com.sweng.recipebook.models.User;
-import com.sweng.recipebook.security.JWTHandler;
-import com.sweng.recipebook.security.JWTStatus;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -72,10 +74,10 @@ public class JWTHandlerTest {
     @Test
     public void verifyTokenTest() throws InterruptedException {
         RecipeBookUser TestUser = new RecipeBookUser("TEST", "mgoudie");
-        assertEquals(JWTStatus.INVALID, JWT.verifyToken(TestUser.getAccessToken()));
+        assertEquals(false, JWT.verifyToken(TestUser.getAccessToken()));
         String testToken = JWT.generateToken(TestUser);
-        assertEquals(JWTStatus.VALID, JWT.verifyToken(testToken));
+        assertEquals(true, JWT.verifyToken(testToken));
         Thread.sleep(70000);
-        assertEquals(JWTStatus.EXPIRED, JWT.verifyToken(testToken));
+        assertEquals(false, JWT.verifyToken(testToken));
     }
 }
