@@ -50,16 +50,34 @@ public class SharedRecipe extends Recipe {
 
     public SharedRecipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
             IngredientComposite ingredients, RecipeMediaComposite recipeMedia) {
-        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia);
+        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia,
+                new ReviewComposite());
+        this.sharedById = 0;
+        this.sharedByName = "";
+    }
+
+    public SharedRecipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
+            IngredientComposite ingredients, RecipeMediaComposite recipeMedia, ReviewComposite reviews) {
+        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia, reviews);
         this.sharedById = 0;
         this.sharedByName = "";
     }
 
     public SharedRecipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
             IngredientComposite ingredients, RecipeMediaComposite recipeMedia, String sharedByName, int sharedById) {
-        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia);
+        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia,
+                new ReviewComposite());
         this.sharedById = sharedById;
         this.sharedByName = sharedByName;
+    }
+
+    public SharedRecipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
+            IngredientComposite ingredients, RecipeMediaComposite recipeMedia, String sharedByName, int sharedById,
+            ReviewComposite reviews) {
+        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia, reviews);
+        this.sharedById = sharedById;
+        this.sharedByName = sharedByName;
+        this.reviews = reviews;
     }
     // end region
 }

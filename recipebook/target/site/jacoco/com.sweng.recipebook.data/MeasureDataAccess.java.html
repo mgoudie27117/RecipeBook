@@ -34,9 +34,9 @@ public class MeasureDataAccess extends DataAccess {
 <span class="fc" id="L34">            ResultSet resultSet = statement.executeQuery();</span>
 <span class="fc bfc" id="L35" title="All 2 branches covered.">            while (resultSet.next()) {</span>
 <span class="fc" id="L36">                result.add(new RecipeMeasure(resultSet.getInt(&quot;measure_unit_id&quot;), resultSet.getString(&quot;measure_unit&quot;),</span>
-<span class="fc" id="L37">                        type));</span>
+                        type));
             }
-<span class="fc" id="L39">        } finally {</span>
+        } finally {
 <span class="fc" id="L40">            statement.close();</span>
         }
 <span class="fc" id="L42">        return result;</span>

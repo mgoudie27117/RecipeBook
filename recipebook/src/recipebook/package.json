@@ -28,6 +28,7 @@
     "vue-next-select": "^2.5.0",
     "vue-router": "^4.0.8",
     "vue-universal-modal": "^1.1.2",
+    "vue3-star-ratings": "^1.0.7",
     "vuex": "^4.0.1",
     "vuex-persistedstate": "^4.0.0-beta.3",
     "yup": "^0.32.9"

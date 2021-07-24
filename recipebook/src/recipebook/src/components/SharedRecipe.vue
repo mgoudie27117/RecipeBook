@@ -11,10 +11,38 @@
         <div id="Btn-Container" class="form-group share-item share-entry-recipe d-flex flex-row">
           <button id="print-button" @click.stop.prevent="print()" class="btn btn-dark btn-lg btn-block col-3">Print Recipe</button>
           <div class="col-1"></div>
-          <button id="update-button" type="submit" @click.stop.prevent="updateRecipe()" class="btn btn-dark btn-lg btn-block col-3">Update Recipe</button>
-          <div class="col-1"></div>
           <button id="fav-button" type="submit" @click.stop.prevent="favoriteRecipe()" class="btn btn-dark btn-lg btn-block col-3">{{model.buttonText}}</button>
           <div class="col-1"></div>
+          <button id="update-button" v-if="model.isUserRecipe" type="submit" @click.stop.prevent="updateRecipe()" class="btn btn-dark btn-lg btn-block col-3">Update Recipe</button>
+          <button id="review-button" v-if="!model.isUserRecipe && !model.hasReviewed && !model.readyReview" type="submit" @click.stop.prevent="reviewRecipe()" class="btn btn-dark btn-lg btn-block col-3">Review Recipe</button>
+          <div class="col-1"></div>
+        </div>
+        <div v-if="model.readyReview">
+          <div class="d-flex flex-row">
+            <div class="col-4"></div>
+            <div class="col-4">
+              <vue3-star-ratings v-model="model.rating" @click.stop.prevent :step="1" :disableClick="true" />
+            </div>
+            <div class="col-4"></div>
+          </div>
+          <div class="d-flex flex-row">
+            <div class="col-2"></div>
+            <div class="col-8">
+              <label>Leave a review</label>
+              <textarea 
+                      id="comment-text"
+                      rows="10"
+                      v-model="model.reviewComment"
+                      class="form-control form-control-lg" 
+                      autocomplete="off" />
+            </div>
+            <div class="col-2"></div>
+          </div>
+          <div class="d-flex flex-row pt-3 pb-4">
+            <div class="col-2"></div>
+            <button id="review-submission-button" @click.stop.prevent="submitReview()" class="btn btn-dark btn-lg btn-block col-3">Submit Review</button>
+            <div class="col-7"></div>
+          </div>
         </div>
         <div class="form-group share-item share-entry-recipe">
           <label>Recipe Description</label>
@@ -169,6 +197,51 @@
         <div class="share-item share-entry-recipe">
           <button v-if="model.updateAvailable" type="submit" @click.stop.prevent="submitUpdate()" class="btn btn-dark btn-lg btn-block space mb-5">Submit Update</button>
         </div>
+        <div class="d-flex flex">
+          <div class="col-1"></div>
+          <div class="col-4"><h4>Recipe Reviews</h4></div>
+          <div class="col-7"></div>
+        </div>
+        <div v-if="model.reviews.length == 0" class="d-flex flex pb-5">
+          <div class="col-2"></div>
+          <div class="col-8 text-center"><h5>No reviews for this recipe. Try the recipe and be the first to rate it!</h5></div>
+          <div class="col-2"></div>
+        </div>
+        <ul v-for="(review) in model.reviews" :key="review" class="p-0">
+          <li class="list-unstyled pb-5">
+            <div class="d-flex flex">
+              <div class="col-1"></div>
+              <div class="rounded border ingredient-border col-10">
+                <div class="d-flex flex-row">
+                  <div class="col-1"></div>
+                  <div class="col-4 critic">
+                    <h5>Reviewed by: {{review.critic}}</h5>
+                  </div>
+                  <div class="col-2"></div>
+                  <div class="col-4">
+                    <vue3-star-ratings v-model="review.rating" @click.stop.prevent :step="1" :showControl="false" :disableClick="true" />
+                  </div>
+                  <div class="col-1"></div>
+                </div>
+                <div class="d-flex flex-row pb-3">
+                  <div class="col-1"></div>
+                  <div class="col-10">
+                    <label>Review</label>
+                    <textarea 
+                            id="comment-text"
+                            rows="5"
+                            v-model="review.comments"
+                            class="form-control form-control-lg" 
+                            autocomplete="off" 
+                            disabled />
+                  </div>
+                  <div class="col-1"></div>
+                </div>
+                <div class="col-1"></div>
+              </div>
+            </div>
+          </li>
+        </ul>
       </form>  
     </div>
   </div>
@@ -186,6 +259,14 @@ export default {
           .then((message) => {
             this.model.isUserRecipe = message.data;
           });
+        axios.post("/api/recipe/hasreviewed", { recipeId: router.currentRoute._value.params.recipeId, token: store.state.token })
+          .then((message) => {
+            this.model.hasReviewed = message.data;
+          });
+        axios.get("/api/recipe/getreviews/" + router.currentRoute._value.params.recipeId).then((message) => {
+          this.model.reviews = message.data;
+          console.log(message.data);
+        });
         this.favoriteCheck();
         axios.get("/api/recipe/getrecipe/" + router.currentRoute._value.params.recipeId)
             .then((message) => {
@@ -216,6 +297,7 @@ export default {
         const options = reactive(store.state.measureUnits);
         const model = reactive({
             buttonText: "",
+            hasReviewed: false,
             isFavorite: false,
             isUserRecipe: false,
             paginationIndex: 0,
@@ -224,6 +306,10 @@ export default {
             mediaId: "_media",
             media: [{ file: {} }],
             mediaNames: [],
+            rating: 0,
+            readyReview: false,
+            reviews: [],
+            reviewComment: "",
             removeIngredients: [],
             removeMedia: [],
             recipe: {},
@@ -402,6 +488,24 @@ export default {
             model.mediaNames.splice(index, 1)
           }
         }
+        function reviewRecipe() {
+          model.readyReview = true;
+        }
+        function submitReview() {
+          if (model.reviewComment.length > 0) {
+            axios.post("/api/recipe/addreview", 
+                { token: store.state.token, recipeId: model.recipe.recipeId, rating: model.rating, comments: prepareJSON(model.reviewComment) })
+              .then((message) => {
+                model.reviews = message.data;
+                model.readyReview = false;
+                model.hasReviewed = true;
+                store.commit("clearError");
+            });
+          } else { 
+            document.getElementById("comment-text").style.border = "3px solid #FF0000";
+            store.commit("setError", "Please leave a review to go with the rating!");
+          }
+        }
         function submitUpdate() {
           store.dispatch("requiredIndication");
           store.dispatch("requiredIndicationSelect", store.state.measureUnits);
@@ -424,14 +528,12 @@ export default {
                 portionAmount: ingredient.portionAmount,
                 portionMeasure: ingredient.portionMeasure
               }));
-            console.log(model.removeIngredients);
             model.removeIngredients.forEach(ingredient => recipe.Ingredients.push({
                 ingredientId: ingredient.ingredientId,
                 ingredientName: prepareJSON(ingredient.ingredientName),
                 portionAmount: ingredient.portionAmount,
                 portionMeasure: ingredient.portionMeasure
               }));
-            console.log(recipe.Ingredients)
             recipe.MediaRemoval = model.removeMedia;
             this.model.media.forEach(media => {
               if (media.file && media.file.name && media.file.name.length > 0) {
@@ -497,6 +599,8 @@ export default {
             removeIngredient,
             removeMedia,
             removeRecipeMedia,
+            reviewRecipe,
+            submitReview,
             submitUpdate,
             updateRecipe,
             updateRecipeReset
@@ -558,4 +662,13 @@ img, video {
   padding-bottom: 2%;
 }
 
+.vue3-star-ratings__wrapper {
+  padding: 0% !important;
+}
+
+.critic {
+  display: block;
+  margin: 25px auto;
+  text-align: left;
+}
 </style>

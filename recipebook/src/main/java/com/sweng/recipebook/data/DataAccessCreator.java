@@ -27,6 +27,8 @@ public abstract class DataAccessCreator {
                 return new MeasureDataAccess();
             case "config":
                 return new ConfigDataAccess();
+            case "review":
+                return new ReviewDataAccess();
             default:
                 return null;
         }

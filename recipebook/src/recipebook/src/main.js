@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueNextSelect from "vue-next-select";
 import "vue-next-select/dist/index.min.css";
 import VueSwappableCard from "@dafcoe/vue-swappable-card";
+import vue3StarRatings from "vue3-star-ratings";
 
 library.add(faPlus, faMinus);
 
@@ -30,6 +31,7 @@ axios.interceptors.response.eject(resInterceptor);
 createApp(App)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component('vue-select', VueNextSelect)
+  .component("vue3-star-ratings", vue3StarRatings)
   .use(store)
   .use(router)
   .use(VueSwappableCard)

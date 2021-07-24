@@ -17,9 +17,9 @@ import java.sql.SQLException;
         try {
 <span class="fc" id="L18">            Class.forName(&quot;oracle.jdbc.OracleDriver&quot;);</span>
 <span class="fc" id="L19">            connection = DriverManager.getConnection(url, user, password);</span>
-<span class="pc" id="L20">        } catch (ClassNotFoundException | SQLException ex) {</span>
+<span class="nc" id="L20">        } catch (ClassNotFoundException | SQLException ex) {</span>
 <span class="nc" id="L21">            ex.printStackTrace();</span>
-        }
+<span class="fc" id="L22">        }</span>
 <span class="fc" id="L23">    }</span>
 
     /**

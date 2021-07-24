@@ -43,7 +43,7 @@ public class UserDataAccess extends DataAccess {
 <span class="fc" id="L43">            statement.setString(5, securityQuestion);</span>
 <span class="fc" id="L44">            statement.setString(6, securityAnswer);</span>
 <span class="fc" id="L45">            statement.executeUpdate();</span>
-<span class="fc" id="L46">        } finally {</span>
+        } finally {
 <span class="fc" id="L47">            statement.close();</span>
         }
 <span class="fc" id="L49">        return validateUser(password, userName);</span>
@@ -66,7 +66,7 @@ public class UserDataAccess extends DataAccess {
 <span class="fc bfc" id="L66" title="All 2 branches covered.">            while (resultSet.next()) {</span>
 <span class="fc" id="L67">                result = resultSet.getString(&quot;security_question&quot;);</span>
             }
-<span class="fc" id="L69">        } finally {</span>
+        } finally {
 <span class="fc" id="L70">            statement.close();</span>
         }
 <span class="fc" id="L72">        return result;</span>
@@ -87,7 +87,7 @@ public class UserDataAccess extends DataAccess {
 <span class="fc bfc" id="L87" title="All 2 branches covered.">            while (resultSet.next()) {</span>
 <span class="fc" id="L88">                result.add(resultSet.getString(&quot;security_question&quot;));</span>
             }
-<span class="fc" id="L90">        } finally {</span>
+        } finally {
 <span class="fc" id="L91">            statement.close();</span>
         }
 <span class="fc" id="L93">        return result;</span>
@@ -105,7 +105,7 @@ public class UserDataAccess extends DataAccess {
         try {
 <span class="fc" id="L106">            statement.setInt(1, userId);</span>
 <span class="fc" id="L107">            statement.executeUpdate();</span>
-<span class="fc" id="L108">        } finally {</span>
+        } finally {
 <span class="fc" id="L109">            statement.close();</span>
         }
 <span class="fc" id="L111">    }</span>
@@ -124,7 +124,7 @@ public class UserDataAccess extends DataAccess {
 <span class="fc" id="L124">            statement.setString(1, userName);</span>
 <span class="fc" id="L125">            statement.setString(2, newPassword);</span>
 <span class="fc" id="L126">            statement.executeUpdate();</span>
-<span class="fc" id="L127">        } finally {</span>
+        } finally {
 <span class="fc" id="L128">            statement.close();</span>
         }
 <span class="fc" id="L130">    }</span>
@@ -176,7 +176,7 @@ public class UserDataAccess extends DataAccess {
 <span class="fc" id="L176">                        resultSet.getString(&quot;password&quot;), resultSet.getInt(&quot;user_id&quot;), resultSet.getString(&quot;user_name&quot;));</span>
 <span class="fc" id="L177">                result.setAuthenticated(true);</span>
             }
-<span class="fc" id="L179">        } finally {</span>
+        } finally {
 <span class="fc" id="L180">            statement.close();</span>
         }
 <span class="fc" id="L182">        return result;</span>
@@ -200,7 +200,7 @@ public class UserDataAccess extends DataAccess {
 <span class="fc bfc" id="L200" title="All 2 branches covered.">            while (resultSet.next()) {</span>
 <span class="fc" id="L201">                result++;</span>
             }
-<span class="fc" id="L203">        } finally {</span>
+        } finally {
 <span class="fc" id="L204">            statement.close();</span>
         }
 <span class="fc bfc" id="L206" title="All 2 branches covered.">        return result &gt; 0;</span>

@@ -7,6 +7,7 @@ import com.sweng.recipebook.models.IngredientComposite;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeIngredient;
 import com.sweng.recipebook.models.RecipeMediaComposite;
+import com.sweng.recipebook.models.ReviewComposite;
 import com.sweng.recipebook.models.SharedRecipe;
 
 import org.junit.jupiter.api.Test;
@@ -76,5 +77,30 @@ public class RecipeTest {
         assertEquals(recipeTest6.getServingSize(), 1);
         assertEquals(recipeTest6.getInstructions(), "TEST_INSTRUCTIONS");
         assertEquals(recipeTest6.getIngredients().size(), 0);
+
+        Recipe recipeTest7 = new SharedRecipe(1, "TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS",
+                new IngredientComposite(), new RecipeMediaComposite(), new ReviewComposite());
+        assertEquals(recipeTest7.getRecipeId(), 1);
+        assertEquals(recipeTest7.getRecipeName(), "TEST_NAME");
+        assertEquals(recipeTest7.getRecipeDescription(), "TEST_DESCRIPTION");
+        assertEquals(recipeTest7.getServingSize(), 1);
+        assertEquals(recipeTest7.getInstructions(), "TEST_INSTRUCTIONS");
+        assertEquals(recipeTest7.getIngredients().size(), 0);
+        assertEquals(recipeTest7.getRecipeMedia().size(), 0);
+        assertEquals(recipeTest7.getReviews().size(), 0);
+
+        Recipe recipeTest8 = new SharedRecipe(1, "TEST_NAME");
+        assertEquals(recipeTest8.getRecipeId(), 1);
+        assertEquals(recipeTest8.getRecipeName(), "TEST_NAME");
+
+        Recipe recipeTest9 = new SharedRecipe(1, "TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS",
+                new IngredientComposite(), new RecipeMediaComposite(), "TEST", 1);
+        assertEquals(recipeTest9.getRecipeId(), 1);
+        assertEquals(recipeTest9.getRecipeName(), "TEST_NAME");
+        assertEquals(recipeTest9.getRecipeDescription(), "TEST_DESCRIPTION");
+        assertEquals(recipeTest9.getServingSize(), 1);
+        assertEquals(recipeTest9.getInstructions(), "TEST_INSTRUCTIONS");
+        assertEquals(recipeTest9.getIngredients().size(), 0);
+        assertEquals(recipeTest9.getRecipeMedia().size(), 0);
     }
 }

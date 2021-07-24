@@ -9,6 +9,7 @@ import java.util.List;
 import com.sweng.recipebook.models.IngredientComposite;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeMediaComposite;
+import com.sweng.recipebook.models.ReviewComposite;
 import com.sweng.recipebook.models.SharedRecipe;
 
 /**
@@ -120,9 +121,9 @@ public class RecipeDataAccess extends DataAccess {
      * @return - Recipe for the given id number.
      * @throws SQLException
      */
-    public Recipe getRecipe(int recipeId, IngredientComposite ingredientComposite,
-            RecipeMediaComposite recipeMediaComposite) throws SQLException {
-        Recipe result = new SharedRecipe();
+    public SharedRecipe getRecipe(int recipeId, IngredientComposite ingredientComposite,
+            RecipeMediaComposite recipeMediaComposite, ReviewComposite reviewComposite) throws SQLException {
+        SharedRecipe result = new SharedRecipe();
         String query = "SELECT recipe_id, recipe_name, recipe_description, serving_size, instructions, user_id AS shared_by_id, first_name || ' ' || SUBSTR(last_name, 1, 1) || '.' AS shared_by_name FROM recipebook_recipes JOIN recipebook_user USING (user_id) WHERE recipe_id = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -132,7 +133,7 @@ public class RecipeDataAccess extends DataAccess {
                 result = new SharedRecipe(resultSet.getInt("recipe_id"), resultSet.getString("recipe_name"),
                         resultSet.getString("recipe_description"), resultSet.getInt("serving_size"),
                         new String(resultSet.getBytes("instructions")), ingredientComposite, recipeMediaComposite,
-                        resultSet.getString("shared_by_name"), resultSet.getInt("shared_by_id"));
+                        resultSet.getString("shared_by_name"), resultSet.getInt("shared_by_id"), reviewComposite);
             }
         } finally {
             statement.close();

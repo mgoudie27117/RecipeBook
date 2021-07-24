@@ -11,10 +11,13 @@ C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\Measure.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeMediaComposite.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DataAccess.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\IngredientComposite.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\ReviewComposite.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\UserDataAccess.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\Review.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\RecipeMediaController.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\Controller.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\RecipeController.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\ReviewDataAccess.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\JWTHandler.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\SharedRecipe.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\ConfigDataAccess.java
@@ -25,6 +28,7 @@ C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\controller\MeasureCo
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DataAccessConcreteCreator.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\MeasureDataAccess.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeMedia.java
+C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeReview.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\data\DatabaseConnection.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\RecipeBookUser.java
 C:\RecipeBook\recipebook\src\main\java\com\sweng\recipebook\models\Recipe.java

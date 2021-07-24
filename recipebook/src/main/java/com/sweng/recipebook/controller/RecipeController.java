@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.sweng.recipebook.data.DataAccessConcreteCreator;
 import com.sweng.recipebook.data.IngredientDataAccess;
 import com.sweng.recipebook.data.RecipeDataAccess;
+import com.sweng.recipebook.data.ReviewDataAccess;
 import com.sweng.recipebook.models.Ingredient;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeIngredient;
 import com.sweng.recipebook.models.RecipeMediaComposite;
+import com.sweng.recipebook.models.Review;
 import com.sweng.recipebook.models.SharedRecipe;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,6 +36,24 @@ public class RecipeController extends Controller {
             .createDataAccess("recipe");
     private IngredientDataAccess ingredientDataAccess = (IngredientDataAccess) new DataAccessConcreteCreator()
             .createDataAccess("ingredient");
+    private ReviewDataAccess reviewDataAccess = (ReviewDataAccess) new DataAccessConcreteCreator()
+            .createDataAccess("review");
+
+    /**
+     * addreview - API call add a review to a recipe.
+     * 
+     * @param payload - Request with review information, token and recipeId.
+     * @return - List of reviews.
+     * @throws NumberFormatException
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/addreview", method = RequestMethod.POST)
+    public ArrayList<Review> addreview(@RequestBody Map<String, String> payload)
+            throws NumberFormatException, SQLException {
+        reviewDataAccess.insertReview(JWT.getUserId(payload.get("token")), Integer.parseInt(payload.get("recipeId")),
+                Integer.parseInt(payload.get("rating")), payload.get("comments"));
+        return (reviewDataAccess.getReviews(Integer.parseInt(payload.get("recipeId")))).getReviews();
+    }
 
     /**
      * addfavoriterecipe - API call to add a favorite recipe for the user.
@@ -72,9 +92,9 @@ public class RecipeController extends Controller {
      * @throws IOException
      */
     @RequestMapping(value = "/getrecipe/{recipeId}", method = RequestMethod.GET)
-    public Recipe getrecipe(@PathVariable int recipeId) throws SQLException, IOException {
+    public SharedRecipe getrecipe(@PathVariable int recipeId) throws SQLException, IOException {
         return recipeDataAccess.getRecipe(recipeId, ingredientDataAccess.getRecipeIngredients(recipeId),
-                new RecipeMediaComposite());
+                new RecipeMediaComposite(), reviewDataAccess.getReviews(recipeId));
     }
 
     /**
@@ -103,7 +123,8 @@ public class RecipeController extends Controller {
         List<Integer> favoriteRecipeIds = recipeDataAccess.getFavoriteRecipeIds(JWT.getUserId(token));
         for (int recipeId : favoriteRecipeIds) {
             result.add((SharedRecipe) recipeDataAccess.getRecipe(recipeId,
-                    ingredientDataAccess.getRecipeIngredients(recipeId), new RecipeMediaComposite()));
+                    ingredientDataAccess.getRecipeIngredients(recipeId), new RecipeMediaComposite(),
+                    reviewDataAccess.getReviews(recipeId)));
         }
         return result;
     }
@@ -117,6 +138,31 @@ public class RecipeController extends Controller {
     @RequestMapping(value = "/gethomerecipes", method = RequestMethod.GET)
     public List<Recipe> gethomerecipes() throws SQLException {
         return recipeDataAccess.getHomeRecipes();
+    }
+
+    /**
+     * getreviews - API call to retrieve reviews for a given recipe id.
+     * 
+     * @param recipeId - Recipe id number.
+     * @return - List of reviews for the recipe.
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/getreviews/{recipeId}", method = RequestMethod.GET)
+    public List<Review> getreviews(@PathVariable int recipeId) throws SQLException {
+        return reviewDataAccess.getReviews(recipeId).getReviews();
+    }
+
+    /**
+     * hasreviewed - API call to determine if the user has reviewed the recipe
+     * before.
+     * 
+     * @return
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/hasreviewed", method = RequestMethod.POST)
+    public boolean hasreviewed(@RequestBody Map<String, String> payload) throws SQLException {
+        return reviewDataAccess.hasReviewed(Integer.parseInt(payload.get("recipeId")),
+                JWT.getUserId(payload.get("token")));
     }
 
     /**
@@ -222,7 +268,7 @@ public class RecipeController extends Controller {
                 }
             }
             return recipeDataAccess.getRecipe(recipeId, ingredientDataAccess.getRecipeIngredients(recipeId),
-                    new RecipeMediaComposite());
+                    new RecipeMediaComposite(), reviewDataAccess.getReviews(recipeId));
         } else {
             return new SharedRecipe();
         }

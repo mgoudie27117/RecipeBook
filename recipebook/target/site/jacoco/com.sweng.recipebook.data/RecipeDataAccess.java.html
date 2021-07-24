@@ -9,6 +9,7 @@ import java.util.List;
 import com.sweng.recipebook.models.IngredientComposite;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeMediaComposite;
+import com.sweng.recipebook.models.ReviewComposite;
 import com.sweng.recipebook.models.SharedRecipe;
 
 /**
@@ -17,8 +18,8 @@ import com.sweng.recipebook.models.SharedRecipe;
 public class RecipeDataAccess extends DataAccess {
 
     public RecipeDataAccess() {
-<span class="fc" id="L20">        super();</span>
-<span class="fc" id="L21">    }</span>
+<span class="fc" id="L21">        super();</span>
+<span class="fc" id="L22">    }</span>
 
     /**
      * addFavoriteRecipe - Method to add a favorite recipe to the favorites table.
@@ -28,16 +29,16 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void addFavoriteRecipe(int userId, int recipeId) throws SQLException {
-<span class="fc" id="L31">        String dml = &quot;MERGE INTO recipebook_favorite_recipes r USING ( SELECT ? AS user_id, ? AS recipe_id FROM dual) a ON (a.user_id = r.user_id AND a.recipe_id = r.recipe_id) WHEN NOT MATCHED THEN INSERT (user_id, recipe_id) VALUES (a.user_id, a.recipe_id)&quot;;</span>
-<span class="fc" id="L32">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L32">        String dml = &quot;MERGE INTO recipebook_favorite_recipes r USING ( SELECT ? AS user_id, ? AS recipe_id FROM dual) a ON (a.user_id = r.user_id AND a.recipe_id = r.recipe_id) WHEN NOT MATCHED THEN INSERT (user_id, recipe_id) VALUES (a.user_id, a.recipe_id)&quot;;</span>
+<span class="fc" id="L33">        PreparedStatement statement = connection.prepareStatement(dml);</span>
         try {
-<span class="fc" id="L34">            statement.setInt(1, userId);</span>
-<span class="fc" id="L35">            statement.setInt(2, recipeId);</span>
-<span class="fc" id="L36">            statement.execute();</span>
-<span class="fc" id="L37">        } finally {</span>
-<span class="fc" id="L38">            statement.close();</span>
+<span class="fc" id="L35">            statement.setInt(1, userId);</span>
+<span class="fc" id="L36">            statement.setInt(2, recipeId);</span>
+<span class="fc" id="L37">            statement.execute();</span>
+<span class="fc" id="L38">        } finally {</span>
+<span class="fc" id="L39">            statement.close();</span>
         }
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * addRecipe - Method to add a recipe to the recipes table.
@@ -48,21 +49,21 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException // this.correctJSONCharacters(
      */
     public int addRecipe(Recipe recipe, int userId) throws SQLException {
-<span class="fc" id="L51">        String dml = &quot;INSERT INTO recipebook_recipes (recipe_name, recipe_description, serving_size, instructions, user_id) VALUES (?, ?, ?, ?, ?)&quot;;</span>
-<span class="fc" id="L52">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L53">        Blob blob = connection.createBlob();</span>
+<span class="fc" id="L52">        String dml = &quot;INSERT INTO recipebook_recipes (recipe_name, recipe_description, serving_size, instructions, user_id) VALUES (?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L53">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L54">        Blob blob = connection.createBlob();</span>
         try {
-<span class="fc" id="L55">            blob.setBytes(1, this.correctJSONCharacters(recipe.getInstructions()).getBytes());</span>
-<span class="fc" id="L56">            statement.setString(1, this.correctJSONCharacters(recipe.getRecipeName()));</span>
-<span class="fc" id="L57">            statement.setString(2, this.correctJSONCharacters(recipe.getRecipeDescription()));</span>
-<span class="fc" id="L58">            statement.setInt(3, recipe.getServingSize());</span>
-<span class="fc" id="L59">            statement.setBlob(4, blob);</span>
-<span class="fc" id="L60">            statement.setInt(5, userId);</span>
-<span class="fc" id="L61">            statement.execute();</span>
-<span class="fc" id="L62">        } finally {</span>
-<span class="fc" id="L63">            statement.close();</span>
+<span class="fc" id="L56">            blob.setBytes(1, this.correctJSONCharacters(recipe.getInstructions()).getBytes());</span>
+<span class="fc" id="L57">            statement.setString(1, this.correctJSONCharacters(recipe.getRecipeName()));</span>
+<span class="fc" id="L58">            statement.setString(2, this.correctJSONCharacters(recipe.getRecipeDescription()));</span>
+<span class="fc" id="L59">            statement.setInt(3, recipe.getServingSize());</span>
+<span class="fc" id="L60">            statement.setBlob(4, blob);</span>
+<span class="fc" id="L61">            statement.setInt(5, userId);</span>
+<span class="fc" id="L62">            statement.execute();</span>
+<span class="fc" id="L63">        } finally {</span>
+<span class="fc" id="L64">            statement.close();</span>
         }
-<span class="fc" id="L65">        return getRecipeId(recipe.getRecipeName(), userId);</span>
+<span class="fc" id="L66">        return getRecipeId(recipe.getRecipeName(), userId);</span>
     }
 
     /**
@@ -72,19 +73,19 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public List&lt;Recipe&gt; getHomeRecipes() throws SQLException {
-<span class="fc" id="L75">        List&lt;Recipe&gt; result = new ArrayList&lt;Recipe&gt;();</span>
-<span class="fc" id="L76">        String query = &quot;SELECT recipe_id, recipe_name, recipe_description FROM recipebook_recipes ORDER BY recipe_id&quot;;</span>
-<span class="fc" id="L77">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L76">        List&lt;Recipe&gt; result = new ArrayList&lt;Recipe&gt;();</span>
+<span class="fc" id="L77">        String query = &quot;SELECT recipe_id, recipe_name, recipe_description FROM recipebook_recipes ORDER BY recipe_id&quot;;</span>
+<span class="fc" id="L78">        PreparedStatement statement = connection.prepareStatement(query);</span>
         try {
-<span class="fc" id="L79">            ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L80" title="All 2 branches covered.">            while (resultSet.next()) {</span>
-<span class="fc" id="L81">                result.add(new SharedRecipe(resultSet.getInt(&quot;recipe_id&quot;), resultSet.getString(&quot;recipe_name&quot;),</span>
-<span class="fc" id="L82">                        resultSet.getString(&quot;recipe_description&quot;), 0, &quot;&quot;, new IngredientComposite()));</span>
+<span class="fc" id="L80">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L82">                result.add(new SharedRecipe(resultSet.getInt(&quot;recipe_id&quot;), resultSet.getString(&quot;recipe_name&quot;),</span>
+<span class="fc" id="L83">                        resultSet.getString(&quot;recipe_description&quot;), 0, &quot;&quot;, new IngredientComposite()));</span>
             }
-<span class="fc" id="L84">        } finally {</span>
-<span class="fc" id="L85">            statement.close();</span>
+<span class="fc" id="L85">        } finally {</span>
+<span class="fc" id="L86">            statement.close();</span>
         }
-<span class="fc" id="L87">        return result;</span>
+<span class="fc" id="L88">        return result;</span>
     }
 
     /**
@@ -96,19 +97,19 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public List&lt;Integer&gt; getFavoriteRecipeIds(int userId) throws SQLException {
-<span class="fc" id="L99">        List&lt;Integer&gt; result = new ArrayList&lt;Integer&gt;();</span>
-<span class="fc" id="L100">        String query = &quot;SELECT recipe_id FROM recipebook_favorite_recipes WHERE user_id = ?&quot;;</span>
-<span class="fc" id="L101">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L100">        List&lt;Integer&gt; result = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc" id="L101">        String query = &quot;SELECT recipe_id FROM recipebook_favorite_recipes WHERE user_id = ?&quot;;</span>
+<span class="fc" id="L102">        PreparedStatement statement = connection.prepareStatement(query);</span>
         try {
-<span class="fc" id="L103">            statement.setInt(1, userId);</span>
-<span class="fc" id="L104">            ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">            while (resultSet.next()) {</span>
-<span class="fc" id="L106">                result.add(resultSet.getInt(&quot;recipe_id&quot;));</span>
+<span class="fc" id="L104">            statement.setInt(1, userId);</span>
+<span class="fc" id="L105">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L107">                result.add(resultSet.getInt(&quot;recipe_id&quot;));</span>
             }
-<span class="fc" id="L108">        } finally {</span>
-<span class="fc" id="L109">            statement.close();</span>
+<span class="fc" id="L109">        } finally {</span>
+<span class="fc" id="L110">            statement.close();</span>
         }
-<span class="fc" id="L111">        return result;</span>
+<span class="fc" id="L112">        return result;</span>
     }
 
     /**
@@ -120,24 +121,24 @@ public class RecipeDataAccess extends DataAccess {
      * @return - Recipe for the given id number.
      * @throws SQLException
      */
-    public Recipe getRecipe(int recipeId, IngredientComposite ingredientComposite,
-            RecipeMediaComposite recipeMediaComposite) throws SQLException {
-<span class="fc" id="L125">        Recipe result = new SharedRecipe();</span>
-<span class="fc" id="L126">        String query = &quot;SELECT recipe_id, recipe_name, recipe_description, serving_size, instructions, user_id AS shared_by_id, first_name || ' ' || SUBSTR(last_name, 1, 1) || '.' AS shared_by_name FROM recipebook_recipes JOIN recipebook_user USING (user_id) WHERE recipe_id = ?&quot;;</span>
-<span class="fc" id="L127">        PreparedStatement statement = connection.prepareStatement(query);</span>
+    public SharedRecipe getRecipe(int recipeId, IngredientComposite ingredientComposite,
+            RecipeMediaComposite recipeMediaComposite, ReviewComposite reviewComposite) throws SQLException {
+<span class="fc" id="L126">        SharedRecipe result = new SharedRecipe();</span>
+<span class="fc" id="L127">        String query = &quot;SELECT recipe_id, recipe_name, recipe_description, serving_size, instructions, user_id AS shared_by_id, first_name || ' ' || SUBSTR(last_name, 1, 1) || '.' AS shared_by_name FROM recipebook_recipes JOIN recipebook_user USING (user_id) WHERE recipe_id = ?&quot;;</span>
+<span class="fc" id="L128">        PreparedStatement statement = connection.prepareStatement(query);</span>
         try {
-<span class="fc" id="L129">            statement.setInt(1, recipeId);</span>
-<span class="fc" id="L130">            ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L131" title="All 2 branches covered.">            while (resultSet.next()) {</span>
-<span class="fc" id="L132">                result = new SharedRecipe(resultSet.getInt(&quot;recipe_id&quot;), resultSet.getString(&quot;recipe_name&quot;),</span>
-<span class="fc" id="L133">                        resultSet.getString(&quot;recipe_description&quot;), resultSet.getInt(&quot;serving_size&quot;),</span>
-<span class="fc" id="L134">                        new String(resultSet.getBytes(&quot;instructions&quot;)), ingredientComposite, recipeMediaComposite,</span>
-<span class="fc" id="L135">                        resultSet.getString(&quot;shared_by_name&quot;), resultSet.getInt(&quot;shared_by_id&quot;));</span>
+<span class="fc" id="L130">            statement.setInt(1, recipeId);</span>
+<span class="fc" id="L131">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L133">                result = new SharedRecipe(resultSet.getInt(&quot;recipe_id&quot;), resultSet.getString(&quot;recipe_name&quot;),</span>
+<span class="fc" id="L134">                        resultSet.getString(&quot;recipe_description&quot;), resultSet.getInt(&quot;serving_size&quot;),</span>
+<span class="fc" id="L135">                        new String(resultSet.getBytes(&quot;instructions&quot;)), ingredientComposite, recipeMediaComposite,</span>
+<span class="fc" id="L136">                        resultSet.getString(&quot;shared_by_name&quot;), resultSet.getInt(&quot;shared_by_id&quot;), reviewComposite);</span>
             }
-<span class="fc" id="L137">        } finally {</span>
-<span class="fc" id="L138">            statement.close();</span>
+<span class="fc" id="L138">        } finally {</span>
+<span class="fc" id="L139">            statement.close();</span>
         }
-<span class="fc" id="L140">        return result;</span>
+<span class="fc" id="L141">        return result;</span>
     }
 
     /**
@@ -150,20 +151,20 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public int getRecipeId(String recipeName, int userId) throws SQLException {
-<span class="fc" id="L153">        int result = 0;</span>
-<span class="fc" id="L154">        String query = &quot;SELECT recipe_id FROM recipebook_recipes WHERE user_id = ? AND recipe_name = ?&quot;;</span>
-<span class="fc" id="L155">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L154">        int result = 0;</span>
+<span class="fc" id="L155">        String query = &quot;SELECT recipe_id FROM recipebook_recipes WHERE user_id = ? AND recipe_name = ?&quot;;</span>
+<span class="fc" id="L156">        PreparedStatement statement = connection.prepareStatement(query);</span>
         try {
-<span class="fc" id="L157">            statement.setInt(1, userId);</span>
-<span class="fc" id="L158">            statement.setString(2, this.correctJSONCharacters(recipeName));</span>
-<span class="fc" id="L159">            ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc bfc" id="L160" title="All 2 branches covered.">            while (resultSet.next()) {</span>
-<span class="fc" id="L161">                result = resultSet.getInt(&quot;recipe_id&quot;);</span>
+<span class="fc" id="L158">            statement.setInt(1, userId);</span>
+<span class="fc" id="L159">            statement.setString(2, this.correctJSONCharacters(recipeName));</span>
+<span class="fc" id="L160">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L162">                result = resultSet.getInt(&quot;recipe_id&quot;);</span>
             }
-<span class="fc" id="L163">        } finally {</span>
-<span class="fc" id="L164">            statement.close();</span>
+<span class="fc" id="L164">        } finally {</span>
+<span class="fc" id="L165">            statement.close();</span>
         }
-<span class="fc" id="L166">        return result;</span>
+<span class="fc" id="L167">        return result;</span>
     }
 
     /**
@@ -176,15 +177,15 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public boolean isFavoriteRecipe(int recipeId, int userId) throws SQLException {
-<span class="fc" id="L179">        String query = &quot;SELECT recipe_id, user_id FROM recipebook_favorite_recipes WHERE recipe_id = ? AND user_id = ?&quot;;</span>
-<span class="fc" id="L180">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L180">        String query = &quot;SELECT recipe_id, user_id FROM recipebook_favorite_recipes WHERE recipe_id = ? AND user_id = ?&quot;;</span>
+<span class="fc" id="L181">        PreparedStatement statement = connection.prepareStatement(query);</span>
         try {
-<span class="fc" id="L182">            statement.setInt(1, recipeId);</span>
-<span class="fc" id="L183">            statement.setInt(2, userId);</span>
-<span class="fc" id="L184">            ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc" id="L185">            return resultSet.isBeforeFirst();</span>
+<span class="fc" id="L183">            statement.setInt(1, recipeId);</span>
+<span class="fc" id="L184">            statement.setInt(2, userId);</span>
+<span class="fc" id="L185">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc" id="L186">            return resultSet.isBeforeFirst();</span>
         } finally {
-<span class="fc" id="L187">            statement.close();</span>
+<span class="fc" id="L188">            statement.close();</span>
         }
     }
 
@@ -197,15 +198,15 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public boolean isUserRecipe(int recipeId, int userId) throws SQLException {
-<span class="fc" id="L200">        String query = &quot;SELECT recipe_id, user_id FROM recipebook_recipes WHERE recipe_id = ? AND user_id = ?&quot;;</span>
-<span class="fc" id="L201">        PreparedStatement statement = connection.prepareStatement(query);</span>
+<span class="fc" id="L201">        String query = &quot;SELECT recipe_id, user_id FROM recipebook_recipes WHERE recipe_id = ? AND user_id = ?&quot;;</span>
+<span class="fc" id="L202">        PreparedStatement statement = connection.prepareStatement(query);</span>
         try {
-<span class="fc" id="L203">            statement.setInt(1, recipeId);</span>
-<span class="fc" id="L204">            statement.setInt(2, userId);</span>
-<span class="fc" id="L205">            ResultSet resultSet = statement.executeQuery();</span>
-<span class="fc" id="L206">            return resultSet.isBeforeFirst();</span>
+<span class="fc" id="L204">            statement.setInt(1, recipeId);</span>
+<span class="fc" id="L205">            statement.setInt(2, userId);</span>
+<span class="fc" id="L206">            ResultSet resultSet = statement.executeQuery();</span>
+<span class="fc" id="L207">            return resultSet.isBeforeFirst();</span>
         } finally {
-<span class="fc" id="L208">            statement.close();</span>
+<span class="fc" id="L209">            statement.close();</span>
         }
     }
 
@@ -218,16 +219,16 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void removeFavoriteRecipe(int userId, int recipeId) throws SQLException {
-<span class="fc" id="L221">        String dml = &quot;DELETE FROM recipebook_favorite_recipes WHERE user_id = ? AND recipe_id = ?&quot;;</span>
-<span class="fc" id="L222">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L222">        String dml = &quot;DELETE FROM recipebook_favorite_recipes WHERE user_id = ? AND recipe_id = ?&quot;;</span>
+<span class="fc" id="L223">        PreparedStatement statement = connection.prepareStatement(dml);</span>
         try {
-<span class="fc" id="L224">            statement.setInt(1, userId);</span>
-<span class="fc" id="L225">            statement.setInt(2, recipeId);</span>
-<span class="fc" id="L226">            statement.execute();</span>
-<span class="fc" id="L227">        } finally {</span>
-<span class="fc" id="L228">            statement.close();</span>
+<span class="fc" id="L225">            statement.setInt(1, userId);</span>
+<span class="fc" id="L226">            statement.setInt(2, recipeId);</span>
+<span class="fc" id="L227">            statement.execute();</span>
+<span class="fc" id="L228">        } finally {</span>
+<span class="fc" id="L229">            statement.close();</span>
         }
-<span class="fc" id="L230">    }</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * removeRecipe - Method to remove a recipe from the application recipe table.
@@ -236,15 +237,15 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void removeRecipe(int recipeId) throws SQLException {
-<span class="fc" id="L239">        String dml = &quot;DELETE FROM recipebook_recipes WHERE recipe_id = ?&quot;;</span>
-<span class="fc" id="L240">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L240">        String dml = &quot;DELETE FROM recipebook_recipes WHERE recipe_id = ?&quot;;</span>
+<span class="fc" id="L241">        PreparedStatement statement = connection.prepareStatement(dml);</span>
         try {
-<span class="fc" id="L242">            statement.setInt(1, recipeId);</span>
-<span class="fc" id="L243">            statement.executeUpdate();</span>
-<span class="fc" id="L244">        } finally {</span>
-<span class="fc" id="L245">            statement.close();</span>
+<span class="fc" id="L243">            statement.setInt(1, recipeId);</span>
+<span class="fc" id="L244">            statement.executeUpdate();</span>
+<span class="fc" id="L245">        } finally {</span>
+<span class="fc" id="L246">            statement.close();</span>
         }
-<span class="fc" id="L247">    }</span>
+<span class="fc" id="L248">    }</span>
 
     /**
      * updateRecipe - Method to update a recipe in the recipe table.
@@ -254,19 +255,19 @@ public class RecipeDataAccess extends DataAccess {
      * @throws SQLException
      */
     public void updateRecipe(int recipeId, Recipe recipe) throws SQLException {
-<span class="fc" id="L257">        String dml = &quot;UPDATE recipebook_recipes SET recipe_description = ?, serving_size = ?, instructions = ? WHERE recipe_id = ?&quot;;</span>
-<span class="fc" id="L258">        PreparedStatement statement = connection.prepareStatement(dml);</span>
-<span class="fc" id="L259">        Blob blob = connection.createBlob();</span>
+<span class="fc" id="L258">        String dml = &quot;UPDATE recipebook_recipes SET recipe_description = ?, serving_size = ?, instructions = ? WHERE recipe_id = ?&quot;;</span>
+<span class="fc" id="L259">        PreparedStatement statement = connection.prepareStatement(dml);</span>
+<span class="fc" id="L260">        Blob blob = connection.createBlob();</span>
         try {
-<span class="fc" id="L261">            blob.setBytes(1, this.correctJSONCharacters(recipe.getInstructions()).getBytes());</span>
-<span class="fc" id="L262">            statement.setString(1, this.correctJSONCharacters(recipe.getRecipeDescription()));</span>
-<span class="fc" id="L263">            statement.setInt(2, recipe.getServingSize());</span>
-<span class="fc" id="L264">            statement.setBlob(3, blob);</span>
-<span class="fc" id="L265">            statement.setInt(4, recipeId);</span>
-<span class="fc" id="L266">            statement.execute();</span>
-<span class="fc" id="L267">        } finally {</span>
-<span class="fc" id="L268">            statement.close();</span>
+<span class="fc" id="L262">            blob.setBytes(1, this.correctJSONCharacters(recipe.getInstructions()).getBytes());</span>
+<span class="fc" id="L263">            statement.setString(1, this.correctJSONCharacters(recipe.getRecipeDescription()));</span>
+<span class="fc" id="L264">            statement.setInt(2, recipe.getServingSize());</span>
+<span class="fc" id="L265">            statement.setBlob(3, blob);</span>
+<span class="fc" id="L266">            statement.setInt(4, recipeId);</span>
+<span class="fc" id="L267">            statement.execute();</span>
+<span class="fc" id="L268">        } finally {</span>
+<span class="fc" id="L269">            statement.close();</span>
         }
-<span class="fc" id="L270">    }</span>
+<span class="fc" id="L271">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

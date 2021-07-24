@@ -12,10 +12,12 @@ import com.google.gson.Gson;
 import com.sweng.recipebook.controller.RecipeController;
 import com.sweng.recipebook.controller.UserController;
 import com.sweng.recipebook.data.RecipeDataAccess;
+import com.sweng.recipebook.data.ReviewDataAccess;
 import com.sweng.recipebook.models.Ingredient;
 import com.sweng.recipebook.models.IngredientComposite;
 import com.sweng.recipebook.models.Recipe;
 import com.sweng.recipebook.models.RecipeIngredient;
+import com.sweng.recipebook.models.Review;
 import com.sweng.recipebook.models.SharedRecipe;
 import com.sweng.recipebook.models.User;
 import org.junit.jupiter.api.Test;
@@ -235,5 +237,51 @@ public class RecipeControllerTest {
         Map<String, Object> payload4 = new HashMap<String, Object>();
         Recipe emptyPayloadRecipe = recipeControllerTest.updaterecipe(payload4);
         assertEquals(emptyPayloadRecipe.getRecipeId(), 0);
+    }
+
+    /**
+     * reviewRecipe - Test method for RecipeController verification recipe review
+     * functionality.
+     * 
+     * Related Test Case Number(s): T45
+     * 
+     * @throws SQLException
+     */
+    @Test
+    public void reviewRecipe() throws SQLException {
+        Map<String, String> userPayload = new HashMap<String, String>();
+        userPayload.put("userName", "mgoudie");
+        userPayload.put("password", "TEST");
+        User testUser = userControllerTest.login(userPayload);
+        Map<String, Object> payload1 = new HashMap<String, Object>();
+        payload1.put("SharedRecipe",
+                new Gson().toJson(new SharedRecipe("TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS")));
+        payload1.put("Ingredients", new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup"),
+                new RecipeIngredient("TEST_I2", 2.02, "cup") }));
+        payload1.put("Token", testUser.getAccessToken());
+        int recipeId = recipeControllerTest.sharerecipe(payload1);
+        Map<String, String> userPayload2 = new HashMap<String, String>();
+        userPayload2.put("userName", "M");
+        userPayload2.put("password", "M");
+        User testUser2 = userControllerTest.login(userPayload2);
+        Map<String, String> payload2 = new HashMap<String, String>();
+        payload2.put("recipeId", recipeId + "");
+        payload2.put("token", testUser2.getAccessToken());
+        boolean hasReviewResult = recipeControllerTest.hasreviewed(payload2);
+        assertEquals(hasReviewResult, false);
+        List<Review> getReviewsTest = recipeControllerTest.getreviews(recipeId);
+        assertEquals(getReviewsTest.size(), 0);
+        Map<String, String> payload3 = new HashMap<String, String>();
+        payload3.put("recipeId", recipeId + "");
+        payload3.put("token", testUser2.getAccessToken());
+        payload3.put("rating", "5");
+        payload3.put("comments", "TEST_COMMENT");
+        List<Review> addReviewTest = recipeControllerTest.addreview(payload3);
+        assertEquals(addReviewTest.size(), 1);
+        assertEquals(addReviewTest.get(0).getCritic(), "M M.");
+        assertEquals(addReviewTest.get(0).getRating(), 5);
+        assertEquals(addReviewTest.get(0).getComments(), "TEST_COMMENT");
+        new ReviewDataAccess().deleteReview(testUser.getUserId(), recipeId);
+        new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
     }
 }

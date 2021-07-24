@@ -33,7 +33,7 @@ public class IngredientDataAccess extends DataAccess {
 <span class="fc" id="L33">            statement.setDouble(3, ingredient.getPortionAmount());</span>
 <span class="fc" id="L34">            statement.setString(4, ingredient.getPortionMeasure());</span>
 <span class="fc" id="L35">            statement.executeUpdate();</span>
-<span class="fc" id="L36">        } finally {</span>
+        } finally {
 <span class="fc" id="L37">            statement.close();</span>
         }
 <span class="fc" id="L39">    }</span>
@@ -55,10 +55,10 @@ public class IngredientDataAccess extends DataAccess {
 <span class="fc" id="L55">                statement.setDouble(3, ingredient.getPortionAmount());</span>
 <span class="fc" id="L56">                statement.setString(4, ingredient.getPortionMeasure());</span>
 <span class="fc" id="L57">                statement.executeUpdate();</span>
-<span class="fc" id="L58">            } finally {</span>
+            } finally {
 <span class="fc" id="L59">                statement.close();</span>
             }
-        }
+<span class="fc" id="L61">        }</span>
 <span class="fc" id="L62">    }</span>
 
     /**
@@ -80,7 +80,7 @@ public class IngredientDataAccess extends DataAccess {
 <span class="fc" id="L80">                        new RecipeIngredient(resultSet.getInt(&quot;ingredient_id&quot;), resultSet.getString(&quot;ingredient_name&quot;),</span>
 <span class="fc" id="L81">                                resultSet.getDouble(&quot;portion_measure&quot;), resultSet.getString(&quot;measure_unit&quot;)));</span>
             }
-<span class="fc" id="L83">        } finally {</span>
+        } finally {
 <span class="fc" id="L84">            statement.close();</span>
         }
 <span class="fc" id="L86">        return result;</span>
@@ -100,7 +100,7 @@ public class IngredientDataAccess extends DataAccess {
 <span class="fc" id="L100">            statement.setInt(1, recipeId);</span>
 <span class="fc" id="L101">            statement.setString(2, correctJSONCharacters(ingredientName));</span>
 <span class="fc" id="L102">            statement.execute();</span>
-<span class="fc" id="L103">        } finally {</span>
+        } finally {
 <span class="fc" id="L104">            statement.close();</span>
         }
 <span class="fc" id="L106">    }</span>
@@ -120,7 +120,7 @@ public class IngredientDataAccess extends DataAccess {
 <span class="fc" id="L120">            statement.setString(3, ingredient.getPortionMeasure());</span>
 <span class="fc" id="L121">            statement.setInt(4, ingredient.getIngredientId());</span>
 <span class="fc" id="L122">            statement.execute();</span>
-<span class="fc" id="L123">        } finally {</span>
+        } finally {
 <span class="fc" id="L124">            statement.close();</span>
         }
 <span class="fc" id="L126">    }</span>

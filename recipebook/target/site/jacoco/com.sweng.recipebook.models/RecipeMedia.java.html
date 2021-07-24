@@ -54,10 +54,10 @@ public abstract class RecipeMedia {
 <span class="fc" id="L54">        Path root = Paths.get(storagePath);</span>
         try {
 <span class="fc" id="L56">            Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()),</span>
-<span class="fc" id="L57">                    StandardCopyOption.REPLACE_EXISTING);</span>
-<span class="fc" id="L58">        } catch (IOException e) {</span>
-<span class="fc" id="L59">            e.printStackTrace();</span>
-        }
+                    StandardCopyOption.REPLACE_EXISTING);
+<span class="nc" id="L58">        } catch (IOException e) {</span>
+<span class="nc" id="L59">            e.printStackTrace();</span>
+<span class="fc" id="L60">        }</span>
 <span class="fc" id="L61">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
