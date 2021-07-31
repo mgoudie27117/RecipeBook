@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class RecipeControllerTest {
         payload2.put("Ingredients",
                 new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
+        payload2.put("Category", "");
         int testResult1 = recipeControllerTest.sharerecipe(payload2);
         assertEquals(true, testResult1 > 0);
         assertEquals(recipeControllerTest.checkuserrecipeexists(payload1), true);
@@ -101,6 +103,7 @@ public class RecipeControllerTest {
         payload2.put("Ingredients",
                 new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
+        payload2.put("Category", "");
         int recipeId = recipeControllerTest.sharerecipe(payload2);
         Recipe testRecipe = recipeControllerTest.getrecipe(recipeId);
         assertEquals(recipeId, testRecipe.getRecipeId());
@@ -129,6 +132,7 @@ public class RecipeControllerTest {
         payload2.put("Ingredients",
                 new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
+        payload2.put("Category", "");
         int recipeId = recipeControllerTest.sharerecipe(payload2);
         Map<String, String> payload3 = new HashMap<String, String>();
         payload3.put("recipeId", recipeId + "");
@@ -166,6 +170,7 @@ public class RecipeControllerTest {
         payload2.put("Ingredients", new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup"),
                 new RecipeIngredient("TEST_I2", 2.02, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
+        payload2.put("Category", "");
         int recipeId = recipeControllerTest.sharerecipe(payload2);
         Map<String, String> payload3 = new HashMap<String, String>();
         payload3.put("recipeId", recipeId + "");
@@ -197,6 +202,7 @@ public class RecipeControllerTest {
         payload2.put("Ingredients", new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup"),
                 new RecipeIngredient("TEST_I2", 2.02, "cup") }));
         payload2.put("Token", testUser.getAccessToken());
+        payload2.put("Category", "");
         int recipeId = recipeControllerTest.sharerecipe(payload2);
         Recipe addedRecipe = recipeControllerTest.getrecipe(recipeId);
         assertEquals(addedRecipe.getRecipeDescription(), "TEST_DESCRIPTION");
@@ -221,6 +227,7 @@ public class RecipeControllerTest {
                 "TEST_DESCRIPTION_UPDATED", 1, "TEST_INSTRUCTIONS", new IngredientComposite())));
         payload3.put("Ingredients", new Gson().toJson(updatedIngredients));
         payload3.put("Token", testUser.getAccessToken());
+        payload2.put("Category", "");
         recipeControllerTest.updaterecipe(payload3);
         Recipe updatedRecipe = recipeControllerTest.getrecipe(recipeId);
         assertEquals(updatedRecipe.getRecipeDescription(), "TEST_DESCRIPTION_UPDATED");
@@ -259,6 +266,7 @@ public class RecipeControllerTest {
         payload1.put("Ingredients", new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup"),
                 new RecipeIngredient("TEST_I2", 2.02, "cup") }));
         payload1.put("Token", testUser.getAccessToken());
+        payload1.put("Category", "");
         int recipeId = recipeControllerTest.sharerecipe(payload1);
         Map<String, String> userPayload2 = new HashMap<String, String>();
         userPayload2.put("userName", "M");
@@ -281,6 +289,64 @@ public class RecipeControllerTest {
         assertEquals(addReviewTest.get(0).getCritic(), "M M.");
         assertEquals(addReviewTest.get(0).getRating(), 5);
         assertEquals(addReviewTest.get(0).getComments(), "TEST_COMMENT");
+        new ReviewDataAccess().deleteReview(testUser.getUserId(), recipeId);
+        new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
+    }
+
+    /**
+     * verifyMealCategories - Test method for RecipeController verification of meal
+     * categories.
+     * 
+     * Related Test Case Number(s): T48
+     * 
+     * @throws SQLException
+     */
+    @Test
+    public void verifyMealCategories() throws SQLException {
+        List<String> categories = new ArrayList<String>(
+                List.of("Appetizers", "Beverages", "Breads", "Breakfast", "Lunch", "Main Dish", "Pasta", "Rolls",
+                        "Salads", "Sandwiches", "Side Dish", "Soups", "Vegetables", "Wraps"));
+        List<String> dbCategories = recipeControllerTest.getmealcategories();
+        for (String category : categories) {
+            assertEquals(true, dbCategories.contains(category));
+        }
+        assertEquals(14, dbCategories.size());
+    }
+
+    @Test
+    public void verifyFilteredResults() throws SQLException {
+        Map<String, String> userPayload = new HashMap<String, String>();
+        userPayload.put("userName", "mgoudie");
+        userPayload.put("password", "TEST");
+        User testUser = userControllerTest.login(userPayload);
+        Map<String, Object> payload1 = new HashMap<String, Object>();
+        payload1.put("SharedRecipe",
+                new Gson().toJson(new SharedRecipe("TEST_NAME", "TEST_DESCRIPTION", 1, "TEST_INSTRUCTIONS")));
+        payload1.put("Ingredients", new Gson().toJson(new Ingredient[] { new RecipeIngredient("TEST_I1", 1.01, "cup"),
+                new RecipeIngredient("TEST_I2", 2.02, "cup") }));
+        payload1.put("Token", testUser.getAccessToken());
+        payload1.put("Category", "Pasta");
+        int recipeId = recipeControllerTest.sharerecipe(payload1);
+        Map<String, String> payload2 = new HashMap<String, String>();
+        payload2.put("category", "Pasta");
+        payload2.put("ingredient", "");
+        payload2.put("rating", "0");
+        List<Recipe> categoryTest = recipeControllerTest.getfilteredrecipes(payload2);
+        assertEquals(1, categoryTest.size());
+        assertEquals("TEST_NAME", categoryTest.get(0).getRecipeName());
+        Map<String, String> payload3 = new HashMap<String, String>();
+        payload3.put("category", "");
+        payload3.put("ingredient", "TEST_I1");
+        payload3.put("rating", "0");
+        List<Recipe> ingredientTest = recipeControllerTest.getfilteredrecipes(payload3);
+        assertEquals(1, ingredientTest.size());
+        assertEquals("TEST_NAME", ingredientTest.get(0).getRecipeName());
+        Map<String, String> payload4 = new HashMap<String, String>();
+        payload4.put("category", "Pasta");
+        payload4.put("ingredient", "TEST_I1");
+        payload4.put("rating", "1");
+        List<Recipe> ratingTest = recipeControllerTest.getfilteredrecipes(payload4);
+        assertEquals(0, ratingTest.size());
         new ReviewDataAccess().deleteReview(testUser.getUserId(), recipeId);
         new RecipeDataAccess().removeRecipe(new RecipeDataAccess().getRecipeId("TEST_NAME", testUser.getUserId()));
     }

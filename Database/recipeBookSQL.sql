@@ -361,3 +361,59 @@ REFERENCES RECIPEBOOK_RECIPES
   RECIPE_ID 
 )
 ON DELETE CASCADE ENABLE;
+
+CREATE TABLE RECIPEBOOK_MEAL_CATEGORIES 
+(
+  CATEGORY_ID NUMBER NOT NULL 
+, CATEGORY_NAME VARCHAR2(75 CHAR) NOT NULL 
+, CONSTRAINT RECIPEBOOK_MEAL_CATEGORIES_PK PRIMARY KEY 
+  (
+    CATEGORY_ID 
+  )
+  ENABLE 
+);
+
+CREATE SEQUENCE RECIPEBOOK_MEAL_CATEGORIES_SEQ;
+
+CREATE TRIGGER RECIPEBOOK_MEAL_CATEGORIES_TRG 
+BEFORE INSERT ON RECIPEBOOK_MEAL_CATEGORIES 
+FOR EACH ROW 
+BEGIN
+  <<COLUMN_SEQUENCES>>
+  BEGIN
+    IF INSERTING AND :NEW.CATEGORY_ID IS NULL THEN
+      SELECT RECIPEBOOK_MEAL_CATEGORIES_SEQ.NEXTVAL INTO :NEW.CATEGORY_ID FROM SYS.DUAL;
+    END IF;
+  END COLUMN_SEQUENCES;
+END;
+
+INSERT ALL
+    INTO recipebook_meal_categories (category_name) VALUES ('Appetizers')
+    INTO recipebook_meal_categories (category_name) VALUES ('Beverages')
+    INTO recipebook_meal_categories (category_name) VALUES ('Breads')
+    INTO recipebook_meal_categories (category_name) VALUES ('Breakfast')
+    INTO recipebook_meal_categories (category_name) VALUES ('Lunch')
+    INTO recipebook_meal_categories (category_name) VALUES ('Main Dish')
+    INTO recipebook_meal_categories (category_name) VALUES ('Pasta')
+    INTO recipebook_meal_categories (category_name) VALUES ('Rolls')
+    INTO recipebook_meal_categories (category_name) VALUES ('Salads')
+    INTO recipebook_meal_categories (category_name) VALUES ('Sandwiches')
+    INTO recipebook_meal_categories (category_name) VALUES ('Side Dish')
+    INTO recipebook_meal_categories (category_name) VALUES ('Soups')
+    INTO recipebook_meal_categories (category_name) VALUES ('Vegetables')
+    INTO recipebook_meal_categories (category_name) VALUES ('Wraps')
+SELECT 1 FROM dual;
+COMMIT;
+
+ALTER TABLE RECIPEBOOK_RECIPES 
+ADD (CATEGORY_ID NUMBER );
+
+CREATE OR REPLACE TRIGGER RECIPEBOOK_RECIPES_TRG 
+BEFORE INSERT ON RECIPEBOOK_RECIPES 
+FOR EACH ROW 
+BEGIN
+  <<COLUMN_SEQUENCES>>
+  BEGIN
+    NULL;
+  END COLUMN_SEQUENCES;
+END;

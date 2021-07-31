@@ -6,12 +6,12 @@
     >
       <div class="container-fluid">
         <div class="navbar-header">
-          <span>
+          <h1>
               <router-link class="nav-link fs-5"
                 to="/home"
                 >RecipeBook</router-link
               >
-            </span>
+            </h1>
         </div>
         <ul class="nav navbar-nav flex-row">
           <li class="nav-item me-3">

@@ -130,6 +130,21 @@ public class RecipeController extends Controller {
     }
 
     /**
+     * getfilteredrecipes - API call to retrieve a list of filtered recipes.
+     * 
+     * @param payload - Request with filter category, ingredient, rating.
+     * @return - List of filtered recipes.
+     * @throws SQLException
+     * @throws NumberFormatException
+     */
+    @RequestMapping(value = "/getfilteredrecipes", method = RequestMethod.POST)
+    public List<Recipe> getfilteredrecipes(@RequestBody Map<String, String> payload)
+            throws NumberFormatException, SQLException {
+        return recipeDataAccess.getFilteredRecipes(payload.get("category"), payload.get("ingredient"),
+                Integer.parseInt(payload.get("rating")));
+    }
+
+    /**
      * gethomerecipes - API call to retrieve recipes for the home page.
      * 
      * @return - List of Recipes.
@@ -138,6 +153,17 @@ public class RecipeController extends Controller {
     @RequestMapping(value = "/gethomerecipes", method = RequestMethod.GET)
     public List<Recipe> gethomerecipes() throws SQLException {
         return recipeDataAccess.getHomeRecipes();
+    }
+
+    /**
+     * getmealcategories - API call to retrieve a list of meal categories.
+     * 
+     * @return - List of meal categories.
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/getmealcategories", method = RequestMethod.GET)
+    public List<String> getmealcategories() throws SQLException {
+        return recipeDataAccess.getMealCategories();
     }
 
     /**
@@ -230,6 +256,10 @@ public class RecipeController extends Controller {
                     parseRecipe.getServingSize(), parseRecipe.getInstructions(), pareseIngredients);
             int userId = JWT.getUserId(payload.get("Token").toString());
             int recipeId = recipeDataAccess.addRecipe(recipe, userId);
+            String category = payload.get("Category").toString();
+            if (category.length() > 0) {
+                recipeDataAccess.updateMealCategory(recipeId, category);
+            }
             ingredientDataAccess.addRecipeIngredients(recipeId, recipe.getIngredients());
             return recipeId;
         } else {

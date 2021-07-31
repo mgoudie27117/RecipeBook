@@ -113,6 +113,101 @@ public class RecipeDataAccess extends DataAccess {
     }
 
     /**
+     * getFilteredRecipes - Method to retrieve a filtered list of recipes.
+     * 
+     * @param category   - Meal Category.
+     * @param ingredient - Ingredient string.
+     * @param rating     - Recipe rating.
+     * @return - List of filtered recipes.
+     * @throws SQLException
+     */
+    public List<Recipe> getFilteredRecipes(String category, String ingredient, int rating) throws SQLException {
+        List<Recipe> result = new ArrayList<Recipe>();
+        String query = "SELECT recipe_id, recipe_name, recipe_description FROM recipebook_recipes ";
+        boolean categorySet = false;
+        String categoryQuery = " SELECT recipe_id FROM recipebook_recipes WHERE category_id = (SELECT category_id FROM recipebook_meal_categories WHERE category_name = ?) ";
+        boolean ingredientSet = false;
+        String ingredientQuery = " SELECT recipe_id FROM recipebook_ingredients WHERE UPPER(ingredient_name) LIKE ? ";
+        boolean ratingSet = false;
+        String ratingQuery = " SELECT recipe_id FROM (SELECT recipe_id, AVG(rating) AS rating FROM recipebook_recipe_reviews GROUP BY recipe_id) WHERE rating >= ? ";
+        if (category.length() > 0 || ingredient.length() > 0 || rating > 0) {
+            query += "WHERE recipe_id IN ( ";
+            String filterConditions = "";
+            if (category.length() > 0) {
+                categorySet = true;
+                filterConditions += categoryQuery + " ) ";
+            }
+            if (ingredient.length() > 0) {
+                if (filterConditions.length() > 0) {
+                    filterConditions += " AND recipe_id IN ( ";
+                }
+                ingredientSet = true;
+                filterConditions += ingredientQuery + " ) ";
+            }
+            if (rating > 0) {
+                if (filterConditions.length() > 0) {
+                    filterConditions += " AND recipe_id IN ( ";
+                }
+                ratingSet = true;
+                filterConditions += ratingQuery + " ) ";
+            }
+            query += filterConditions;
+        }
+        query += " ORDER BY recipe_id";
+        PreparedStatement statement = connection.prepareStatement(query);
+        int count = 0;
+        while (count < 3) {
+            count++;
+            if (categorySet) {
+                statement.setString(count, category);
+                categorySet = false;
+                continue;
+            }
+            if (ingredientSet) {
+                statement.setString(count, ("%" + (ingredient.toUpperCase()) + "%"));
+                ingredientSet = false;
+                continue;
+            }
+            if (ratingSet) {
+                statement.setInt(count, rating);
+                ratingSet = false;
+                continue;
+            }
+        }
+        try {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(new SharedRecipe(resultSet.getInt("recipe_id"), resultSet.getString("recipe_name"),
+                        resultSet.getString("recipe_description"), 0, "", new IngredientComposite()));
+            }
+        } finally {
+            statement.close();
+        }
+        return result;
+    }
+
+    /**
+     * getMealCategories - Method to retrieve a list of meal categories.
+     * 
+     * @return - List of meal categories.
+     * @throws SQLException
+     */
+    public List<String> getMealCategories() throws SQLException {
+        List<String> result = new ArrayList<String>();
+        String query = "SELECT category_name FROM recipebook_meal_categories ORDER BY category_name";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.add(resultSet.getString("category_name"));
+            }
+        } finally {
+            statement.close();
+        }
+        return result;
+    }
+
+    /**
      * getRecipe - Method to retrieve a recipe for a given id number.
      * 
      * @param recipeId             - Recipe id number.
@@ -242,6 +337,25 @@ public class RecipeDataAccess extends DataAccess {
         try {
             statement.setInt(1, recipeId);
             statement.executeUpdate();
+        } finally {
+            statement.close();
+        }
+    }
+
+    /**
+     * updateMealCategory - Method to add a meal category to a recipe.
+     * 
+     * @param recipeId - Recipe id number.
+     * @param category - Category to be added.
+     * @throws SQLException
+     */
+    public void updateMealCategory(int recipeId, String category) throws SQLException {
+        String dml = "UPDATE recipebook_recipes SET category_id = (SELECT category_id FROM recipebook_meal_categories WHERE category_name = ?) WHERE recipe_id = ?";
+        PreparedStatement statement = connection.prepareStatement(dml);
+        try {
+            statement.setString(1, category);
+            statement.setInt(2, recipeId);
+            statement.execute();
         } finally {
             statement.close();
         }

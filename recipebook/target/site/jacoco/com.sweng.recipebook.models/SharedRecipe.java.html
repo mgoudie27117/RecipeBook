@@ -51,7 +51,7 @@ public class SharedRecipe extends Recipe {
     public SharedRecipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
             IngredientComposite ingredients, RecipeMediaComposite recipeMedia) {
 <span class="fc" id="L53">        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia,</span>
-<span class="fc" id="L54">                new ReviewComposite());</span>
+                new ReviewComposite());
 <span class="fc" id="L55">        this.sharedById = 0;</span>
 <span class="fc" id="L56">        this.sharedByName = &quot;&quot;;</span>
 <span class="fc" id="L57">    }</span>
@@ -66,7 +66,7 @@ public class SharedRecipe extends Recipe {
     public SharedRecipe(int recipeId, String recipeName, String recipeDescription, int servingSize, String instructions,
             IngredientComposite ingredients, RecipeMediaComposite recipeMedia, String sharedByName, int sharedById) {
 <span class="fc" id="L68">        super(recipeId, recipeName, recipeDescription, servingSize, instructions, ingredients, recipeMedia,</span>
-<span class="fc" id="L69">                new ReviewComposite());</span>
+                new ReviewComposite());
 <span class="fc" id="L70">        this.sharedById = sharedById;</span>
 <span class="fc" id="L71">        this.sharedByName = sharedByName;</span>
 <span class="fc" id="L72">    }</span>

@@ -130,6 +130,21 @@ import java.io.StringReader;
     }
 
     /**
+     * getfilteredrecipes - API call to retrieve a list of filtered recipes.
+     * 
+     * @param payload - Request with filter category, ingredient, rating.
+     * @return - List of filtered recipes.
+     * @throws SQLException
+     * @throws NumberFormatException
+     */
+    @RequestMapping(value = &quot;/getfilteredrecipes&quot;, method = RequestMethod.POST)
+    public List&lt;Recipe&gt; getfilteredrecipes(@RequestBody Map&lt;String, String&gt; payload)
+            throws NumberFormatException, SQLException {
+<span class="fc" id="L143">        return recipeDataAccess.getFilteredRecipes(payload.get(&quot;category&quot;), payload.get(&quot;ingredient&quot;),</span>
+<span class="fc" id="L144">                Integer.parseInt(payload.get(&quot;rating&quot;)));</span>
+    }
+
+    /**
      * gethomerecipes - API call to retrieve recipes for the home page.
      * 
      * @return - List of Recipes.
@@ -137,7 +152,18 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/gethomerecipes&quot;, method = RequestMethod.GET)
     public List&lt;Recipe&gt; gethomerecipes() throws SQLException {
-<span class="fc" id="L140">        return recipeDataAccess.getHomeRecipes();</span>
+<span class="fc" id="L155">        return recipeDataAccess.getHomeRecipes();</span>
+    }
+
+    /**
+     * getmealcategories - API call to retrieve a list of meal categories.
+     * 
+     * @return - List of meal categories.
+     * @throws SQLException
+     */
+    @RequestMapping(value = &quot;/getmealcategories&quot;, method = RequestMethod.GET)
+    public List&lt;String&gt; getmealcategories() throws SQLException {
+<span class="fc" id="L166">        return recipeDataAccess.getMealCategories();</span>
     }
 
     /**
@@ -149,7 +175,7 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/getreviews/{recipeId}&quot;, method = RequestMethod.GET)
     public List&lt;Review&gt; getreviews(@PathVariable int recipeId) throws SQLException {
-<span class="fc" id="L152">        return reviewDataAccess.getReviews(recipeId).getReviews();</span>
+<span class="fc" id="L178">        return reviewDataAccess.getReviews(recipeId).getReviews();</span>
     }
 
     /**
@@ -161,8 +187,8 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/hasreviewed&quot;, method = RequestMethod.POST)
     public boolean hasreviewed(@RequestBody Map&lt;String, String&gt; payload) throws SQLException {
-<span class="fc" id="L164">        return reviewDataAccess.hasReviewed(Integer.parseInt(payload.get(&quot;recipeId&quot;)),</span>
-<span class="fc" id="L165">                JWT.getUserId(payload.get(&quot;token&quot;)));</span>
+<span class="fc" id="L190">        return reviewDataAccess.hasReviewed(Integer.parseInt(payload.get(&quot;recipeId&quot;)),</span>
+<span class="fc" id="L191">                JWT.getUserId(payload.get(&quot;token&quot;)));</span>
     }
 
     /**
@@ -177,8 +203,8 @@ import java.io.StringReader;
     @RequestMapping(value = &quot;/isfavoriterecipe&quot;, method = RequestMethod.POST)
     public boolean isfavoriterecipe(@RequestBody Map&lt;String, String&gt; payload)
             throws NumberFormatException, SQLException {
-<span class="fc" id="L180">        return recipeDataAccess.isFavoriteRecipe(Integer.parseInt(payload.get(&quot;recipeId&quot;)),</span>
-<span class="fc" id="L181">                JWT.getUserId(payload.get(&quot;token&quot;)));</span>
+<span class="fc" id="L206">        return recipeDataAccess.isFavoriteRecipe(Integer.parseInt(payload.get(&quot;recipeId&quot;)),</span>
+<span class="fc" id="L207">                JWT.getUserId(payload.get(&quot;token&quot;)));</span>
     }
 
     /**
@@ -191,8 +217,8 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/isuserrecipe&quot;, method = RequestMethod.POST)
     public boolean isuserrecipe(@RequestBody Map&lt;String, String&gt; payload) throws NumberFormatException, SQLException {
-<span class="fc" id="L194">        return recipeDataAccess.isUserRecipe(Integer.parseInt(payload.get(&quot;recipeId&quot;)),</span>
-<span class="fc" id="L195">                JWT.getUserId(payload.get(&quot;token&quot;)));</span>
+<span class="fc" id="L220">        return recipeDataAccess.isUserRecipe(Integer.parseInt(payload.get(&quot;recipeId&quot;)),</span>
+<span class="fc" id="L221">                JWT.getUserId(payload.get(&quot;token&quot;)));</span>
     }
 
     /**
@@ -204,10 +230,10 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/removefavoriterecipe&quot;, method = RequestMethod.POST)
     public List&lt;SharedRecipe&gt; removefavoriterecipe(@RequestBody Map&lt;String, String&gt; payload) throws SQLException {
-<span class="fc" id="L207">        int userId = JWT.getUserId(payload.get(&quot;token&quot;));</span>
-<span class="fc" id="L208">        int recipeId = Integer.parseInt(payload.get(&quot;recipeId&quot;));</span>
-<span class="fc" id="L209">        recipeDataAccess.removeFavoriteRecipe(userId, recipeId);</span>
-<span class="fc" id="L210">        return getfavoriterecipes(payload.get(&quot;token&quot;));</span>
+<span class="fc" id="L233">        int userId = JWT.getUserId(payload.get(&quot;token&quot;));</span>
+<span class="fc" id="L234">        int recipeId = Integer.parseInt(payload.get(&quot;recipeId&quot;));</span>
+<span class="fc" id="L235">        recipeDataAccess.removeFavoriteRecipe(userId, recipeId);</span>
+<span class="fc" id="L236">        return getfavoriterecipes(payload.get(&quot;token&quot;));</span>
     }
 
     /**
@@ -219,21 +245,25 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/sharerecipe&quot;, method = RequestMethod.POST)
     public int sharerecipe(@RequestBody Map&lt;String, Object&gt; payload) throws SQLException {
-<span class="fc bfc" id="L222" title="All 2 branches covered.">        if (!payload.isEmpty()) {</span>
-<span class="fc" id="L223">            Gson gson = new Gson();</span>
-<span class="fc" id="L224">            JsonReader reader = new JsonReader(new StringReader(payload.get(&quot;SharedRecipe&quot;).toString()));</span>
-<span class="fc" id="L225">            reader.setLenient(true);</span>
-<span class="fc" id="L226">            SharedRecipe parseRecipe = gson.fromJson(reader, SharedRecipe.class);</span>
-<span class="fc" id="L227">            RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get(&quot;Ingredients&quot;).toString(),</span>
-<span class="fc" id="L228">                    RecipeIngredient[].class);</span>
-<span class="fc" id="L229">            Recipe recipe = new SharedRecipe(parseRecipe.getRecipeName(), parseRecipe.getRecipeDescription(),</span>
-<span class="fc" id="L230">                    parseRecipe.getServingSize(), parseRecipe.getInstructions(), pareseIngredients);</span>
-<span class="fc" id="L231">            int userId = JWT.getUserId(payload.get(&quot;Token&quot;).toString());</span>
-<span class="fc" id="L232">            int recipeId = recipeDataAccess.addRecipe(recipe, userId);</span>
-<span class="fc" id="L233">            ingredientDataAccess.addRecipeIngredients(recipeId, recipe.getIngredients());</span>
-<span class="fc" id="L234">            return recipeId;</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        if (!payload.isEmpty()) {</span>
+<span class="fc" id="L249">            Gson gson = new Gson();</span>
+<span class="fc" id="L250">            JsonReader reader = new JsonReader(new StringReader(payload.get(&quot;SharedRecipe&quot;).toString()));</span>
+<span class="fc" id="L251">            reader.setLenient(true);</span>
+<span class="fc" id="L252">            SharedRecipe parseRecipe = gson.fromJson(reader, SharedRecipe.class);</span>
+<span class="fc" id="L253">            RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get(&quot;Ingredients&quot;).toString(),</span>
+<span class="fc" id="L254">                    RecipeIngredient[].class);</span>
+<span class="fc" id="L255">            Recipe recipe = new SharedRecipe(parseRecipe.getRecipeName(), parseRecipe.getRecipeDescription(),</span>
+<span class="fc" id="L256">                    parseRecipe.getServingSize(), parseRecipe.getInstructions(), pareseIngredients);</span>
+<span class="fc" id="L257">            int userId = JWT.getUserId(payload.get(&quot;Token&quot;).toString());</span>
+<span class="fc" id="L258">            int recipeId = recipeDataAccess.addRecipe(recipe, userId);</span>
+<span class="fc" id="L259">            String category = payload.get(&quot;Category&quot;).toString();</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">            if (category.length() &gt; 0) {</span>
+<span class="fc" id="L261">                recipeDataAccess.updateMealCategory(recipeId, category);</span>
+            }
+<span class="fc" id="L263">            ingredientDataAccess.addRecipeIngredients(recipeId, recipe.getIngredients());</span>
+<span class="fc" id="L264">            return recipeId;</span>
         } else {
-<span class="fc" id="L236">            return 0;</span>
+<span class="fc" id="L266">            return 0;</span>
         }
     }
 
@@ -246,31 +276,31 @@ import java.io.StringReader;
      */
     @RequestMapping(value = &quot;/updaterecipe&quot;, method = RequestMethod.POST)
     public Recipe updaterecipe(@RequestBody Map&lt;String, Object&gt; payload) throws SQLException {
-<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (!payload.isEmpty()) {</span>
-<span class="fc" id="L250">            Gson gson = new Gson();</span>
-<span class="fc" id="L251">            JsonReader reader = new JsonReader(new StringReader(payload.get(&quot;SharedRecipe&quot;).toString()));</span>
-<span class="fc" id="L252">            reader.setLenient(true);</span>
-<span class="fc" id="L253">            SharedRecipe parseRecipe = gson.fromJson(reader, SharedRecipe.class);</span>
-<span class="fc" id="L254">            RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get(&quot;Ingredients&quot;).toString(),</span>
-<span class="fc" id="L255">                    RecipeIngredient[].class);</span>
-<span class="fc" id="L256">            Recipe recipe = new SharedRecipe(parseRecipe.getRecipeName(), parseRecipe.getRecipeDescription(),</span>
-<span class="fc" id="L257">                    parseRecipe.getServingSize(), parseRecipe.getInstructions(), pareseIngredients);</span>
-<span class="fc" id="L258">            int userId = JWT.getUserId(payload.get(&quot;Token&quot;).toString());</span>
-<span class="fc" id="L259">            int recipeId = recipeDataAccess.getRecipeId(recipe.getRecipeName(), userId);</span>
-<span class="fc" id="L260">            recipeDataAccess.updateRecipe(recipeId, recipe);</span>
-<span class="fc bfc" id="L261" title="All 2 branches covered.">            for (Ingredient ingredient : recipe.getIngredients()) {</span>
-<span class="fc bfc" id="L262" title="All 2 branches covered.">                if (ingredient.getIngredientId() == 0) {</span>
-<span class="fc" id="L263">                    ingredientDataAccess.addRecipeIngredient(recipeId, ingredient);</span>
-<span class="fc bfc" id="L264" title="All 2 branches covered.">                } else if (ingredient.getIngredientId() &lt; 0) {</span>
-<span class="fc" id="L265">                    ingredientDataAccess.removeIngredient(recipeId, ingredient.getIngredientName());</span>
-<span class="fc" id="L266">                } else {</span>
-<span class="fc" id="L267">                    ingredientDataAccess.updateIngredient(ingredient);</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (!payload.isEmpty()) {</span>
+<span class="fc" id="L280">            Gson gson = new Gson();</span>
+<span class="fc" id="L281">            JsonReader reader = new JsonReader(new StringReader(payload.get(&quot;SharedRecipe&quot;).toString()));</span>
+<span class="fc" id="L282">            reader.setLenient(true);</span>
+<span class="fc" id="L283">            SharedRecipe parseRecipe = gson.fromJson(reader, SharedRecipe.class);</span>
+<span class="fc" id="L284">            RecipeIngredient[] pareseIngredients = gson.fromJson(payload.get(&quot;Ingredients&quot;).toString(),</span>
+<span class="fc" id="L285">                    RecipeIngredient[].class);</span>
+<span class="fc" id="L286">            Recipe recipe = new SharedRecipe(parseRecipe.getRecipeName(), parseRecipe.getRecipeDescription(),</span>
+<span class="fc" id="L287">                    parseRecipe.getServingSize(), parseRecipe.getInstructions(), pareseIngredients);</span>
+<span class="fc" id="L288">            int userId = JWT.getUserId(payload.get(&quot;Token&quot;).toString());</span>
+<span class="fc" id="L289">            int recipeId = recipeDataAccess.getRecipeId(recipe.getRecipeName(), userId);</span>
+<span class="fc" id="L290">            recipeDataAccess.updateRecipe(recipeId, recipe);</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">            for (Ingredient ingredient : recipe.getIngredients()) {</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">                if (ingredient.getIngredientId() == 0) {</span>
+<span class="fc" id="L293">                    ingredientDataAccess.addRecipeIngredient(recipeId, ingredient);</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">                } else if (ingredient.getIngredientId() &lt; 0) {</span>
+<span class="fc" id="L295">                    ingredientDataAccess.removeIngredient(recipeId, ingredient.getIngredientName());</span>
+<span class="fc" id="L296">                } else {</span>
+<span class="fc" id="L297">                    ingredientDataAccess.updateIngredient(ingredient);</span>
                 }
             }
-<span class="fc" id="L270">            return recipeDataAccess.getRecipe(recipeId, ingredientDataAccess.getRecipeIngredients(recipeId),</span>
-<span class="fc" id="L271">                    new RecipeMediaComposite(), reviewDataAccess.getReviews(recipeId));</span>
+<span class="fc" id="L300">            return recipeDataAccess.getRecipe(recipeId, ingredientDataAccess.getRecipeIngredients(recipeId),</span>
+<span class="fc" id="L301">                    new RecipeMediaComposite(), reviewDataAccess.getReviews(recipeId));</span>
         } else {
-<span class="fc" id="L273">            return new SharedRecipe();</span>
+<span class="fc" id="L303">            return new SharedRecipe();</span>
         }
     }
 }

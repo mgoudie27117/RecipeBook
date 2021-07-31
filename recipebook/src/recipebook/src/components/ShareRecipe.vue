@@ -17,7 +17,17 @@
                   autocomplete="off" 
                   required />
             </div>
-            <div class="col-4"></div>
+            <div class="col-1"></div>
+            <div class="col-2">
+              <label>Meal Category</label>
+                <div id="measure-selector">
+                  <vue-select 
+                    :options="model.mealCategories"
+                    v-model="model.category"
+                    :close-on-select="true" />
+                </div>
+            </div>
+            <div class="col-1"></div>
             <div class="col-2">
               <label>Serving Size</label>
               <input type="number" 
@@ -130,14 +140,21 @@
 </template>
 
 <script>
+  import axios from "../axios-connection";
   import { computed, reactive, ref } from "vue";
   import store from "../store/store";
   export default {
     name: "sharerecipe",
+    beforeMount() {
+      axios.get("/api/recipe/getmealcategories").then((message) => {
+        this.model.mealCategories = message.data;
+      });
+    },
     setup() {
       const files = ref([]);
       const options = reactive(store.state.measureUnits);
       const model = reactive({ 
+        category: "",
         recipeName: "",
         recipeDescription: "",
         servingSize: 1,
@@ -149,7 +166,8 @@
             measureUnit: ""
           }
         ],
-        media: [{ file: {} }]
+        media: [{ file: {} }],
+        mealCategories: []
       });
       function onSubmit() {
         store.dispatch("requiredIndication");
@@ -164,7 +182,8 @@
             },
             Ingredients: [],
             Token: store.state.token,
-            Files: []
+            Files: [],
+            Category: model.category
           };
           model.ingredients.forEach(ingredient => recipe.Ingredients.push({
               ingredientName: prepareJSON(ingredient.ingredientName),

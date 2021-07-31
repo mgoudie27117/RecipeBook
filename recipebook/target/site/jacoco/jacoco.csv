@@ -2,8 +2,8 @@ GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_
 recipebook,com.sweng.recipebook,RecipebookApplication,0,8,0,0,0,3,0,2,0,2
 recipebook,com.sweng.recipebook.data,UserDataAccess,0,250,0,12,0,73,0,15,0,9
 recipebook,com.sweng.recipebook.data,ConfigDataAccess,0,30,0,2,0,11,0,3,0,2
-recipebook,com.sweng.recipebook.data,ReviewDataAccess,0,131,0,2,0,40,0,6,0,5
-recipebook,com.sweng.recipebook.data,RecipeDataAccess,0,378,0,8,0,108,0,16,0,12
+recipebook,com.sweng.recipebook.data,ReviewDataAccess,0,128,0,2,0,37,0,6,0,5
+recipebook,com.sweng.recipebook.data,RecipeDataAccess,0,631,1,35,0,173,1,32,0,15
 recipebook,com.sweng.recipebook.data,DataAccessConcreteCreator,0,3,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook.data,MeasureDataAccess,0,42,0,2,0,11,0,3,0,2
 recipebook,com.sweng.recipebook.data,DatabaseConnection,6,20,0,0,3,9,1,2,1,2
@@ -14,7 +14,7 @@ recipebook,com.sweng.recipebook.controller,MeasureController,0,16,0,0,0,4,0,2,0,
 recipebook,com.sweng.recipebook.controller,RecipeMediaController,8,248,3,17,4,42,3,14,0,7
 recipebook,com.sweng.recipebook.controller,UserController,0,150,0,14,0,26,0,15,0,8
 recipebook,com.sweng.recipebook.controller,Controller,0,8,0,0,0,2,0,2,0,2
-recipebook,com.sweng.recipebook.controller,RecipeController,0,446,0,14,0,73,0,22,0,15
+recipebook,com.sweng.recipebook.controller,RecipeController,0,480,0,16,0,79,0,25,0,17
 recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
 recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
 recipebook,com.sweng.recipebook.models,MeasureType.new MeasureType() {...},0,8,0,0,0,2,0,2,0,2
@@ -36,6 +36,6 @@ recipebook,com.sweng.recipebook.models,MeasureType,0,34,0,0,0,4,0,1,0,1
 recipebook,com.sweng.recipebook.models,RecipeReview,0,9,0,0,0,4,0,2,0,2
 recipebook,com.sweng.recipebook.models,Measure,0,57,0,0,0,23,0,7,0,7
 recipebook,com.sweng.recipebook.models,Recipe,0,268,0,2,0,80,0,16,0,15
-recipebook,com.sweng.recipebook.models,SharedRecipe,0,151,0,0,0,43,0,10,0,10
+recipebook,com.sweng.recipebook.models,SharedRecipe,0,151,0,0,0,41,0,10,0,10
 recipebook,com.sweng.recipebook.models,RecipeMediaConcreteCreator,0,3,0,0,0,2,0,1,0,1
 recipebook,com.sweng.recipebook.models,RecipeVideo,3,5,0,0,2,2,1,1,1,1
