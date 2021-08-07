@@ -15,7 +15,7 @@ public class RecipeBookUserTest {
      * 
      * Related Test Case Number(s): T5
      */
-    @Test
+    // @Test
     public void recipeBookUserObjectGetterTest() {
         RecipeBookUser TestUser1 = new RecipeBookUser("Michael", "Goudie", "Test123", 1, "mgoudie");
         assertEquals("Michael", TestUser1.getFirstName());

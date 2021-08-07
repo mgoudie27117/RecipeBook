@@ -99,6 +99,11 @@ INSERT INTO recipebook_user
 VALUES
     ('mgoudie', 'TEST', 'Michael', 'Goudie', 1, 'Burlington')
 ;
+INSERT INTO recipebook_user
+    (user_name, password, first_name, last_name, security_question_id, security_answer)
+VALUES
+    ('M', 'M', 'M', 'M', 1, 'M')
+;
 COMMIT;
 
 --RECIPEBOOK_MEASURE_UNIT : Application measure table.

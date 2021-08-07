@@ -25,7 +25,7 @@ public class MeasureControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void recipeMeasuresTest() throws SQLException {
         ArrayList<Measure> testMeasures = controllerTest.recipemeasures();
         assertEquals(testMeasures.size(), 21);

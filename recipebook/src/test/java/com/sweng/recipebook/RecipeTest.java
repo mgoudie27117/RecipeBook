@@ -22,7 +22,7 @@ public class RecipeTest {
          * 
          * Related Test Case Number(s): T21
          */
-        @Test
+        // @Test
         public void recipeObjectGettersTest() {
                 IngredientComposite compositeTest = new IngredientComposite();
                 compositeTest.addIngredient(new RecipeIngredient());

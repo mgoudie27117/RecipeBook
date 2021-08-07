@@ -11,8 +11,12 @@ public final class DatabaseConnection {
     private static Connection connection = null;
 
     static {
-        String url = "jdbc:oracle:thin:SYSTEM/SWENG894@localhost:1521/XE";
-        String user = "SYSTEM";
+        // String url = "jdbc:oracle:thin:SYSTEM/SWENG894@localhost:1521/XE";
+        // String user = "SYSTEM";
+        // String password = "SWENG894";
+
+        String url = "jdbc:oracle:thin:Admin/SWENG894@rbook.cftozwt2e6pt.us-east-2.rds.amazonaws.com:1521/ORCL";
+        String user = "Admin";
         String password = "SWENG894";
         try {
             Class.forName("oracle.jdbc.OracleDriver");

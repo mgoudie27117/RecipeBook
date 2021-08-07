@@ -15,7 +15,7 @@ public class RecipebookApplicationTest {
     /**
      * applicationEntryTest - Test application entry.
      */
-    @Test
+    // @Test
     public void applicationEntryTest() {
         RecipebookApplication.main(new String[] {});
     }
@@ -23,7 +23,7 @@ public class RecipebookApplicationTest {
     /**
      * defaultDataAccess - Test to verify default DataAccess creator.
      */
-    @Test
+    // @Test
     public void defaultDataAccess() {
         DataAccess access = new DataAccessConcreteCreator().createDataAccess("");
         assertEquals(null, access);

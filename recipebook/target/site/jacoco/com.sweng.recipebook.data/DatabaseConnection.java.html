@@ -8,19 +8,23 @@ import java.sql.SQLException;
  * DatabaseConnection - Database connection constant class.
  */
 <span class="nc" id="L10">public final class DatabaseConnection {</span>
-<span class="fc" id="L11">    private static Connection connection = null;</span>
+<span class="nc" id="L11">    private static Connection connection = null;</span>
 
     static {
-<span class="fc" id="L14">        String url = &quot;jdbc:oracle:thin:SYSTEM/SWENG894@localhost:1521/XE&quot;;</span>
-<span class="fc" id="L15">        String user = &quot;SYSTEM&quot;;</span>
-<span class="fc" id="L16">        String password = &quot;SWENG894&quot;;</span>
+        // String url = &quot;jdbc:oracle:thin:SYSTEM/SWENG894@localhost:1521/XE&quot;;
+        // String user = &quot;SYSTEM&quot;;
+        // String password = &quot;SWENG894&quot;;
+
+<span class="nc" id="L18">        String url = &quot;jdbc:oracle:thin:Admin/SWENG894@rbook.cftozwt2e6pt.us-east-2.rds.amazonaws.com:1521/ORCL&quot;;</span>
+<span class="nc" id="L19">        String user = &quot;Admin&quot;;</span>
+<span class="nc" id="L20">        String password = &quot;SWENG894&quot;;</span>
         try {
-<span class="fc" id="L18">            Class.forName(&quot;oracle.jdbc.OracleDriver&quot;);</span>
-<span class="fc" id="L19">            connection = DriverManager.getConnection(url, user, password);</span>
-<span class="nc" id="L20">        } catch (ClassNotFoundException | SQLException ex) {</span>
-<span class="nc" id="L21">            ex.printStackTrace();</span>
-<span class="fc" id="L22">        }</span>
-<span class="fc" id="L23">    }</span>
+<span class="nc" id="L22">            Class.forName(&quot;oracle.jdbc.OracleDriver&quot;);</span>
+<span class="nc" id="L23">            connection = DriverManager.getConnection(url, user, password);</span>
+<span class="nc" id="L24">        } catch (ClassNotFoundException | SQLException ex) {</span>
+<span class="nc" id="L25">            ex.printStackTrace();</span>
+        }
+<span class="nc" id="L27">    }</span>
 
     /**
      * getConnection - Static method to return the application database connection.
@@ -28,7 +32,7 @@ import java.sql.SQLException;
      * @return - Connection object with application database.
      */
     public static Connection getConnection() {
-<span class="fc" id="L31">        return connection;</span>
+<span class="nc" id="L35">        return connection;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

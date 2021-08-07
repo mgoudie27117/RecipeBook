@@ -16,7 +16,7 @@ public class MeasureTypeTest {
      * 
      * Related Test Case Number(s): T17
      */
-    @Test
+    // @Test
     public void measureTypeToStringTest() {
         assertEquals(MeasureType.RECIPE.toString(), "recipe");
         assertEquals(MeasureType.NUTRITIONAL.toString(), "nutritional");

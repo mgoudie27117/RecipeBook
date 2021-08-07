@@ -29,7 +29,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void createUserTest() throws SQLException {
         Map<String, String> payload = new HashMap<String, String>();
         payload.put("userName", "mg");
@@ -52,7 +52,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void loginTest() throws SQLException {
         Map<String, String> payload1 = new HashMap<String, String>();
         payload1.put("userName", "mg");
@@ -88,7 +88,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void securityAnswerTest() throws SQLException {
         Map<String, String> payload = new HashMap<String, String>();
         String result1 = controllerTest.securityanswer(payload);
@@ -113,7 +113,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void securityQuestionTest() throws SQLException {
         String userName = "mgoudie";
         String securityQuestion = controllerTest.securityquestion(userName);
@@ -128,7 +128,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void securityQuestionsTest() throws SQLException {
         List<String> securityQuestions = controllerTest.securityquestions();
         assertEquals(3, securityQuestions.size());
@@ -145,7 +145,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void updatepasswordTest() throws SQLException {
         String oldPassword = "TEST";
         String newPassword = "TEST123";
@@ -171,7 +171,7 @@ public class UserControllerTest {
      * 
      * @throws SQLException
      */
-    @Test
+    // @Test
     public void verifyDuplicateUsernameTest() throws SQLException {
         String TestUsername1 = "_";
         assertEquals(false, controllerTest.usernameexists(TestUsername1));

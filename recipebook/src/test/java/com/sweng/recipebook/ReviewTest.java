@@ -19,7 +19,7 @@ public class ReviewTest {
      * 
      * Related Test Case Number(s): T43
      */
-    @Test
+    // @Test
     public void reviewCompositeTest() {
         ReviewComposite compositeTest = new ReviewComposite();
         Review testReview = new RecipeReview();
@@ -37,7 +37,7 @@ public class ReviewTest {
      * 
      * Related Test Case Number(s): T44
      */
-    @Test
+    // @Test
     public void reviewObjectTest() {
         Review testReview = new RecipeReview("TEST_CRITIC", 5, "TEST_COMMENT");
         assertEquals(testReview.getCritic(), "TEST_CRITIC");

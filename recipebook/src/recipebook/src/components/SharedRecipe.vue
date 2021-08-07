@@ -55,20 +55,19 @@
         </div>
         <div class="form-group share-item share-entry-recipe d-flex flex-row">
             <div class="col-2 ">
-              <div class="inner-container">
+              <div id="serving-size-container" class="inner-container">
                 <label>Servings: </label>
                 <input type="number" 
                     v-bind="{ id: model.recipe.recipeId }"
                     v-model="model.recipe.servingSize"
-                    class="form-control form-control-lg text-center dis-func" 
+                    @change="updateIngredients()"
+                    class="form-control form-control-lg text-center" 
                     min="1"
                     default="1"
-                    autocomplete="off" 
-                    disabled />
+                    autocomplete="off" />
               </div>
             </div>
-            <div class="col-1"></div>
-            <div class="col-9 paginator text-center">
+            <div class="col-7 paginator text-center">
               <div v-bind="{ id: model.mediaId}" ></div>
               <div v-if="(model.mediaNames.length > 0)" class="text-center">
                 <div class="pagination text-center">
@@ -76,6 +75,9 @@
                   <a v-if="model.paginationNext" @click="paginate(1)">Next&raquo;</a>
                 </div>
               </div>
+            </div>
+            <div class="col-2">
+              <NutritionFacts :facts="model.facts"/>
             </div>
         </div>
         <div id="Printable">
@@ -248,12 +250,16 @@
 </template>
 
 <script>
+import NutritionFacts from "../components/NutritionalFacts.vue"
 import { computed, reactive, ref } from "vue";
 import store from "../store/store";
 import router from "../router/router";
 import axios from "../axios-connection";
 import "@dafcoe/vue-swappable-card/dist/vue-swappable-card.css";
 export default {
+    components: {
+      NutritionFacts
+    },
     beforeMount() {
         axios.post("/api/recipe/isuserrecipe", { recipeId: router.currentRoute._value.params.recipeId, token: store.state.token })
           .then((message) => {
@@ -265,13 +271,93 @@ export default {
           });
         axios.get("/api/recipe/getreviews/" + router.currentRoute._value.params.recipeId).then((message) => {
           this.model.reviews = message.data;
-          console.log(message.data);
         });
         this.favoriteCheck();
         axios.get("/api/recipe/getrecipe/" + router.currentRoute._value.params.recipeId)
             .then((message) => {
                 this.model.recipe = message.data;
                 this.model.ingredients = message.data.ingredients;
+                this.model.recipe.ingredients.forEach(ingredient => {
+                  var ready = encodeURIComponent(ingredient.ingredientName);
+                  axios.get("https://api.nal.usda.gov/fdc/v1/foods/search?query=" + ready + "&pageSize=2&api_key=bpjfaX3xygzymFML7XqgQ7ttJ8cb6Vdpvaexi1QQ").then((message) => {
+                    console.log(message.data.foods);
+                    message.data.foods[0].foodNutrients.forEach(dataItem => {
+                      if (dataItem.nutrientName == "Total lipid (fat)") {
+                        this.model.facts.totalFat += ((Math.round(dataItem.value * 100)) / 100) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Cholesterol")) {
+                        this.model.facts.cholesterol += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Fatty acids, total saturated")) {
+                        this.model.facts.saturatedFat += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Fatty acids") && !dataItem.nutrientName.includes("total saturated")) {
+                        this.model.facts.transFat += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName == "Protein") {
+                        this.model.facts.protein += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Sugars, total")) {
+                        this.model.facts.sugars += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Fiber, total")) {
+                        this.model.facts.dietaryFiber += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Carbohydrate, by difference")) {
+                        this.model.facts.totalCarbohydrates += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Sodium, Na")) {
+                        this.model.facts.sodium += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Vitamin A")) {
+                        this.model.facts.vitaminA += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Vitamin C")) {
+                        this.model.facts.vitaminC += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Vitamin D")) {
+                        this.model.facts.vitaminD += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Calcium, Ca")) {
+                        this.model.facts.calcium += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Iron, Fe")) {
+                        this.model.facts.iron += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                      if (dataItem.nutrientName.includes("Potassium, K")) {
+                        this.model.facts.potassium += ((Math.floor(dataItem.value * 10)) / 10) / this.model.recipe.servingSize;
+                      }
+                    });
+                    this.model.facts.calories = Math.floor(((this.model.facts.protein * 4) + (this.model.facts.totalFat * 9)))
+                    this.model.facts.caloriesFromFat = Math.floor(this.model.facts.totalFat * 9);
+                    this.model.facts.totalFatPercent = Math.round((Math.floor(((this.model.facts.totalFat / 78) * 100) * 10) / 10));
+                    this.model.facts.totalFat = parseFloat(parseFloat(this.model.facts.totalFat).toFixed(1));
+                    this.model.facts.saturatedFatPercent = Math.round((Math.floor(((this.model.facts.saturatedFat / 20) * 100) * 10) / 10));
+                    this.model.facts.saturatedFat = parseFloat(parseFloat(this.model.facts.saturatedFat).toFixed(1));
+                    this.model.facts.cholesterolPercent = Math.round((Math.floor(((this.model.facts.cholesterol / 300) * 100) * 10) / 10)); 
+                    this.model.facts.sodiumPercent = Math.round((Math.floor(((this.model.facts.sodium / 2300) * 100) * 10) / 10));
+                    this.model.facts.sodium = parseFloat(parseFloat(this.model.facts.sodium).toFixed(1));
+                    this.model.facts.totalCarbohydratesPercent = Math.round((Math.floor(((this.model.facts.totalCarbohydrates / 275) * 100) * 10) / 10));
+                    this.model.facts.totalCarbohydrates = parseFloat(parseFloat(this.model.facts.totalCarbohydrates).toFixed(1));
+                    this.model.facts.dietaryFiberPercent = Math.round((Math.floor(((this.model.facts.dietaryFiber / 28) * 100) * 10) / 10));
+                    this.model.facts.dietaryFiber = parseFloat(parseFloat(this.model.facts.dietaryFiber).toFixed(1));
+                    this.model.facts.vitaminAPercent = Math.round((Math.floor(((this.model.facts.vitaminA / 900) * 100) * 10) / 10));
+                    this.model.facts.vitaminA = parseFloat(parseFloat(this.model.facts.vitaminA).toFixed(1));
+                    this.model.facts.vitaminCPercent = Math.round((Math.floor(((this.model.facts.vitaminC / 90) * 100) * 10) / 10));
+                    this.model.facts.vitaminC = parseFloat(parseFloat(this.model.facts.vitaminC).toFixed(1));
+                    this.model.facts.vitaminDPercent = Math.round((Math.floor(((this.model.facts.vitaminD / 20) * 100) * 10) / 10));
+                    this.model.facts.vitaminD = parseFloat(parseFloat(this.model.facts.vitaminD).toFixed(1));
+                    this.model.facts.calciumPercent = Math.round((Math.floor(((this.model.facts.calcium / 1300) * 100) * 10) / 10));
+                    this.model.facts.calcium = parseFloat(parseFloat(this.model.facts.calcium).toFixed(1));
+                    this.model.facts.ironPercent = Math.round((Math.floor(((this.model.facts.iron / 18) * 100) * 10) / 10));
+                    this.model.facts.iron = parseFloat(parseFloat(this.model.facts.iron).toFixed(1));
+                    this.model.facts.potassiumPercent = Math.round((Math.floor(((this.model.facts.potassium / 4700) * 100) * 10) / 10));
+                    this.model.facts.potassium = parseFloat(parseFloat(this.model.facts.potassium).toFixed(1));
+                    this.model.facts.transFat = parseFloat(parseFloat(this.model.facts.transFat).toFixed(1));
+                    this.model.facts.sugars = parseFloat(parseFloat(this.model.facts.sugars).toFixed(1));
+                    this.model.facts.protein = parseFloat(parseFloat(this.model.facts.protein).toFixed(1));
+                  });
+                });
                 this.model.mediaId = router.currentRoute._value.params.recipeId + "_media";
                 axios.get("/api/recipemedia/retrieverecipemedianames/" + router.currentRoute._value.params.recipeId)
                  .then((media) => { 
@@ -314,7 +400,38 @@ export default {
             removeMedia: [],
             recipe: {},
             ingredients: [],
-            updateAvailable: false
+            updateAvailable: false,
+            facts: {
+              calories: 0,
+              caloriesFromFat: 0,
+              totalFat: 0,
+              totalFatPercent: 0,
+              saturatedFat: 0,
+              saturatedFatPercent: 0,
+              transFat: 0,
+              cholesterol: 0,
+              cholesterolPercent: 0,
+              sodium: 0,
+              sodiumPercent: 0,
+              totalCarbohydrates: 0,
+              totalCarbohydratesPercent: 0,
+              dietaryFiber: 0,
+              dietaryFiberPercent: 0,
+              sugars: 0,
+              protein: 0,
+              vitaminA: 0,
+              vitaminAPercent: 0,
+              vitaminC: 0,
+              vitaminCPercent: 0,
+              vitaminD: 0,
+              vitaminDPercent: 0,
+              calcium: 0,
+              calciumPercent: 0,
+              iron: 0,
+              ironPercent: 0,
+              potassium: 0,
+              potassiumPercent: 0,
+            }
         });
         function addIngredient() {
           model.ingredients.push({
@@ -551,36 +668,67 @@ export default {
             model.media = [{ file: {} }];
           }
         }
+        function updateIngredients() {
+          axios.get("/api/recipe/getrecipe/" + router.currentRoute._value.params.recipeId)
+            .then((message) => {
+                model.recipe.ingredients = message.data.ingredients;
+                model.recipe.ingredients.forEach(ingredient => {
+                  var modifier = model.recipe.servingSize * ingredient.portionAmount;
+                  ingredient.portionAmount = modifier;
+                  ingredient.portionAmount
+                });
+                setTimeout(function() {
+                  var nodes = document.getElementsByClassName("dis-func");
+                  if (model.updateAvailable) {
+                    for (var j = 0; j < nodes.length; j++) {
+                      nodes[j].disabled = false;
+                    }
+                  } else {
+                    for (var k = 0; k < nodes.length; k++) {
+                      nodes[k].disabled = true;
+                    }
+                  }
+                }, 500);
+            });
+        }
         function updateRecipe() {
-          model.updateAvailable = true;
-          var nodes = document.getElementsByClassName("dis-func");
-          for (var j = 0; j < nodes.length; j++) {
-            nodes[j].disabled = false;
-          }
-          document.getElementById("update-button").disabled = true;
-          document.getElementById("print-button").disabled = true;
+          axios.get("/api/recipe/getrecipe/" + router.currentRoute._value.params.recipeId)
+            .then((message) => {
+                model.updateAvailable = true;
+                var nodes = document.getElementsByClassName("dis-func");
+                for (var j = 0; j < nodes.length; j++) {
+                  nodes[j].disabled = false;
+                }
+                document.getElementById("update-button").disabled = true;
+                document.getElementById("print-button").disabled = true;
+                model.recipe.servingSize = message.data.servingSize;
+            });
         }
         function updateRecipeReset() {
-          model.updateAvailable = false;
-          var nodes = document.getElementsByClassName("dis-func");
-          for (var j = 0; j < nodes.length; j++) {
-            nodes[j].disabled = true;
-          }
-          document.getElementById("update-button").disabled = false;
-          document.getElementById("print-button").disabled = false;
-          if (model.mediaNames.length == 0) {
-            var header = document.createElement("p");
-            var text = document.createTextNode("No media was shared, but don't let that stop you for trying the recipe out!");
-            header.appendChild(text);
-            document.getElementById(model.mediaId).appendChild(header);
-            document.getElementById(model.mediaId).parentNode.classList.remove("paginator");
-          } else if (model.mediaNames.length == 1) {
-            var image = document.createElement("img");
-            image.src = "http://localhost:80/api/recipemedia/retrieverecipemedia/" + model.recipe.recipeId + "/" + model.mediaNames[0];
-            document.getElementById(model.mediaId).appendChild(image);
-          } else if (model.mediaNames.length > 0) {
-            paginate(0);
-          }
+          axios.get("/api/recipe/getrecipe/" + router.currentRoute._value.params.recipeId)
+            .then((message) => {
+                model.updateAvailable = false;
+                var nodes = document.getElementsByClassName("dis-func");
+                for (var j = 0; j < nodes.length; j++) {
+                  nodes[j].disabled = true;
+                }
+                model.recipe.servingSize = message.data.servingSize;
+                document.getElementById("update-button").disabled = false;
+                document.getElementById("print-button").disabled = false;
+                if (model.mediaNames.length == 0) {
+                  var header = document.createElement("p");
+                  var text = document.createTextNode("No media was shared, but don't let that stop you for trying the recipe out!");
+                  header.appendChild(text);
+                  document.getElementById(model.mediaId).appendChild(header);
+                  document.getElementById(model.mediaId).parentNode.classList.remove("paginator");
+                } else if (model.mediaNames.length == 1) {
+                  var image = document.createElement("img");
+                  image.src = "http://localhost:80/api/recipemedia/retrieverecipemedia/" + model.recipe.recipeId + "/" + model.mediaNames[0];
+                  document.getElementById(model.mediaId).appendChild(image);
+                } else if (model.mediaNames.length > 0) {
+                  paginate(0);
+                }
+          });
         }
         return {
             error: computed(() => store.state.error),
@@ -603,7 +751,8 @@ export default {
             submitReview,
             submitUpdate,
             updateRecipe,
-            updateRecipeReset
+            updateRecipeReset,
+            updateIngredients
         }
     }
 };

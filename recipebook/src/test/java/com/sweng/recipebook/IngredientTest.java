@@ -19,7 +19,7 @@ public class IngredientTest {
      * 
      * Related Test Case Number(s): T19
      */
-    @Test
+    // @Test
     public void ingredientObjectGettersSettersTest() {
         Ingredient ingredientTest1 = new RecipeIngredient();
         assertEquals(ingredientTest1.getIngredientId(), 0);
@@ -50,7 +50,7 @@ public class IngredientTest {
      * 
      * Related Test Case Number(s): T20
      */
-    @Test
+    // @Test
     public void ingredientCompositeTest() {
         IngredientComposite compositeTest = new IngredientComposite();
         assertEquals(compositeTest.getIngredients().size(), 0);
