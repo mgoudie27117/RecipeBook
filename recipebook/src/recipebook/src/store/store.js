@@ -1,7 +1,9 @@
 import { createStore } from "vuex";
 import axios from "../axios-connection";
 import router from "../router/router";
-import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from 'vuex-persistedstate';
+
+let apiCall = "http://ec2-3-134-79-22.us-east-2.compute.amazonaws.com:8080";
 
 const store = createStore({
     plugins: [createPersistedState({
@@ -76,7 +78,7 @@ const store = createStore({
             try {
                 commit("setBusy");
                 commit("clearError");
-                axios.post('/api/user/login', formData)
+                axios.post(apiCall + '/api/user/login', formData)
                     .then((message) => {
                         if (!(message.data.accessToken.length > 0)) {
                             commit("setError", "Invalid login! Please try again.");
