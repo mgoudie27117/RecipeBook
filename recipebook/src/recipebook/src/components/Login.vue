@@ -45,7 +45,10 @@
             store.dispatch('logoutURLHandler');
         },
         setup() {
-            const model = reactive({ userName: "", password: "" });
+            const model = reactive({ userName: "", password: "", headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }});
             function onSubmit() {
                 store.dispatch("requiredIndication");
                 if (model.userName.length > 0 && model.password.length > 0) {
